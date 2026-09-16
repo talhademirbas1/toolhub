@@ -1,7 +1,6 @@
 'use client'
 
 import { useMemo, useState, useEffect } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
 import {
   ArrowUpRight,
   Calculator,
@@ -14,8 +13,10 @@ import {
   Clock,
   Timer
 } from 'lucide-react'
+import CalculatorTool from "./calculator-tool";
 import StopwatchTool from './stopwatch-tool';
 import TextAnalyzerTool from './text-analyzer-tool';
+import TimeDifferenceTool from './time-difference-tool';
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
@@ -41,24 +42,31 @@ const baseTools: ToolBase[] = [
   { id: 'stopwatchTool', categoryKey: 'time', icon: Timer, accent: 'bg-rose-500/10 text-rose-500 ring-rose-500/20' },
 ]
 
-export function ToolHubDashboard({ dict }: { dict: any }) {
+export function ToolHubDashboard({
+  dict,
+  currentLang,
+  onLangChange,
+}: {
+  dict: any
+  currentLang: 'tr' | 'en'
+  onLangChange: (lang: 'tr' | 'en') => void
+}) {
   const [activeTool, setActiveTool] = useState<string | null>(null)
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all')
   const [dark, setDark] = useState(false)
-
-  const pathname = usePathname()
-  const router = useRouter()
-  const currentLang = pathname?.split('/')[1] || 'tr'
 
   useEffect(() => {
     if (window.location.hash === '#stopwatch') {
       setActiveTool('stopwatch')
     } else if (window.location.hash === '#textAnalyzer') {
       setActiveTool('textAnalyzer')
+    } else if (window.location.hash === '#classicCalculator') {
+      setActiveTool('classicCalculator')
+    } else if (window.location.hash === '#timeDifference') {
+      setActiveTool('timeDifference')
     }
 
-    // localStorage'dan tema tercihini okuyup kalıcı hale getiriyoruz
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark' || (!savedTheme && document.documentElement.classList.contains('dark'))) {
       setDark(true);
@@ -83,22 +91,13 @@ export function ToolHubDashboard({ dict }: { dict: any }) {
   }
 
   function toggleLanguage() {
-    if (!pathname) return
     const newLang = currentLang === 'tr' ? 'en' : 'tr'
-    
     if (dark) {
       localStorage.setItem('theme', 'dark');
     } else {
       localStorage.setItem('theme', 'light');
     }
-
-    let newPath = pathname.replace(`/${currentLang}`, `/${newLang}`)
-    if (activeTool) {
-      newPath += window.location.hash || `#${activeTool}`;
-    }
-
-    // scroll: false ile sayfa zıplamaz ve beyaz ekran patlaması tamamen engellenir
-    router.replace(newPath, { scroll: false });
+    onLangChange(newLang);
   }
 
   const filteredTools = useMemo(() => {
@@ -121,7 +120,7 @@ export function ToolHubDashboard({ dict }: { dict: any }) {
           <Button
             onClick={() => {
               setActiveTool(null)
-              window.history.replaceState(null, '', pathname)
+              window.history.replaceState(null, '', window.location.pathname)
               localStorage.removeItem('sw_time')
               localStorage.removeItem('sw_running')
               localStorage.removeItem('sw_laps')
@@ -152,7 +151,7 @@ export function ToolHubDashboard({ dict }: { dict: any }) {
           <Button
             onClick={() => {
               setActiveTool(null)
-              window.history.replaceState(null, '', pathname)
+              window.history.replaceState(null, '', window.location.pathname)
             }}
             variant="ghost"
           >
@@ -169,6 +168,62 @@ export function ToolHubDashboard({ dict }: { dict: any }) {
           </div>
         </header>
         <TextAnalyzerTool dict={dict} />
+      </div>
+    )
+  }
+
+  if (activeTool === 'classicCalculator') {
+    return (
+      <div className="min-h-screen p-8 bg-zinc-100 dark:bg-background text-foreground transition-colors">
+        <header className="mb-6 flex justify-between items-center max-w-md mx-auto">
+          <Button
+            onClick={() => {
+              setActiveTool(null)
+              window.history.replaceState(null, '', window.location.pathname)
+            }}
+            variant="ghost"
+          >
+            ← {dict.dashboard.backButton}
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            <Button onClick={toggleLanguage} size="sm" variant="outline" className="font-bold">
+              {currentLang === 'tr' ? 'EN' : 'TR'}
+            </Button>
+            <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+          </div>
+        </header>
+        <CalculatorTool lang={currentLang} />
+      </div>
+    )
+  }
+
+  if (activeTool === 'timeDifference') {
+    return (
+      <div className="min-h-screen p-8 bg-zinc-100 dark:bg-background text-foreground transition-colors">
+        <header className="mb-6 flex justify-between items-center max-w-lg mx-auto">
+          <Button
+            onClick={() => {
+              setActiveTool(null)
+              window.history.replaceState(null, '', window.location.pathname)
+            }}
+            variant="ghost"
+          >
+            ← {dict.dashboard.backButton}
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            <Button onClick={toggleLanguage} size="sm" variant="outline" className="font-bold">
+              {currentLang === 'tr' ? 'EN' : 'TR'}
+            </Button>
+            <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+          </div>
+        </header>
+        <TimeDifferenceTool lang={currentLang} />
       </div>
     )
   }
@@ -262,6 +317,12 @@ export function ToolHubDashboard({ dict }: { dict: any }) {
                         } else if (tool.id === 'textAnalyzer') {
                           setActiveTool('textAnalyzer')
                           window.location.hash = 'textAnalyzer'
+                        } else if (tool.id === 'classicCalculator') {
+                          setActiveTool('classicCalculator')
+                          window.location.hash = 'classicCalculator'
+                        } else if (tool.id === 'timeDifference') {
+                          setActiveTool('timeDifference')
+                          window.location.hash = 'timeDifference'
                         }
                       }}
                     >
