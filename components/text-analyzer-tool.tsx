@@ -1,15 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { FileText, Trash2, Copy, Check } from 'lucide-react';
 
-export default function TextAnalyzerTool({ dict }: { dict: any }) {
+export default function TextAnalyzerTool({ dict }: { dict?: any }) {
+  const [isTr, setIsTr] = useState(false);
   const [text, setText] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const t = dict.textAnalyzer || {};
-  const isTr = typeof window !== 'undefined' && window.location.pathname.startsWith('/tr');
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsTr(window.location.pathname.startsWith('/tr'));
+    }
+  }, []);
+
+  // dict yapısını hem dışarıdan gelen prop'a hem de güvenli yedek değerlere göre ayarlıyoruz
+  const toolDict = dict?.tools?.textAnalyzer || dict?.textAnalyzer || {};
 
   const characters = text.length;
   const charactersNoSpace = text.replace(/\s/g, '').length;
@@ -30,17 +37,21 @@ export default function TextAnalyzerTool({ dict }: { dict: any }) {
           <FileText className="size-5" />
         </div>
         <div>
-          <h2 className="text-xl font-bold">{t.title || (isTr ? 'Akıllı Metin & Karakter Analizcisi' : 'Smart Text & Character Analyzer')}</h2>
-          <p className="text-xs text-muted-foreground">{isTr ? 'ToolHub Metin Aracı' : 'ToolHub Text Suite'}</p>
+          <h2 className="text-xl font-bold">
+            {toolDict.title || (isTr ? 'Akıllı Metin & Karakter Analizcisi' : 'Smart Text & Character Analyzer')}
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {toolDict.description || (isTr ? 'ToolHub Metin Aracı' : 'ToolHub Text Suite')}
+          </p>
         </div>
       </div>
 
       <textarea
-            className="w-full h-40 p-4 rounded-xl bg-muted/35 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 border border-border/70"
-            placeholder={dict?.tools?.textAnalyzer?.placeholder || "Metninizi buraya yazın veya yapıştırın..."}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+        className="w-full h-40 p-4 rounded-xl bg-muted/35 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 border border-border/70"
+        placeholder={toolDict.placeholder || (isTr ? 'Metninizi buraya yazın veya yapıştırın...' : 'Type or paste your text here...')}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60">

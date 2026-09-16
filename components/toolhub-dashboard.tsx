@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState, useEffect } from 'react'
+import Link from 'next/link'
 import {
   ArrowUpRight,
   Calculator,
@@ -13,10 +14,6 @@ import {
   Clock,
   Timer
 } from 'lucide-react'
-import CalculatorTool from "./calculator-tool";
-import StopwatchTool from './stopwatch-tool';
-import TextAnalyzerTool from './text-analyzer-tool';
-import TimeDifferenceTool from './time-difference-tool';
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
@@ -29,17 +26,18 @@ type ToolBase = {
   categoryKey: Exclude<CategoryKey, 'all'>;
   icon: typeof ImageIcon;
   accent: string;
+  slug: string;
 }
 
 const categoryKeys: CategoryKey[] = ['all', 'visual', 'text', 'calculators', 'time'];
 
 const baseTools: ToolBase[] = [
-  { id: 'imageConverter', categoryKey: 'visual', icon: ImageIcon, accent: 'bg-sky-500/10 text-sky-400 ring-sky-400/20' },
-  { id: 'textAnalyzer', categoryKey: 'text', icon: FileText, accent: 'bg-violet-500/10 text-violet-400 ring-violet-400/20' },
-  { id: 'percentageCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-emerald-500/10 text-emerald-400 ring-emerald-400/20' },
-  { id: 'classicCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-amber-500/10 text-amber-500 ring-amber-500/20' },
-  { id: 'timeDifference', categoryKey: 'time', icon: Clock, accent: 'bg-cyan-500/10 text-cyan-500 ring-cyan-500/20' },
-  { id: 'stopwatchTool', categoryKey: 'time', icon: Timer, accent: 'bg-rose-500/10 text-rose-500 ring-rose-500/20' },
+  { id: 'imageConverter', categoryKey: 'visual', icon: ImageIcon, accent: 'bg-sky-500/10 text-sky-400 ring-sky-400/20', slug: 'image-converter' },
+  { id: 'textAnalyzer', categoryKey: 'text', icon: FileText, accent: 'bg-violet-500/10 text-violet-400 ring-violet-400/20', slug: 'text-analyzer' },
+  { id: 'percentageCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-emerald-500/10 text-emerald-400 ring-emerald-400/20', slug: 'percentage-calculator' },
+  { id: 'classicCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-amber-500/10 text-amber-500 ring-amber-500/20', slug: 'classic-calculator' },
+  { id: 'timeDifference', categoryKey: 'time', icon: Clock, accent: 'bg-cyan-500/10 text-cyan-500 ring-cyan-500/20', slug: 'time-difference' },
+  { id: 'stopwatchTool', categoryKey: 'time', icon: Timer, accent: 'bg-rose-500/10 text-rose-500 ring-rose-500/20', slug: 'stopwatch' },
 ]
 
 export function ToolHubDashboard({
@@ -51,22 +49,11 @@ export function ToolHubDashboard({
   currentLang: 'tr' | 'en'
   onLangChange: (lang: 'tr' | 'en') => void
 }) {
-  const [activeTool, setActiveTool] = useState<string | null>(null)
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all')
   const [dark, setDark] = useState(false)
 
   useEffect(() => {
-    if (window.location.hash === '#stopwatch') {
-      setActiveTool('stopwatch')
-    } else if (window.location.hash === '#textAnalyzer') {
-      setActiveTool('textAnalyzer')
-    } else if (window.location.hash === '#classicCalculator') {
-      setActiveTool('classicCalculator')
-    } else if (window.location.hash === '#timeDifference') {
-      setActiveTool('timeDifference')
-    }
-
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark' || (!savedTheme && document.documentElement.classList.contains('dark'))) {
       setDark(true);
@@ -112,121 +99,6 @@ export function ToolHubDashboard({
       return matchesCategory && matchesQuery
     })
   }, [activeCategory, query, dict])
-
-  if (activeTool === 'stopwatch') {
-    return (
-      <div className="min-h-screen p-8 bg-zinc-100 dark:bg-background text-foreground transition-colors">
-        <header className="mb-6 flex justify-between items-center max-w-md mx-auto">
-          <Button
-            onClick={() => {
-              setActiveTool(null)
-              window.history.replaceState(null, '', window.location.pathname)
-              localStorage.removeItem('sw_time')
-              localStorage.removeItem('sw_running')
-              localStorage.removeItem('sw_laps')
-            }}
-            variant="ghost"
-          >
-            ← {dict.dashboard.backButton}
-          </Button>
-          
-          <div className="flex items-center gap-2">
-            <Button onClick={toggleLanguage} size="sm" variant="outline" className="font-bold">
-              {currentLang === 'tr' ? 'EN' : 'TR'}
-            </Button>
-            <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-          </div>
-        </header>
-        <StopwatchTool dict={dict} />
-      </div>
-    )
-  }
-
-  if (activeTool === 'textAnalyzer') {
-    return (
-      <div className="min-h-screen p-8 bg-zinc-100 dark:bg-background text-foreground transition-colors">
-        <header className="mb-6 flex justify-between items-center max-w-2xl mx-auto">
-          <Button
-            onClick={() => {
-              setActiveTool(null)
-              window.history.replaceState(null, '', window.location.pathname)
-            }}
-            variant="ghost"
-          >
-            ← {dict.dashboard.backButton}
-          </Button>
-          
-          <div className="flex items-center gap-2">
-            <Button onClick={toggleLanguage} size="sm" variant="outline" className="font-bold">
-              {currentLang === 'tr' ? 'EN' : 'TR'}
-            </Button>
-            <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-          </div>
-        </header>
-        <TextAnalyzerTool dict={dict} />
-      </div>
-    )
-  }
-
-  if (activeTool === 'classicCalculator') {
-    return (
-      <div className="min-h-screen p-8 bg-zinc-100 dark:bg-background text-foreground transition-colors">
-        <header className="mb-6 flex justify-between items-center max-w-md mx-auto">
-          <Button
-            onClick={() => {
-              setActiveTool(null)
-              window.history.replaceState(null, '', window.location.pathname)
-            }}
-            variant="ghost"
-          >
-            ← {dict.dashboard.backButton}
-          </Button>
-          
-          <div className="flex items-center gap-2">
-            <Button onClick={toggleLanguage} size="sm" variant="outline" className="font-bold">
-              {currentLang === 'tr' ? 'EN' : 'TR'}
-            </Button>
-            <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-          </div>
-        </header>
-        <CalculatorTool lang={currentLang} />
-      </div>
-    )
-  }
-
-  if (activeTool === 'timeDifference') {
-    return (
-      <div className="min-h-screen p-8 bg-zinc-100 dark:bg-background text-foreground transition-colors">
-        <header className="mb-6 flex justify-between items-center max-w-lg mx-auto">
-          <Button
-            onClick={() => {
-              setActiveTool(null)
-              window.history.replaceState(null, '', window.location.pathname)
-            }}
-            variant="ghost"
-          >
-            ← {dict.dashboard.backButton}
-          </Button>
-          
-          <div className="flex items-center gap-2">
-            <Button onClick={toggleLanguage} size="sm" variant="outline" className="font-bold">
-              {currentLang === 'tr' ? 'EN' : 'TR'}
-            </Button>
-            <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-          </div>
-        </header>
-        <TimeDifferenceTool lang={currentLang} />
-      </div>
-    )
-  }
 
   return (
     <main className="min-h-screen bg-zinc-100 dark:bg-background text-foreground transition-colors">
@@ -289,6 +161,7 @@ export function ToolHubDashboard({
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredTools.map((tool) => {
               const Icon = tool.icon
+              const toolRoute = `/${currentLang}/tools/${tool.slug}`
               return (
                 <Card className="group flex min-h-[300px] flex-col border-border/70 bg-card/60 transition-all duration-300 hover:-translate-y-1 hover:border-border hover:bg-card hover:shadow-2xl hover:shadow-black/10" key={tool.id}>
                   <CardHeader className="gap-6">
@@ -307,28 +180,15 @@ export function ToolHubDashboard({
                     <p className="text-sm leading-6 text-muted-foreground">{dict.tools[tool.id].description}</p>
                   </CardContent>
                   <CardFooter>
-                    <Button
-                      className="w-full justify-between"
-                      variant="outline"
-                      onClick={() => {
-                        if (tool.id === 'stopwatchTool') {
-                          setActiveTool('stopwatch')
-                          window.location.hash = 'stopwatch'
-                        } else if (tool.id === 'textAnalyzer') {
-                          setActiveTool('textAnalyzer')
-                          window.location.hash = 'textAnalyzer'
-                        } else if (tool.id === 'classicCalculator') {
-                          setActiveTool('classicCalculator')
-                          window.location.hash = 'classicCalculator'
-                        } else if (tool.id === 'timeDifference') {
-                          setActiveTool('timeDifference')
-                          window.location.hash = 'timeDifference'
-                        }
-                      }}
-                    >
-                      {dict.dashboard.useButton}
-                      <ArrowUpRight data-icon="inline-end" />
-                    </Button>
+                    <Link href={toolRoute} className="w-full">
+                      <Button
+                        className="w-full justify-between pointer-events-none"
+                        variant="outline"
+                      >
+                        {dict.dashboard.useButton}
+                        <ArrowUpRight data-icon="inline-end" />
+                      </Button>
+                    </Link>
                   </CardFooter>
                 </Card>
               )

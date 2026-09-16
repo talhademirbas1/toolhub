@@ -4,8 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, RotateCcw, Timer } from 'lucide-react';
 
-export default function StopwatchTool({ dict }: { dict: any }) {
-  const isTr = typeof window !== 'undefined' && window.location.pathname.startsWith('/tr');
+export default function StopwatchTool({ dict }: { dict?: any }) {
+  const [isTr, setIsTr] = useState(false);
+
+  useEffect(() => {
+    // URL'in /tr ile başlayıp başlamadığını istemci tarafında güvenle kontrol ediyoruz
+    if (typeof window !== 'undefined') {
+      setIsTr(window.location.pathname.startsWith('/tr'));
+    }
+  }, []);
 
   const [time, setTime] = useState<number>(() => {
     if (typeof window === 'undefined') return 0;
