@@ -1,0 +1,70 @@
+{
+    "dashboard": {
+      "backButton": "Go Back",
+      "searchPlaceholder": "Search tools...",
+      "themeLight": "Switch to light theme",
+      "themeDark": "Switch to dark theme",
+      "subtitle": "Everyday tasks, made easier",
+      "title1": "The tools you need.",
+      "title2": "In one place.",
+      "description": "Accelerate your workflow with fast, reliable, and simple web tools. No installation, no waiting.",
+      "toolsCount": "tools",
+      "useButton": "Use / Open",
+      "notFound": "No tools found matching your search.",
+      "footer": "ToolHub · Simple. Fast. Useful."
+    },
+    "stopwatch": {
+      "title": "Stopwatch",
+      "start": "Start",
+      "pause": "Pause",
+      "reset": "Reset",
+      "lap": "Lap",
+      "description": "Start, pause, or reset the timer.",
+      "lapsTitle": "Laps",
+      "lapItem": "Lap"
+    },
+    "categories": {
+      "all": "All",
+      "visual": "Visual Tools",
+      "text": "Text Tools",
+      "calculators": "Calculators",
+      "time": "Time"
+    },
+    "tools": {
+      "imageConverter": {
+        "title": "Image Converter & Compressor",
+        "description": "Convert and compress your WEBP, PNG, and JPG files quickly while maintaining quality."
+      },
+      "textAnalyzer": {
+      "title": "Smart Text & Character Analyzer",
+      "description": "Calculate word, character, and sentence counts; find out your reading time instantly.",
+      "subtitle": "ToolHub Text Suite",
+      "placeholder": "Type or paste your text here...",
+      "characters": "CHARACTERS",
+      "charactersNoSpace": "Characters (no space)",
+      "words": "WORDS",
+      "sentences": "SENTENCES",
+      "readingTime": "READING TIME",
+      "seconds": "sec",
+      "clear": "Clear",
+      "copy": "Copy",
+      "copied": "Copied!"
+    },
+      "percentageCalculator": {
+        "title": "Percentage & Profit/Loss Calculator",
+        "description": "Manage margin, discount, and percentage difference calculations from a single simple interface."
+      },
+      "classicCalculator": {
+        "title": "Classic Calculator",
+        "description": "Perform basic four operations, practical and fast calculations."
+      },
+      "timeDifference": {
+        "title": "Date & Time Difference Calculator",
+        "description": "Instantly calculate the difference between two dates or times in days, hours, and minutes."
+      },
+      "stopwatchTool": {
+        "title": "Stopwatch & Timer",
+        "description": "Keep time, record lap times, and make practical countdowns."
+      }
+    }
+  }
