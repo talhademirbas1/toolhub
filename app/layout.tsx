@@ -1,5 +1,14 @@
 import './globals.css'
 
+// Tarayıcı sekmesi için başlık, açıklama ve logo ayarları
+export const metadata = {
+  title: 'MyToolkit',
+  description: 'Pratik ve hızlı dijital araçlar merkezi.',
+  icons: {
+    icon: '/icon.svg',
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" suppressHydrationWarning>
