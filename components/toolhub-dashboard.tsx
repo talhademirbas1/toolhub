@@ -12,7 +12,9 @@ import {
   Sun,
   Zap,
   Clock,
-  Timer
+  Timer,
+  Globe,
+  Keyboard // Klavye ikonu eklendi
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -34,10 +36,13 @@ const categoryKeys: CategoryKey[] = ['all', 'visual', 'text', 'calculators', 'ti
 const baseTools: ToolBase[] = [
   { id: 'imageConverter', categoryKey: 'visual', icon: ImageIcon, accent: 'bg-sky-500/10 text-sky-400 ring-sky-400/20', slug: 'image-converter' },
   { id: 'textAnalyzer', categoryKey: 'text', icon: FileText, accent: 'bg-violet-500/10 text-violet-400 ring-violet-400/20', slug: 'text-analyzer' },
+  // YENİ KLAVYE HIZ TESTİ ARACI BURAYA EKLENDİ:
+  { id: 'typingTest', categoryKey: 'text', icon: Keyboard, accent: 'bg-indigo-500/10 text-indigo-400 ring-indigo-400/20', slug: 'typing-test' },
   { id: 'percentageCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-emerald-500/10 text-emerald-400 ring-emerald-400/20', slug: 'percentage-calculator' },
   { id: 'classicCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-amber-500/10 text-amber-500 ring-amber-500/20', slug: 'classic-calculator' },
   { id: 'timeDifference', categoryKey: 'time', icon: Clock, accent: 'bg-cyan-500/10 text-cyan-500 ring-cyan-500/20', slug: 'time-difference' },
   { id: 'stopwatchTool', categoryKey: 'time', icon: Timer, accent: 'bg-rose-500/10 text-rose-500 ring-rose-500/20', slug: 'stopwatch' },
+  { id: 'worldClock', categoryKey: 'time', icon: Globe, accent: 'bg-blue-500/10 text-blue-500 ring-blue-500/20', slug: 'world-clock' },
 ]
 
 export function ToolHubDashboard({
@@ -91,9 +96,9 @@ export function ToolHubDashboard({
     const normalizedQuery = query.toLocaleLowerCase('tr-TR')
     return baseTools.filter((tool) => {
       const matchesCategory = activeCategory === 'all' || tool.categoryKey === activeCategory;
-      const translatedTitle = dict.tools[tool.id].title;
-      const translatedDesc = dict.tools[tool.id].description;
-      const translatedCategory = dict.categories[tool.categoryKey];
+      const translatedTitle = dict.tools[tool.id]?.title || '';
+      const translatedDesc = dict.tools[tool.id]?.description || '';
+      const translatedCategory = dict.categories[tool.categoryKey] || '';
       
       const matchesQuery = `${translatedTitle} ${translatedDesc} ${translatedCategory}`.toLocaleLowerCase('tr-TR').includes(normalizedQuery)
       return matchesCategory && matchesQuery
@@ -173,11 +178,11 @@ export function ToolHubDashboard({
                     </div>
                     <div className="space-y-2">
                       <Badge className="rounded-md font-normal" variant="secondary">{dict.categories[tool.categoryKey]}</Badge>
-                      <h2 className="text-lg font-medium tracking-tight">{dict.tools[tool.id].title}</h2>
+                      <h2 className="text-lg font-medium tracking-tight">{dict.tools[tool.id]?.title}</h2>
                     </div>
                   </CardHeader>
                   <CardContent className="flex-1">
-                    <p className="text-sm leading-6 text-muted-foreground">{dict.tools[tool.id].description}</p>
+                    <p className="text-sm leading-6 text-muted-foreground">{dict.tools[tool.id]?.description}</p>
                   </CardContent>
                   <CardFooter>
                     <Link href={toolRoute} className="w-full">

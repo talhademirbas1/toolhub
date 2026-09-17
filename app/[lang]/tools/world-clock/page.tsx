@@ -1,11 +1,11 @@
-import CalculatorTool from "@/components/calculator-tool";
+import WorldClockTool from "@/components/world-clock-tool";
 
 // Next.js'in bu sayfayı statik olarak önceden üretmesini sağlar
 export async function generateStaticParams() {
   return [{ lang: 'tr' }, { lang: 'en' }];
 }
 
-export default async function ClassicCalculatorPage({
+export default async function WorldClockPage({
   params,
 }: {
   params: Promise<{ lang: 'tr' | 'en' }>
@@ -16,8 +16,7 @@ export default async function ClassicCalculatorPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Üst barı buradan tamamen kaldırdık. Artık butonları CalculatorTool yönetecek. */}
-        <CalculatorTool lang={lang} />
+        <WorldClockTool lang={lang} />
       </div>
     </div>
   );

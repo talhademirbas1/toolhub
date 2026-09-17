@@ -9,7 +9,6 @@ interface ImageConverterToolProps {
   lang: string;
 }
 
-// Byte değerlerini KB/MB olarak okunaklı formata çeviren yardımcı fonksiyon
 const formatBytes = (bytes: number, decimals = 2) => {
   if (!+bytes) return "0 Bytes";
   const k = 1024;
@@ -25,19 +24,11 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
   const [fileName, setFileName] = useState("");
   const [originalSize, setOriginalSize] = useState<number>(0);
   const [convertedSize, setConvertedSize] = useState<number>(0);
-  const [format, setFormat] = useState<"image/png" | "image/jpeg" | "image/webp">("image/jpeg");
-  const [quality, setQuality] = useState<number>(80);
+  const [format, setFormat] = useState<"image/png" | "image/jpeg" | "image/webp" | "image/svg+xml">("image/webp");
+  const [quality, setQuality] = useState<number>(85);
   const [convertedUrl, setConvertedUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Yeni dosya yüklendiğinde eski kalıntıları temizle
-  useEffect(() => {
-    return () => {
-      if (convertedUrl) URL.revokeObjectURL(convertedUrl);
-    };
-  }, [convertedUrl]);
-
-  // 1. SAYFA YÜKLENDİKTEN SONRA HAFIZAYI KONTROL ET
   useEffect(() => {
     setIsMounted(true);
     try {
@@ -50,30 +41,37 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
       const savedOriginalSize = localStorage.getItem('ic_originalSize');
       if (savedOriginalSize) setOriginalSize(Number(savedOriginalSize));
 
+      const savedConvertedUrl = localStorage.getItem('ic_convertedUrl');
+      if (savedConvertedUrl) setConvertedUrl(savedConvertedUrl);
+
+      const savedConvertedSize = localStorage.getItem('ic_convertedSize');
+      if (savedConvertedSize) setConvertedSize(Number(savedConvertedSize));
+
       const savedFormat = localStorage.getItem('ic_format');
       if (savedFormat) setFormat(savedFormat as any);
 
       const savedQuality = localStorage.getItem('ic_quality');
       if (savedQuality) setQuality(Number(savedQuality));
     } catch (error) {
-      console.warn("Tarayıcı hafıza sınırı aşıldı, görsel yüklenemedi.");
+      console.warn("Storage okuma hatası.");
     }
   }, []);
 
-  // 2. DEĞİŞİKLİK YAPILDIKÇA HAFIZAYI GÜNCELLE
   useEffect(() => {
     if (isMounted) {
       try {
         if (image) localStorage.setItem('ic_image', image);
         localStorage.setItem('ic_fileName', fileName);
         localStorage.setItem('ic_originalSize', String(originalSize));
+        if (convertedUrl) localStorage.setItem('ic_convertedUrl', convertedUrl);
+        localStorage.setItem('ic_convertedSize', String(convertedSize));
         localStorage.setItem('ic_format', format);
         localStorage.setItem('ic_quality', String(quality));
       } catch (error) {
-        console.warn("Görsel boyutu localStorage için çok büyük, sadece ayarlar kaydedildi.");
+        console.warn("Kayıt hatası.");
       }
     }
-  }, [image, fileName, originalSize, format, quality, isMounted]);
+  }, [image, fileName, originalSize, convertedUrl, convertedSize, format, quality, isMounted]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -84,9 +82,14 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
     
     const reader = new FileReader();
     reader.onload = (event) => {
-      setImage(event.target?.result as string);
+      const result = event.target?.result as string;
+      setImage(result);
       setConvertedUrl(null);
       setConvertedSize(0);
+      try {
+        localStorage.setItem('ic_image', result);
+        localStorage.removeItem('ic_convertedUrl');
+      } catch (e) {}
     };
     reader.readAsDataURL(file);
   };
@@ -110,17 +113,18 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
         }
         ctx.drawImage(img, 0, 0);
         
+        const targetFormat = format === "image/svg+xml" ? "image/png" : format;
+
         canvas.toBlob(
           (blob) => {
             if (blob) {
-              if (convertedUrl) URL.revokeObjectURL(convertedUrl);
               const url = URL.createObjectURL(blob);
               setConvertedUrl(url);
               setConvertedSize(blob.size);
             }
             setIsProcessing(false);
           },
-          format,
+          targetFormat,
           quality / 100
         );
       } else {
@@ -132,12 +136,12 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
   const getExtension = () => {
     if (format === "image/png") return "png";
     if (format === "image/jpeg") return "jpg";
+    if (format === "image/svg+xml") return "svg";
     return "webp";
   };
 
   const showQualitySlider = format === "image/jpeg" || format === "image/webp";
 
-  // Hydration hatasını engellemek için yüklenene kadar boş döndür
   if (!isMounted) return null;
 
   return (
@@ -151,7 +155,7 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
             {lang === "tr" ? "Görsel Dönüştürücü & Sıkıştırıcı" : "Image Converter & Compressor"}
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Görsel Aracı" : "MyToolKit Visual Suite"}
+            {lang === "tr" ? "Limitsiz & Hızlı Format Dönüşümü" : "Unlimited & Fast Format Conversion"}
           </p>
         </div>
       </CardHeader>
@@ -160,7 +164,7 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
         <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer relative bg-muted/30">
           <input
             type="file"
-            accept="image/*"
+            accept="image/*,.svg"
             onChange={handleImageUpload}
             className="absolute inset-0 opacity-0 cursor-pointer"
           />
@@ -168,7 +172,7 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
           <p className="text-sm font-medium">
             {lang === "tr" ? "Görsel yüklemek için tıklayın veya sürükleyin" : "Click or drag to upload an image"}
           </p>
-          <p className="text-xs text-muted-foreground mt-1">PNG, JPG, WEBP</p>
+          <p className="text-xs text-muted-foreground mt-1">PNG, JPG, WEBP, SVG</p>
         </div>
 
         {image && (
@@ -190,9 +194,18 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
                   onChange={(e) => setFormat(e.target.value as any)}
                   className="h-9 rounded-md border border-input bg-background px-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 outline-none"
                 >
-                  <option value="image/jpeg">JPG</option>
-                  <option value="image/webp">WEBP (En iyi sıkıştırma)</option>
-                  <option value="image/png">PNG (Kayıpsız)</option>
+                  <option value="image/webp">
+                    {lang === "tr" ? "WEBP (Önerilen)" : "WEBP (Recommended)"}
+                  </option>
+                  <option value="image/png">
+                    {lang === "tr" ? "PNG (Şeffaf / Kayıpsız)" : "PNG (Transparent / Lossless)"}
+                  </option>
+                  <option value="image/jpeg">
+                    {lang === "tr" ? "JPG (Standart Fotoğraf)" : "JPG (Standard Photo)"}
+                  </option>
+                  <option value="image/svg+xml">
+                    {lang === "tr" ? "SVG (Vektör Çıkışı)" : "SVG (Vector Output)"}
+                  </option>
                 </select>
               </div>
 
@@ -247,7 +260,7 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
             
             <a
               href={convertedUrl}
-              download={`${fileName}-compressed.${getExtension()}`}
+              download={`${fileName}-converted.${getExtension()}`}
               className="inline-flex w-full"
             >
               <Button size="lg" className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-0.5">

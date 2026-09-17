@@ -65,6 +65,14 @@
     "stopwatchTool": {
       "title": "Stopwatch & Timer",
       "description": "Keep time, record lap times, and make practical countdowns."
+    },
+    "worldClock": {
+      "title": "World Clock & Time Difference",
+      "description": "Airport-style live time zone and city-to-city time difference comparator."
+    },
+    "typingTest": {
+      "title": "Typing Speed Test (WPM)",
+      "description": "Test how many words you can type in 60 seconds and measure your typing speed."
     }
   }
 }
