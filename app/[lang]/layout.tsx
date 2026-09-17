@@ -3,9 +3,6 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "MyToolkit",
   description: "Simple. Fast. Useful web tools.",
-  icons: {
-    icon: "/icon?v=999", // Tarayıcıya "Bunu yeni bir dosya gibi zorla indir" diyoruz
-  },
 };
 
 export function generateStaticParams() {

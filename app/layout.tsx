@@ -9,9 +9,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" suppressHydrationWarning>
       <head>
-        {/* Logoyu doğrudan HTML ile zorla çekiyoruz */}
-        <link rel="icon" href="/mt-logo.svg" />
-        
         {/* Sayfa boyanmadan (paint) ÖNCE senkron çalışarak beyaz flash'ı engeller */}
         <script
           dangerouslySetInnerHTML={{
