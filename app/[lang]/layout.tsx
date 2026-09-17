@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "ToolHub",
+  title: "MyToolkit",
   description: "Simple. Fast. Useful web tools.",
 };
 
