@@ -1,11 +1,11 @@
 import './globals.css'
 
-// Tarayıcı sekmesi için başlık, açıklama ve logo ayarları
+// Tarayıcı sekmesi için başlık, açıklama ve logo ayarları (Cache kırıcı eklendi)
 export const metadata = {
   title: 'MyToolkit',
   description: 'Pratik ve hızlı dijital araçlar merkezi.',
   icons: {
-    icon: '/icon.svg',
+    icon: '/icon.svg?v=1', // ?v=1 parametresi tarayıcıyı logoyu yeniden indirmeye zorlar
   },
 };
 
