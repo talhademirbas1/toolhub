@@ -105,10 +105,10 @@ export function ToolHubDashboard({
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-6 sm:px-8 lg:px-10">
         <header className="flex items-center justify-between border-b border-border/60 pb-6">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
-              <Zap aria-hidden="true" className="size-4 fill-current" />
+            <div className="flex size-9 items-center justify-center rounded-xl bg-black text-white dark:bg-white dark:text-black shadow-sm font-bold text-sm tracking-tighter">
+              MT
             </div>
-            <span className="text-base font-semibold tracking-tight">ToolHub</span>
+            <span className="text-base font-semibold tracking-tight">MyToolkit</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative hidden w-64 sm:block">
