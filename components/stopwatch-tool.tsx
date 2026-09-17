@@ -5,36 +5,35 @@ import { Button } from '@/components/ui/button';
 import { Play, Pause, RotateCcw, Timer } from 'lucide-react';
 
 export default function StopwatchTool({ dict }: { dict?: any }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [isTr, setIsTr] = useState(false);
+  
+  // Varsayılan değerleri başta güvenli (0/false) veriyoruz
+  const [time, setTime] = useState<number>(0);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [laps, setLaps] = useState<number[]>([]);
 
+  // SAYFA YÜKLENDİKTEN SONRA HAFIZAYI (LOCAL STORAGE) KONTROL ET
   useEffect(() => {
-    // URL'in /tr ile başlayıp başlamadığını istemci tarafında güvenle kontrol ediyoruz
-    if (typeof window !== 'undefined') {
-      setIsTr(window.location.pathname.startsWith('/tr'));
-    }
+    setIsMounted(true);
+    setIsTr(window.location.pathname.startsWith('/tr'));
+
+    const savedTime = localStorage.getItem('sw_time');
+    if (savedTime) setTime(parseInt(savedTime, 10));
+
+    const savedRunning = localStorage.getItem('sw_running');
+    if (savedRunning === 'true') setIsRunning(true);
+
+    const savedLaps = localStorage.getItem('sw_laps');
+    if (savedLaps) setLaps(JSON.parse(savedLaps));
   }, []);
 
-  const [time, setTime] = useState<number>(() => {
-    if (typeof window === 'undefined') return 0;
-    const saved = localStorage.getItem('sw_time');
-    return saved ? parseInt(saved, 10) : 0;
-  });
-
-  const [isRunning, setIsRunning] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('sw_running') === 'true';
-  });
-
-  const [laps, setLaps] = useState<number[]>(() => {
-    if (typeof window === 'undefined') return [];
-    const saved = localStorage.getItem('sw_laps');
-    return saved ? JSON.parse(saved) : [];
-  });
-
+  // KRONOMETRE ÇALIŞTIKÇA HAFIZAYI GÜNCELLE
   useEffect(() => {
-    localStorage.setItem('sw_running', String(isRunning));
     let interval: NodeJS.Timeout;
+    
     if (isRunning) {
+      localStorage.setItem('sw_running', 'true');
       interval = setInterval(() => {
         setTime((prevTime) => {
           const newTime = prevTime + 10;
@@ -42,7 +41,10 @@ export default function StopwatchTool({ dict }: { dict?: any }) {
           return newTime;
         });
       }, 10);
+    } else {
+      localStorage.setItem('sw_running', 'false');
     }
+    
     return () => clearInterval(interval);
   }, [isRunning]);
 
@@ -69,6 +71,9 @@ export default function StopwatchTool({ dict }: { dict?: any }) {
     localStorage.removeItem('sw_laps');
   };
 
+  // Hydration hatasını engellemek için yüklenene kadar bir şey gösterme
+  if (!isMounted) return null; 
+
   return (
     <div className="max-w-md mx-auto p-6 bg-card border rounded-2xl shadow-sm">
       <div className="flex items-center gap-3 mb-6">
@@ -77,7 +82,7 @@ export default function StopwatchTool({ dict }: { dict?: any }) {
         </div>
         <div>
           <h2 className="text-xl font-bold">{isTr ? 'Kronometre' : 'Stopwatch'}</h2>
-          <p className="text-xs text-muted-foreground">{isTr ? 'ToolHub Zaman Aracı' : 'ToolHub Time Suite'}</p>
+          <p className="text-xs text-muted-foreground">{isTr ? 'MyToolKit Zaman Aracı' : 'MyToolKit Time Suite'}</p>
         </div>
       </div>
       

@@ -5,15 +5,31 @@ import { Button } from '@/components/ui/button';
 import { FileText, Trash2, Copy, Check } from 'lucide-react';
 
 export default function TextAnalyzerTool({ dict }: { dict?: any }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [isTr, setIsTr] = useState(false);
   const [text, setText] = useState('');
   const [copied, setCopied] = useState(false);
 
+  // 1. SAYFA YÜKLENDİKTEN SONRA HAFIZAYI VE DİLİ KONTROL ET
   useEffect(() => {
+    setIsMounted(true);
     if (typeof window !== 'undefined') {
       setIsTr(window.location.pathname.startsWith('/tr'));
+      const savedText = localStorage.getItem('ta_text');
+      if (savedText) setText(savedText);
     }
   }, []);
+
+  // 2. METİN DEĞİŞTİKÇE HAFIZAYI GÜNCELLE
+  useEffect(() => {
+    if (isMounted) {
+      try {
+        localStorage.setItem('ta_text', text);
+      } catch (error) {
+        console.warn("Metin hafızaya kaydedilemedi.");
+      }
+    }
+  }, [text, isMounted]);
 
   // dict yapısını hem dışarıdan gelen prop'a hem de güvenli yedek değerlere göre ayarlıyoruz
   const toolDict = dict?.tools?.textAnalyzer || dict?.textAnalyzer || {};
@@ -30,6 +46,14 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleClear = () => {
+    setText('');
+    localStorage.removeItem('ta_text');
+  };
+
+  // Hydration hatasını engellemek için yüklenene kadar boş döndür
+  if (!isMounted) return null;
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-card border rounded-2xl shadow-sm">
       <div className="flex items-center gap-3 mb-4">
@@ -40,39 +64,39 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
           <h2 className="text-xl font-bold">
             {toolDict.title || (isTr ? 'Akıllı Metin & Karakter Analizcisi' : 'Smart Text & Character Analyzer')}
           </h2>
-          <p className="text-xs text-muted-foreground">
-            {toolDict.description || (isTr ? 'ToolHub Metin Aracı' : 'ToolHub Text Suite')}
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {isTr ? 'MyToolKit Metin Aracı' : 'MyToolKit Text Suite'}
           </p>
         </div>
       </div>
 
       <textarea
-        className="w-full h-40 p-4 rounded-xl bg-muted/35 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 border border-border/70"
+        className="w-full h-40 p-4 rounded-xl bg-muted/35 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 border border-border/70 resize-y"
         placeholder={toolDict.placeholder || (isTr ? 'Metninizi buraya yazın veya yapıştırın...' : 'Type or paste your text here...')}
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
             {isTr ? 'KELİME' : 'WORDS'}
           </span>
           <span className="text-2xl font-black tracking-tight">{words}</span>
         </div>
-        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60">
+        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
             {isTr ? 'KARAKTER' : 'CHARACTERS'}
           </span>
           <span className="text-2xl font-black tracking-tight">{characters}</span>
         </div>
-        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60">
+        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
             {isTr ? 'CÜMLE' : 'SENTENCES'}
           </span>
           <span className="text-2xl font-black tracking-tight">{sentences}</span>
         </div>
-        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60">
+        <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
             {isTr ? 'OKUMA SÜRESİ' : 'READING TIME'}
           </span>
@@ -90,7 +114,7 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
             size="sm"
             onClick={handleCopy}
             disabled={!text}
-            className="gap-1.5"
+            className="gap-1.5 font-medium"
           >
             {copied ? <Check className="size-4 text-emerald-500" /> : <Copy className="size-4" />}
             {copied ? (isTr ? 'Kopyalandı!' : 'Copied!') : (isTr ? 'Kopyala' : 'Copy')}
@@ -98,9 +122,9 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setText('')}
+            onClick={handleClear}
             disabled={!text}
-            className="gap-1.5 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10"
+            className="gap-1.5 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 font-medium"
           >
             <Trash2 className="size-4" />
             {isTr ? 'Temizle' : 'Clear'}

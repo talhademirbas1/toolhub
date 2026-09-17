@@ -1,43 +1,21 @@
-'use client'
-
-import { useState, useEffect } from "react";
-import ProfitLossTool from "@/components/profit-loss-tool";
+import ProfitLossCalculatorTool from "@/components/profit-loss-tool";
+import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Moon, Sun } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
-export default function PercentageCalculatorPage({
+// Next.js'in bu sayfayı statik olarak önceden üretmesini sağlar
+export async function generateStaticParams() {
+  return [{ lang: 'tr' }, { lang: 'en' }];
+}
+
+export default async function PercentageCalculatorPage({
   params,
 }: {
   params: Promise<{ lang: 'tr' | 'en' }>
 }) {
-  const [lang, setLang] = useState<'tr' | 'en'>('tr');
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    params.then((p) => setLang(p.lang));
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && document.documentElement.classList.contains('dark'))) {
-      setDark(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setDark(false);
-      document.documentElement.classList.remove('dark');
-    }
-  }, [params]);
-
-  function toggleTheme() {
-    const yeniDurum = !dark;
-    setDark(yeniDurum);
-    if (yeniDurum) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }
-
+  const resolvedParams = await params;
+  const lang = resolvedParams.lang;
   const otherLang = lang === 'tr' ? 'en' : 'tr';
 
   return (
@@ -56,12 +34,10 @@ export default function PercentageCalculatorPage({
                 {lang === 'tr' ? 'EN' : 'TR'}
               </Button>
             </Link>
-            <Button onClick={toggleTheme} size="icon" variant="outline" aria-label="Tema Değiştir">
-              {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
-            </Button>
+            <ThemeToggle />
           </div>
         </div>
-        <ProfitLossTool lang={lang} />
+        <ProfitLossCalculatorTool lang={lang} />
       </div>
     </div>
   );

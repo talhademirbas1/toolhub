@@ -1,30 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Image as ImageIcon, Download, Upload } from "lucide-react";
+import { Image as ImageIcon, Download, Upload, Settings2 } from "lucide-react";
 
 interface ImageConverterToolProps {
   lang: string;
 }
 
+// Byte değerlerini KB/MB olarak okunaklı formata çeviren yardımcı fonksiyon
+const formatBytes = (bytes: number, decimals = 2) => {
+  if (!+bytes) return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+};
+
 export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
+  const [isMounted, setIsMounted] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
+  const [originalSize, setOriginalSize] = useState<number>(0);
+  const [convertedSize, setConvertedSize] = useState<number>(0);
   const [format, setFormat] = useState<"image/png" | "image/jpeg" | "image/webp">("image/jpeg");
+  const [quality, setQuality] = useState<number>(80);
   const [convertedUrl, setConvertedUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Yeni dosya yüklendiğinde eski kalıntıları temizle
+  useEffect(() => {
+    return () => {
+      if (convertedUrl) URL.revokeObjectURL(convertedUrl);
+    };
+  }, [convertedUrl]);
+
+  // 1. SAYFA YÜKLENDİKTEN SONRA HAFIZAYI KONTROL ET
+  useEffect(() => {
+    setIsMounted(true);
+    try {
+      const savedImage = localStorage.getItem('ic_image');
+      if (savedImage) setImage(savedImage);
+
+      const savedFileName = localStorage.getItem('ic_fileName');
+      if (savedFileName) setFileName(savedFileName);
+
+      const savedOriginalSize = localStorage.getItem('ic_originalSize');
+      if (savedOriginalSize) setOriginalSize(Number(savedOriginalSize));
+
+      const savedFormat = localStorage.getItem('ic_format');
+      if (savedFormat) setFormat(savedFormat as any);
+
+      const savedQuality = localStorage.getItem('ic_quality');
+      if (savedQuality) setQuality(Number(savedQuality));
+    } catch (error) {
+      console.warn("Tarayıcı hafıza sınırı aşıldı, görsel yüklenemedi.");
+    }
+  }, []);
+
+  // 2. DEĞİŞİKLİK YAPILDIKÇA HAFIZAYI GÜNCELLE
+  useEffect(() => {
+    if (isMounted) {
+      try {
+        if (image) localStorage.setItem('ic_image', image);
+        localStorage.setItem('ic_fileName', fileName);
+        localStorage.setItem('ic_originalSize', String(originalSize));
+        localStorage.setItem('ic_format', format);
+        localStorage.setItem('ic_quality', String(quality));
+      } catch (error) {
+        console.warn("Görsel boyutu localStorage için çok büyük, sadece ayarlar kaydedildi.");
+      }
+    }
+  }, [image, fileName, originalSize, format, quality, isMounted]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setOriginalSize(file.size);
     setFileName(file.name.substring(0, file.name.lastIndexOf('.')) || file.name);
+    
     const reader = new FileReader();
     reader.onload = (event) => {
       setImage(event.target?.result as string);
       setConvertedUrl(null);
+      setConvertedSize(0);
     };
     reader.readAsDataURL(file);
   };
@@ -48,10 +110,22 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
         }
         ctx.drawImage(img, 0, 0);
         
-        const dataUrl = canvas.toDataURL(format, 0.9);
-        setConvertedUrl(dataUrl);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              if (convertedUrl) URL.revokeObjectURL(convertedUrl);
+              const url = URL.createObjectURL(blob);
+              setConvertedUrl(url);
+              setConvertedSize(blob.size);
+            }
+            setIsProcessing(false);
+          },
+          format,
+          quality / 100
+        );
+      } else {
+        setIsProcessing(false);
       }
-      setIsProcessing(false);
     };
   };
 
@@ -61,15 +135,25 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
     return "webp";
   };
 
+  const showQualitySlider = format === "image/jpeg" || format === "image/webp";
+
+  // Hydration hatasını engellemek için yüklenene kadar boş döndür
+  if (!isMounted) return null;
+
   return (
     <Card className="w-full max-w-xl mx-auto shadow-xl">
-      <CardHeader className="text-center space-y-3">
+      <CardHeader className="text-center space-y-2">
         <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-400 ring-1 ring-sky-400/20">
           <ImageIcon className="size-6" />
         </div>
-        <CardTitle className="text-xl font-bold">
-          {lang === "tr" ? "Görsel Format Dönüştürücü" : "Image Format Converter"}
-        </CardTitle>
+        <div>
+          <CardTitle className="text-xl font-bold">
+            {lang === "tr" ? "Görsel Dönüştürücü & Sıkıştırıcı" : "Image Converter & Compressor"}
+          </CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">
+            {lang === "tr" ? "MyToolKit Görsel Aracı" : "MyToolKit Visual Suite"}
+          </p>
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -88,47 +172,87 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
         </div>
 
         {image && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between bg-muted p-3 rounded-lg">
-              <span className="text-xs font-medium truncate max-w-[200px]">{fileName}</span>
-              <div className="flex items-center gap-2">
-                <label className="text-xs text-muted-foreground">{lang === "tr" ? "Hedef Format:" : "Target Format:"}</label>
+          <div className="space-y-4 bg-muted/30 p-4 rounded-xl border border-border/50">
+            <div className="flex items-center justify-between pb-3 border-b border-border/50">
+              <span className="text-sm font-medium truncate max-w-[200px]">{fileName}</span>
+              <span className="text-xs font-semibold text-muted-foreground bg-background px-2 py-1 rounded-md border border-border">
+                {formatBytes(originalSize)}
+              </span>
+            </div>
+
+            <div className="space-y-4 pt-2">
+              <div className="flex items-center justify-between gap-4">
+                <label className="text-sm font-medium text-muted-foreground">
+                  {lang === "tr" ? "Hedef Format:" : "Target Format:"}
+                </label>
                 <select
                   value={format}
                   onChange={(e) => setFormat(e.target.value as any)}
-                  className="h-8 rounded-md border border-input bg-background px-2 text-xs font-medium"
+                  className="h-9 rounded-md border border-input bg-background px-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 outline-none"
                 >
                   <option value="image/jpeg">JPG</option>
-                  <option value="image/png">PNG</option>
-                  <option value="image/webp">WEBP</option>
+                  <option value="image/webp">WEBP (En iyi sıkıştırma)</option>
+                  <option value="image/png">PNG (Kayıpsız)</option>
                 </select>
               </div>
+
+              {showQualitySlider && (
+                <div className="space-y-2 pt-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium flex items-center gap-1.5 text-muted-foreground">
+                      <Settings2 className="size-4" />
+                      {lang === "tr" ? "Sıkıştırma Kalitesi:" : "Compression Quality:"}
+                    </span>
+                    <span className="font-bold text-sky-500">%{quality}</span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min="10" 
+                    max="100" 
+                    step="5"
+                    value={quality}
+                    onChange={(e) => setQuality(Number(e.target.value))}
+                    className="w-full accent-sky-500 cursor-pointer"
+                  />
+                  <p className="text-[10px] text-muted-foreground text-right">
+                    {lang === "tr" ? "Düşük kalite = Daha küçük dosya boyutu" : "Lower quality = Smaller file size"}
+                  </p>
+                </div>
+              )}
             </div>
 
-            <div className="flex gap-2">
-              <Button onClick={handleConvert} disabled={isProcessing} className="flex-1">
-                {isProcessing ? (lang === "tr" ? "Dönüştürülüyor..." : "Converting...") : (lang === "tr" ? "Dönüştür" : "Convert")}
-              </Button>
-            </div>
+            <Button onClick={handleConvert} disabled={isProcessing} className="w-full mt-2 font-semibold">
+              {isProcessing 
+                ? (lang === "tr" ? "İşleniyor..." : "Processing...") 
+                : (lang === "tr" ? "Dönüştür ve Sıkıştır" : "Convert & Compress")}
+            </Button>
           </div>
         )}
 
         {convertedUrl && (
-          <div className="mt-4 p-4 bg-muted/60 rounded-xl text-center space-y-3 border border-border/60">
-            <p className="text-xs font-medium text-emerald-500">
-              {lang === "tr" ? "Dönüştürme Başarılı!" : "Conversion Successful!"}
-            </p>
-            <div className="flex justify-center">
-              <img src={convertedUrl} alt="Converted" className="max-h-40 rounded-lg shadow-sm object-contain" />
+          <div className="mt-4 p-5 bg-emerald-500/10 rounded-xl text-center space-y-4 border border-emerald-500/20">
+            <div className="flex items-center justify-center gap-3 text-sm">
+              <span className="font-medium text-muted-foreground line-through decoration-emerald-500/50">
+                {formatBytes(originalSize)}
+              </span>
+              <span className="text-emerald-500 font-bold text-lg">➔</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/20 px-2 py-1 rounded-md">
+                {formatBytes(convertedSize)}
+              </span>
             </div>
+            
+            <div className="flex justify-center p-2 bg-background rounded-lg border border-border/50">
+              <img src={convertedUrl} alt="Converted" className="max-h-48 rounded-md shadow-sm object-contain" />
+            </div>
+            
             <a
               href={convertedUrl}
-              download={`${fileName}-converted.${getExtension()}`}
+              download={`${fileName}-compressed.${getExtension()}`}
               className="inline-flex w-full"
             >
-              <Button variant="default" className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white">
-                <Download className="size-4" />
-                {lang === "tr" ? "Görseli İndir" : "Download Image"}
+              <Button size="lg" className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-0.5">
+                <Download className="size-5" />
+                {lang === "tr" ? "Yeni Görseli İndir" : "Download New Image"}
               </Button>
             </a>
           </div>

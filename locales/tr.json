@@ -1,43 +1,43 @@
 {
-    "dashboard": {
-      "backButton": "Geri Dön",
-      "searchPlaceholder": "Araçlarda ara...",
-      "themeLight": "Açık temaya geç",
-      "themeDark": "Koyu temaya geç",
-      "subtitle": "Günlük işler, daha kolay",
-      "title1": "İhtiyacınız olan araçlar.",
-      "title2": "Tek bir yerde.",
-      "description": "Hızlı, güvenilir ve sade web araçlarıyla iş akışınızı hızlandırın. Kurulum yok, bekleme yok.",
-      "toolsCount": "araç",
-      "useButton": "Kullan / Aç",
-      "notFound": "Aramanızla eşleşen araç bulunamadı.",
-      "footer": "MyToolKit · Basit. Hızlı. Faydalı."
+  "dashboard": {
+    "backButton": "Geri Dön",
+    "searchPlaceholder": "Araçlarda ara...",
+    "themeLight": "Açık temaya geç",
+    "themeDark": "Koyu temaya geç",
+    "subtitle": "Günlük işler, daha kolay",
+    "title1": "İhtiyacınız olan araçlar.",
+    "title2": "Tek bir yerde.",
+    "description": "Hızlı, güvenilir ve sade web araçlarıyla iş akışınızı hızlandırın. Kurulum yok, bekleme yok.",
+    "toolsCount": "araç",
+    "useButton": "Kullan / Aç",
+    "notFound": "Aramanızla eşleşen araç bulunamadı.",
+    "footer": "MyToolKit · Basit. Hızlı. Faydalı."
+  },
+  "stopwatch": {
+    "title": "Kronometre",
+    "start": "Başlat",
+    "pause": "Durdur",
+    "reset": "Sıfırla",
+    "lap": "Tur Al",
+    "description": "Süreyi başlatın, durdurun veya sıfırlayın.",
+    "lapsTitle": "Turlar",
+    "lapItem": "Tur"
+  },
+  "categories": {
+    "all": "Tümü",
+    "visual": "Görsel Araçlar",
+    "text": "Metin Araçları",
+    "calculators": "Hesaplayıcılar",
+    "time": "Zaman"
+  },
+  "tools": {
+    "imageConverter": {
+      "title": "Görsel Dönüştürücü & Sıkıştırıcı",
+      "description": "Görsellerinizin formatını değiştirin ve dosya boyutunu sıkıştırarak küçültün."
     },
-    "stopwatch": {
-      "title": "Kronometre",
-      "start": "Başlat",
-      "pause": "Durdur",
-      "reset": "Sıfırla",
-      "lap": "Tur Al",
-      "description": "Süreyi başlatın, durdurun veya sıfırlayın.",
-      "lapsTitle": "Turlar",
-      "lapItem": "Tur"
-    },
-    "categories": {
-      "all": "Tümü",
-      "visual": "Görsel Araçlar",
-      "text": "Metin Araçları",
-      "calculators": "Hesaplayıcılar",
-      "time": "Zaman"
-    },
-    "tools": {
-      "imageConverter": {
-        "title": "Görsel Dönüştürücü & Sıkıştırıcı",
-        "description": "WEBP, PNG ve JPG dosyalarınızı kaliteyi koruyarak hızlıca dönüştürün ve küçültün."
-      },
-     "textAnalyzer": {
+    "textAnalyzer": {
       "title": "Akıllı Metin & Karakter Analizcisi",
-      "subtitle": "ToolHub Metin Aracı",
+      "subtitle": "MyToolKit Metin Aracı",
       "description": "Kelime, karakter ve cümle sayılarını hesaplayın; okuma sürenizi anında öğrenin.",
       "placeholder": "Metninizi buraya yazın veya yapıştırın...",
       "characters": "KARAKTER",
@@ -50,21 +50,21 @@
       "copy": "Kopyala",
       "copied": "Kopyalandı!"
     },
-      "percentageCalculator": {
-        "title": "Yüzde & Kar/Zarar Hesaplayıcı",
-        "description": "Marj, indirim ve yüzde farkı hesaplamalarını tek bir sade arayüzden yönetin."
-      },
-      "classicCalculator": {
-        "title": "Klasik Hesap Makinesi",
-        "description": "Temel dört işlem, pratik ve hızlı hesaplamalar yapın."
-      },
-      "timeDifference": {
-        "title": "Tarih & Saat Farkı Hesaplayıcı",
-        "description": "İki tarih veya saat arasındaki farkı gün, saat ve dakika olarak anında hesaplayın."
-      },
-      "stopwatchTool": {
-        "title": "Kronometre & Zamanlayıcı",
-        "description": "Süre tutun, tur zamanlarını kaydedin ve pratik geri sayımlar yapın."
-      }
+    "percentageCalculator": {
+      "title": "Yüzde & Kar/Zarar Hesaplayıcı",
+      "description": "Marj, indirim ve yüzde farkı hesaplamalarını tek bir sade arayüzden yönetin."
+    },
+    "classicCalculator": {
+      "title": "Klasik Hesap Makinesi",
+      "description": "Temel dört işlem, pratik ve hızlı hesaplamalar yapın."
+    },
+    "timeDifference": {
+      "title": "Tarih & Saat Farkı Hesaplayıcı",
+      "description": "İki tarih veya saat arasındaki farkı gün, saat ve dakika olarak anında hesaplayın."
+    },
+    "stopwatchTool": {
+      "title": "Kronometre & Zamanlayıcı",
+      "description": "Süre tutun, tur zamanlarını kaydedin ve pratik geri sayımlar yapın."
     }
   }
+}

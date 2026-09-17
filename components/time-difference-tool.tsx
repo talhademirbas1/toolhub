@@ -11,40 +11,57 @@ interface TimeDifferenceToolProps {
 }
 
 export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
-  const [mode, setMode] = useState<"datetime" | "date" | "time">(() => {
-    return (typeof window !== "undefined" ? localStorage.getItem("td_mode") : null) as any || "datetime";
-  });
+  const [isMounted, setIsMounted] = useState(false);
   
-  const [startValue, setStartValue] = useState(() => {
-    return (typeof window !== "undefined" ? localStorage.getItem("td_start") : "") || "";
-  });
-  
-  const [endValue, setEndValue] = useState(() => {
-    return (typeof window !== "undefined" ? localStorage.getItem("td_end") : "") || "";
-  });
-
+  const [mode, setMode] = useState<"datetime" | "date" | "time">("datetime");
+  const [startValue, setStartValue] = useState("");
+  const [endValue, setEndValue] = useState("");
   const [result, setResult] = useState<{
     days?: number;
     hours?: number;
     minutes?: number;
     totalDays?: number;
-  } | null>(() => {
-    const saved = typeof window !== "undefined" ? localStorage.getItem("td_result") : null;
-    return saved ? JSON.parse(saved) : null;
-  });
+  } | null>(null);
 
   const [error, setError] = useState("");
 
+  // 1. SAYFA YÜKLENDİKTEN SONRA HAFIZAYI KONTROL ET (Hydration Koruması)
   useEffect(() => {
-    localStorage.setItem("td_mode", mode);
-    localStorage.setItem("td_start", startValue);
-    localStorage.setItem("td_end", endValue);
-    if (result) {
-      localStorage.setItem("td_result", JSON.stringify(result));
-    } else {
-      localStorage.removeItem("td_result");
+    setIsMounted(true);
+    try {
+      const savedMode = localStorage.getItem("td_mode");
+      if (savedMode) setMode(savedMode as any);
+
+      const savedStart = localStorage.getItem("td_start");
+      if (savedStart) setStartValue(savedStart);
+
+      const savedEnd = localStorage.getItem("td_end");
+      if (savedEnd) setEndValue(savedEnd);
+
+      const savedResult = localStorage.getItem("td_result");
+      if (savedResult) setResult(JSON.parse(savedResult));
+    } catch (error) {
+      console.warn("Hafızadan veri okunamadı.");
     }
-  }, [mode, startValue, endValue, result]);
+  }, []);
+
+  // 2. DEĞİŞİKLİK YAPILDIKÇA HAFIZAYI GÜNCELLE
+  useEffect(() => {
+    if (isMounted) {
+      try {
+        localStorage.setItem("td_mode", mode);
+        localStorage.setItem("td_start", startValue);
+        localStorage.setItem("td_end", endValue);
+        if (result) {
+          localStorage.setItem("td_result", JSON.stringify(result));
+        } else {
+          localStorage.removeItem("td_result");
+        }
+      } catch (error) {
+        console.warn("Hafızaya kaydedilemedi.");
+      }
+    }
+  }, [mode, startValue, endValue, result, isMounted]);
 
   const handleCalculate = () => {
     setError("");
@@ -124,15 +141,23 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
     localStorage.removeItem("td_result");
   };
 
+  // Hydration hatasını önlemek için bileşen yüklenene kadar boş döndür
+  if (!isMounted) return null;
+
   return (
     <Card className="w-full max-w-xl mx-auto shadow-xl">
       <CardHeader className="text-center space-y-3">
         <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-500 ring-1 ring-cyan-500/20">
           <Clock className="size-6" />
         </div>
-        <CardTitle className="text-xl font-bold">
-          {lang === "tr" ? "Tarih ve Saat Farkı" : "Time Difference"}
-        </CardTitle>
+        <div>
+          <CardTitle className="text-xl font-bold">
+            {lang === "tr" ? "Tarih ve Saat Farkı" : "Time Difference"}
+          </CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">
+            {lang === "tr" ? "MyToolKit Zaman Aracı" : "MyToolKit Time Suite"}
+          </p>
+        </div>
         
         {/* Mod Seçim Sekmeleri */}
         <div className="flex justify-center gap-1 bg-muted p-1 rounded-lg text-xs mt-2">
@@ -194,21 +219,21 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
         )}
 
         <div className="flex gap-2">
-          <Button onClick={handleCalculate} className="flex-1">
+          <Button onClick={handleCalculate} className="flex-1 font-semibold">
             {lang === "tr" ? "Hesapla" : "Calculate"}
           </Button>
-          <Button onClick={handleReset} variant="outline">
+          <Button onClick={handleReset} variant="outline" className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10">
             {lang === "tr" ? "Sıfırla" : "Reset"}
           </Button>
         </div>
 
         {result !== null && (
-          <div className="mt-6 p-4 bg-muted rounded-xl text-center">
+          <div className="mt-6 p-4 bg-muted/50 rounded-xl text-center border border-border/50">
             {mode === "datetime" && result.days !== undefined && (
               <div className="grid grid-cols-3 gap-2">
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono">{result.days}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Gün" : "Days"}</span></div>
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono">{result.hours}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Saat" : "Hours"}</span></div>
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono">{result.minutes}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Dakika" : "Mins"}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.days}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Gün" : "Days"}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.hours}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Saat" : "Hours"}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.minutes}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Dakika" : "Mins"}</span></div>
               </div>
             )}
             {mode === "date" && result.totalDays !== undefined && (

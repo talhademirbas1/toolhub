@@ -1,7 +1,7 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'MyToolkit',
+  title: 'MyToolKit',
   description: 'Pratik ve hızlı dijital araçlar merkezi.',
 };
 
