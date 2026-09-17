@@ -1,4 +1,5 @@
-import './globals.css'
+import './globals.css';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
   title: 'MyToolKit',
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-background text-foreground antialiased transition-colors">
         {children}
+        <Analytics />
       </body>
     </html>
   );
