@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.mytoolkitbase.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.mytoolkitbase.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url><loc>https://www.mytoolkitbase.com/tr/tools/classic-calculator</loc></url>
+  <url><loc>https://www.mytoolkitbase.com/en/tools/classic-calculator</loc></url>
+  <url><loc>https://www.mytoolkitbase.com/tr/tools/image-converter</loc></url>
+  <url><loc>https://www.mytoolkitbase.com/en/tools/image-converter</loc></url>
+  <url><loc>https://www.mytoolkitbase.com/tr/tools/typing-test</loc></url>
+  <url><loc>https://www.mytoolkitbase.com/en/tools/typing-test</loc></url>
+  <url><loc>https://www.mytoolkitbase.com/tr/tools/world-clock</loc></url>
+  <url><loc>https://www.mytoolkitbase.com/en/tools/world-clock</loc></url>
+</urlset>
