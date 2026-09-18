@@ -4,6 +4,9 @@ import { Analytics } from '@vercel/analytics/react';
 export const metadata = {
   title: 'MyToolKit',
   description: 'Pratik ve hızlı dijital araçlar merkezi.',
+  verification: {
+    google: '<meta name="google-site-verification" content="WroaGcnuy3Wy4pTACYI-40MIBEmFZHMeSosCK25r38U" />',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
