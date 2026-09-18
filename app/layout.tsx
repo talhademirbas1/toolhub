@@ -5,7 +5,7 @@ export const metadata = {
   title: 'MyToolKit',
   description: 'Pratik ve hızlı dijital araçlar merkezi.',
   verification: {
-    google: '<meta name="google-site-verification" content="WroaGcnuy3Wy4pTACYI-40MIBEmFZHMeSosCK25r38U" />',
+    google: 'WroaGcnuy3Wy4pTACYI-40MIBEmFZHMeSosCK25r38U',
   },
 };
 
