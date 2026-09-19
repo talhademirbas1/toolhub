@@ -19,29 +19,25 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [mode, setMode] = useState<"stopwatch" | "countdown">("stopwatch");
 
-  // Kronometre State'leri
   const [swMs, setSwMs] = useState(0);
   const [swRunning, setSwRunning] = useState(false);
   const [laps, setLaps] = useState<Lap[]>([]);
 
-  // Zamanlayıcı State'leri (Saat, Dakika, Saniye)
   const [cdHours, setCdHours] = useState("0");
-  const [cdMinutes, setCdMinutes] = useState("5");
+  const [cdMinutes, setCdMinutes] = useState("0");
   const [cdSeconds, setCdSeconds] = useState("0");
-  const [cdTimeLeftMs, setCdTimeLeftMs] = useState(300000);
+  const [cdTimeLeftMs, setCdTimeLeftMs] = useState(0);
   const [cdRunning, setCdRunning] = useState(false);
 
   const swTimerRef = useRef<NodeJS.Timeout | null>(null);
   const cdTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // İlk yüklemede localStorage'dan verileri çek
   useEffect(() => {
     setIsMounted(true);
     try {
       const savedMode = localStorage.getItem("sw_mode");
       if (savedMode) setMode(savedMode as any);
 
-      // Kronometre Durumu
       const isRunning = localStorage.getItem("sw_running") === "true";
       const startTimestamp = Number(localStorage.getItem("sw_start_timestamp") || "0");
       const accumulatedMs = Number(localStorage.getItem("sw_accumulated_ms") || "0");
@@ -57,9 +53,8 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
       const savedLaps = localStorage.getItem("sw_laps");
       if (savedLaps) setLaps(JSON.parse(savedLaps));
 
-      // Zamanlayıcı Girdi Alanları ve Süresi
       const savedH = localStorage.getItem("cd_h") || "0";
-      const savedM = localStorage.getItem("cd_m") || "5";
+      const savedM = localStorage.getItem("cd_m") || "0";
       const savedS = localStorage.getItem("cd_s") || "0";
       setCdHours(savedH);
       setCdMinutes(savedM);
@@ -67,7 +62,7 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
 
       const isCdRunning = localStorage.getItem("cd_running") === "true";
       const cdTargetEnd = Number(localStorage.getItem("cd_target_end") || "0");
-      const cdSavedLeft = Number(localStorage.getItem("cd_left_ms") || "300000");
+      const cdSavedLeft = Number(localStorage.getItem("cd_left_ms") || "0");
 
       if (isCdRunning && cdTargetEnd > 0) {
         const remaining = cdTargetEnd - Date.now();
@@ -87,7 +82,6 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
     }
   }, []);
 
-  // Kronometre Çalışma Döngüsü
   useEffect(() => {
     if (!isMounted) return;
 
@@ -122,7 +116,6 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
     };
   }, [swRunning, isMounted]);
 
-  // Zamanlayıcı Çalışma Döngüsü
   useEffect(() => {
     if (!isMounted) return;
 
@@ -212,7 +205,6 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
   return (
     <Card className="w-full max-w-xl mx-auto shadow-xl border-border/60">
       <CardHeader className="text-center space-y-3 pb-4">
-        {/* Ana sayfadaki pembe/kırmızı ton ile birebir eşlendi (rose-500) */}
         <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/20">
           <Timer className="size-6" />
         </div>
@@ -225,7 +217,6 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
           </p>
         </div>
 
-        {/* Sekmeler */}
         <div className="flex justify-center gap-1 bg-muted p-1 rounded-lg text-xs mt-2">
           <button
             onClick={() => { setMode("stopwatch"); localStorage.setItem("sw_mode", "stopwatch"); }}
@@ -321,7 +312,6 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
               )}
             </div>
 
-            {/* Esnek Saat, Dakika ve Saniye Ayar Alanı */}
             <div className="flex items-center justify-center gap-2">
               <div className="flex flex-col items-center gap-1">
                 <span className="text-[10px] text-muted-foreground">{lang === "tr" ? "Saat" : "Hours"}</span>
@@ -377,7 +367,7 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
               <Button
                 onClick={() => {
                   setCdRunning(false);
-                  handleSetCdInput("0", "5", "0");
+                  handleSetCdInput("0", "0", "0");
                   localStorage.removeItem("cd_target_end");
                   localStorage.removeItem("cd_left_ms");
                   localStorage.setItem("cd_running", "false");

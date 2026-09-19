@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Keyboard, ArrowLeft, Sun, Moon, RotateCcw } from "lucide-react";
+import { Keyboard, RotateCcw } from "lucide-react";
 
 interface TypingTestToolProps {
   lang: string;
@@ -28,9 +26,7 @@ const generateRandomWords = (lang: string, count: number) => {
 };
 
 export default function TypingTestTool({ lang }: TypingTestToolProps) {
-  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
-  const [dark, setDark] = useState(false);
 
   const [testMode, setTestMode] = useState<"time-to-words" | "words-to-time">("time-to-words");
   const [selectedTime, setSelectedTime] = useState<number>(30); 
@@ -93,21 +89,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
       console.warn("Hafızaya yazılamadı.");
     }
   }, [lang, testMode, selectedTime, selectedWordCount, isMounted]);
-
-  useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark" || (!savedTheme && document.documentElement.classList.contains("dark"))) {
-        setDark(true);
-        document.documentElement.classList.add("dark");
-      } else {
-        setDark(false);
-        document.documentElement.classList.remove("dark");
-      }
-    } catch (e) {
-      console.warn("Tema yüklenemedi.");
-    }
-  }, []);
 
   const handleModeSwitch = (mode: "time-to-words" | "words-to-time") => {
     setTestMode(mode);
@@ -254,26 +235,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
     });
   };
 
-  function toggleTheme() {
-    const yeniDurum = !dark;
-    setDark(yeniDurum);
-    if (yeniDurum) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }
-
-  function toggleLanguage() {
-    const newLang = lang === "tr" ? "en" : "tr";
-    const currentPath = window.location.pathname;
-    const newPath = currentPath.replace(`/${lang}/`, `/${newLang}/`);
-    window.history.replaceState(null, "", newPath);
-    router.refresh();
-  }
-
   if (!isMounted) return null;
 
   const typedWords = inputVal.split(" ");
@@ -281,22 +242,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
 
   return (
     <div className="w-full max-w-xl mx-auto space-y-4">
-      {/* Standart Üst Navigasyon: Alt Çizgili, Sağda Dil ve Tema yan yana */}
-      <div className="flex items-center justify-between px-1 border-b border-border/60 pb-4">
-        <Link href={`/${lang}`} className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors">
-          <ArrowLeft className="size-4" />
-          {lang === "tr" ? "Ana Sayfaya Dön" : "Back to Home"}
-        </Link>
-        <div className="flex items-center gap-2">
-          <Button onClick={toggleLanguage} size="icon" variant="outline" className="font-bold text-xs h-9 w-9">
-            {lang === "tr" ? "EN" : "TR"}
-          </Button>
-          <Button onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
-            {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
-          </Button>
-        </div>
-      </div>
-
       <Card className="shadow-xl">
         <CardHeader className="text-center space-y-3">
           <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-violet-500/10 text-violet-500 ring-1 ring-violet-500/20">
@@ -311,7 +256,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
             </p>
           </div>
 
-          {/* Test Modu Seçim Sekmeleri */}
           <div className="flex justify-center gap-1 bg-muted p-1 rounded-lg text-xs mt-2">
             <button
               onClick={() => handleModeSwitch("time-to-words")}
@@ -327,7 +271,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
             </button>
           </div>
 
-          {/* Seçenek Alanı */}
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs text-muted-foreground">
             {testMode === "time-to-words" ? (
               <div className="flex flex-wrap gap-1.5 items-center justify-center">
@@ -390,7 +333,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {/* Sayaç / Durum Ekranı */}
           <div className="text-center bg-muted/40 p-3 rounded-xl border border-border/50">
             <div className="text-xs text-muted-foreground">
               {testMode === "time-to-words" ? (lang === "tr" ? "Kalan Süre" : "Time Left") : (lang === "tr" ? "Geçen Süre" : "Elapsed Time")}
@@ -400,7 +342,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
             </div>
           </div>
 
-          {/* Kelime Alanı */}
           <div className="p-5 bg-muted/30 rounded-xl border border-border/50 text-base leading-loose font-mono select-none max-h-44 overflow-y-auto flex flex-wrap gap-x-2 gap-y-1">
             {targetWords.map((word, wIdx) => {
               const isCurrent = wIdx === activeWordIndex;
@@ -436,7 +377,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
             })}
           </div>
 
-          {/* Kullanıcı Giriş Alanı */}
           <input
             type="text"
             value={inputVal}
@@ -446,7 +386,6 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
             className="w-full h-12 p-3 rounded-xl border border-input bg-background text-sm font-mono focus:ring-2 focus:ring-violet-500 outline-none"
           />
 
-          {/* Sonuç Kartı */}
           {isFinished && resultMetric ? (
             <div className="p-4 bg-violet-500/10 rounded-xl border border-violet-500/20 text-center space-y-2">
               <div className="font-bold text-violet-600 dark:text-violet-400">

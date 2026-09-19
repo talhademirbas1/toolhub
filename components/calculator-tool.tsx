@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useToolNavigation } from "@/hooks/use-tool-navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calculator, Sun, Moon, ArrowLeft } from "lucide-react";
@@ -86,7 +85,7 @@ const formatNumberWithCommas = (val: string) => {
 };
 
 export default function CalculatorTool({ lang }: CalculatorToolProps) {
-  const router = useRouter();
+  const { handleBack, toggleLanguage } = useToolNavigation(lang);
   const [isMounted, setIsMounted] = useState(false);
   const [dark, setDark] = useState(false);
   const [display, setDisplay] = useState("0");
@@ -133,14 +132,6 @@ export default function CalculatorTool({ lang }: CalculatorToolProps) {
     }
   }
 
-  function toggleLanguage() {
-    const newLang = lang === "tr" ? "en" : "tr";
-    const currentPath = window.location.pathname;
-    const newPath = currentPath.replace(`/${lang}/`, `/${newLang}/`);
-    window.history.replaceState(null, "", newPath);
-    router.refresh();
-  }
-
   const handleNumber = (num: string) => {
     if (display === "0" || display === "Error") {
       setDisplay(num);
@@ -180,18 +171,18 @@ export default function CalculatorTool({ lang }: CalculatorToolProps) {
 
   return (
     <div className="w-full max-w-md mx-auto space-y-4">
-      {/* Üst Navigasyon: Sol tarafta Geri Dön, Sağ tarafta önce Dil, sonra Koyu Mod */}
       <div className="flex items-center justify-between px-1 border-b border-border/60 pb-4">
-        <Link href={`/${lang}`} className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors">
+        <button
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
+        >
           <ArrowLeft className="size-4" />
           {lang === "tr" ? "Ana Sayfaya Dön" : "Back to Home"}
-        </Link>
+        </button>
         <div className="flex items-center gap-2">
-          {/* Önce Dil Butonu */}
           <Button onClick={toggleLanguage} size="icon" variant="outline" className="font-bold text-xs h-9 w-9">
             {lang === "tr" ? "EN" : "TR"}
           </Button>
-          {/* Sonra Tema Butonu */}
           <Button onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
             {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </Button>
