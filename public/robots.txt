@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.mytoolkitbase.com
+Sitemap: https://www.mytoolkitbase.com/sitemap.xml
