@@ -5,9 +5,9 @@
     "themeLight": "Açık temaya geç",
     "themeDark": "Koyu temaya geç",
     "subtitle": "Günlük işler, daha kolay",
-    "title1": "İhtiyacınız olan araçlar.",
-    "title2": "Tek bir yerde.",
-    "description": "Hızlı, güvenilir ve sade web araçlarıyla iş akışınızı hızlandırın. Kurulum yok, bekleme yok.",
+    "title1": "Ücretsiz online araçlar,",
+    "title2": "tek bir yerde.",
+    "description": "Yüzde ve indirim hesaplama, kelime sayacı, yazma hızı testi, dünya saati ve daha fazlası. Hızlı, sade ve ücretsiz. Kayıt veya kurulum gerekmez.",
     "toolsCount": "araç",
     "useButton": "Kullan / Aç",
     "notFound": "Aramanızla eşleşen araç bulunamadı.",
@@ -32,13 +32,13 @@
   },
   "tools": {
     "imageConverter": {
-      "title": "Görsel Dönüştürücü & Sıkıştırıcı",
-      "description": "Görsellerinizin formatını değiştirin ve dosya boyutunu sıkıştırarak küçültün."
+      "title": "Resim Dönüştürücü ve Sıkıştırıcı",
+      "description": "WEBP, PNG ve JPG dosyalarınızı kaliteyi koruyarak hızla dönüştürün ve sıkıştırın."
     },
     "textAnalyzer": {
-      "title": "Akıllı Metin & Karakter Analizcisi",
+      "title": "Kelime ve Karakter Sayacı",
       "subtitle": "MyToolKit Metin Aracı",
-      "description": "Kelime, karakter ve cümle sayılarını hesaplayın; okuma sürenizi anında öğrenin.",
+      "description": "Kelime, karakter ve cümle sayısını hesaplayın; okuma süresini anında öğrenin.",
       "placeholder": "Metninizi buraya yazın veya yapıştırın...",
       "characters": "KARAKTER",
       "charactersNoSpace": "Karakter (boşluksuz)",
@@ -51,28 +51,28 @@
       "copied": "Kopyalandı!"
     },
     "percentageCalculator": {
-      "title": "Yüzde & Kar/Zarar Hesaplayıcı",
-      "description": "Marj, indirim ve yüzde farkı hesaplamalarını tek bir sade arayüzden yönetin."
+      "title": "Yüzde, Kâr Zarar ve İndirim Hesaplama",
+      "description": "Yüzde, kâr zarar ve indirimli fiyat hesaplamalarını tek bir sade arayüzden yapın."
     },
     "classicCalculator": {
-      "title": "Klasik Hesap Makinesi",
-      "description": "Temel dört işlem, pratik ve hızlı hesaplamalar yapın."
+      "title": "Online Hesap Makinesi",
+      "description": "Temel dört işlemi pratik ve hızlı bir şekilde yapın."
     },
     "timeDifference": {
-      "title": "Tarih & Saat Farkı Hesaplayıcı",
+      "title": "Tarih ve Saat Farkı Hesaplama",
       "description": "İki tarih veya saat arasındaki farkı gün, saat ve dakika olarak anında hesaplayın."
     },
     "stopwatchTool": {
-      "title": "Kronometre & Zamanlayıcı",
+      "title": "Online Kronometre ve Zamanlayıcı",
       "description": "Süre tutun, tur zamanlarını kaydedin ve pratik geri sayımlar yapın."
     },
     "worldClock": {
-      "title": "Dünya Saatleri & Saat Farkı",
-      "description": "Havalimanı tarzı canlı zaman dilimi ve şehirler arası saat farkı karşılaştırıcısı."
+      "title": "Dünya Saati ve Saat Farkı",
+      "description": "Farklı şehirlerin canlı saatini görün ve şehirler arası saat farkını karşılaştırın."
     },
     "typingTest": {
-      "title": "Klavye Hız Testi (WPM)",
-      "description": "60 saniyede kaç kelime yazabildiğinizi test edin ve klavye hızınızı ölçün."
+      "title": "Yazma Hızı Testi (WPM)",
+      "description": "60 saniyede kaç kelime yazabildiğinizi test edin ve yazma hızınızı ölçün."
     }
   }
 }

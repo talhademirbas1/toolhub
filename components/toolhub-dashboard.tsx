@@ -45,6 +45,32 @@ const baseTools: ToolBase[] = [
   { id: 'worldClock', categoryKey: 'time', icon: Globe, accent: 'bg-blue-500/10 text-blue-500 ring-blue-500/20', slug: 'world-clock' },
 ]
 
+// Ana sayfadaki tanıtım bölümü: Google'a sitenin ne olduğunu anlatır
+const aboutContent = {
+  tr: {
+    title: 'MyToolKit nedir?',
+    text: 'MyToolKit, günlük işlerde işinize yarayan ücretsiz online araçları tek bir yerde toplar. Yüzde, kâr zarar ve indirim hesaplayabilir, metninizin kelime ve karakter sayısını öğrenebilir, yazma hızınızı ölçebilir, dünya saatlerine bakabilir ve resim formatlarını dönüştürebilirsiniz. Araçların hepsi tarayıcıda çalışır, kayıt veya kurulum gerektirmez.',
+    featuresTitle: 'Neden MyToolKit?',
+    features: [
+      'Tamamen ücretsiz, üyelik gerektirmez',
+      'Tarayıcıda çalışır, program kurmanız gerekmez',
+      'Türkçe ve İngilizce dil desteği',
+      'Telefon, tablet ve bilgisayarda kullanılabilir',
+    ],
+  },
+  en: {
+    title: 'What is MyToolKit?',
+    text: 'MyToolKit brings together free online tools for everyday tasks in one place. You can calculate percentages, profit and loss and discounts, count the words and characters in your text, test your typing speed, check the world clock and convert image formats. All tools run in your browser and need no sign-up or installation.',
+    featuresTitle: 'Why MyToolKit?',
+    features: [
+      'Completely free, no account required',
+      'Runs in your browser, nothing to install',
+      'Available in Turkish and English',
+      'Works on phone, tablet and computer',
+    ],
+  },
+} as const
+
 export function ToolHubDashboard({
   dict,
   currentLang,
@@ -57,6 +83,7 @@ export function ToolHubDashboard({
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all')
   const [dark, setDark] = useState(false)
+  const about = aboutContent[currentLang]
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -93,28 +120,32 @@ export function ToolHubDashboard({
   }
 
   const filteredTools = useMemo(() => {
-    const normalizedQuery = query.toLocaleLowerCase('tr-TR')
+    // Arama dilini aktif arayüz diline göre ayarlıyoruz. 'tr-TR' sabit kullanılırsa
+    // İngilizce arayüzde büyük "I" harfi yanlışlıkla "ı" (noktasız i) olarak küçültülür
+    // ve İngilizce aramalar hatalı sonuç verebilir.
+    const localeCode = currentLang === 'tr' ? 'tr-TR' : 'en-US'
+    const normalizedQuery = query.toLocaleLowerCase(localeCode)
     return baseTools.filter((tool) => {
       const matchesCategory = activeCategory === 'all' || tool.categoryKey === activeCategory;
       const translatedTitle = dict.tools[tool.id]?.title || '';
       const translatedDesc = dict.tools[tool.id]?.description || '';
       const translatedCategory = dict.categories[tool.categoryKey] || '';
       
-      const matchesQuery = `${translatedTitle} ${translatedDesc} ${translatedCategory}`.toLocaleLowerCase('tr-TR').includes(normalizedQuery)
+      const matchesQuery = `${translatedTitle} ${translatedDesc} ${translatedCategory}`.toLocaleLowerCase(localeCode).includes(normalizedQuery)
       return matchesCategory && matchesQuery
     })
-  }, [activeCategory, query, dict])
+  }, [activeCategory, query, dict, currentLang])
 
   return (
     <main className="min-h-screen bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-6 sm:px-8 lg:px-10">
         <header className="flex items-center justify-between border-b border-border/60 pb-6">
-          <div className="flex items-center gap-3">
+          <Link href={`/${currentLang}`} className="flex items-center gap-3">
             <div className="flex size-9 items-center justify-center rounded-xl bg-black text-white dark:bg-white dark:text-black shadow-sm font-bold text-sm tracking-tighter">
               MT
             </div>
-            <span className="text-base font-semibold tracking-tight">MyToolkit</span>
-          </div>
+            <span className="text-base font-semibold tracking-tight">MyToolKit</span>
+          </Link>
           <div className="flex items-center gap-2">
             <div className="relative hidden w-64 sm:block">
               <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -126,7 +157,13 @@ export function ToolHubDashboard({
                 value={query}
               />
             </div>
-            <Button onClick={toggleLanguage} size="icon" variant="outline" className="font-bold text-xs" aria-label="Dil Değiştir">
+            <Button
+              onClick={toggleLanguage}
+              size="icon"
+              variant="outline"
+              className="font-bold text-xs"
+              aria-label={currentLang === 'tr' ? 'Switch to English' : "Türkçe'ye geç"}
+            >
               {currentLang === 'tr' ? 'EN' : 'TR'}
             </Button>
             <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline">
@@ -143,7 +180,7 @@ export function ToolHubDashboard({
           </div>
 
           <div className="mt-12 flex flex-col gap-4 border-b border-border/60 pb-5 sm:flex-row sm:items-center sm:justify-between">
-            <nav aria-label="Araç kategorileri" className="flex flex-wrap gap-2">
+            <nav aria-label={currentLang === 'tr' ? 'Araç kategorileri' : 'Tool categories'} className="flex flex-wrap gap-2">
               {categoryKeys.map((catKey) => (
                 <Button
                   className="rounded-full px-4"
@@ -168,7 +205,7 @@ export function ToolHubDashboard({
               const Icon = tool.icon
               const toolRoute = `/${currentLang}/tools/${tool.slug}`
               return (
-                <Card className="group flex min-h-[300px] flex-col border-border/70 bg-card/60 transition-all duration-300 hover:-translate-y-1 hover:border-border hover:bg-card hover:shadow-2xl hover:shadow-black/10" key={tool.id}>
+                <Card className="group relative flex min-h-[300px] flex-col border-border/70 bg-card/60 transition-all duration-300 hover:-translate-y-1 hover:border-border hover:bg-card hover:shadow-2xl hover:shadow-black/10" key={tool.id}>
                   <CardHeader className="gap-6">
                     <div className="flex items-start justify-between">
                       <div className={`flex size-11 items-center justify-center rounded-xl ring-1 ${tool.accent}`}>
@@ -178,17 +215,24 @@ export function ToolHubDashboard({
                     </div>
                     <div className="space-y-2">
                       <Badge className="rounded-md font-normal" variant="secondary">{dict.categories[tool.categoryKey]}</Badge>
-                      <h2 className="text-lg font-medium tracking-tight">{dict.tools[tool.id]?.title}</h2>
+                      {/* Başlık gerçek bir link: Google araç adını bağlantı metni olarak görür.
+                          after:absolute after:inset-0 tüm kartı tıklanabilir yapar. */}
+                      <h2 className="text-lg font-medium tracking-tight">
+                        <Link href={toolRoute} className="after:absolute after:inset-0">
+                          {dict.tools[tool.id]?.title}
+                        </Link>
+                      </h2>
                     </div>
                   </CardHeader>
                   <CardContent className="flex-1">
                     <p className="text-sm leading-6 text-muted-foreground">{dict.tools[tool.id]?.description}</p>
                   </CardContent>
                   <CardFooter>
-                    <Link href={toolRoute} className="w-full">
+                    <Link href={toolRoute} className="w-full" tabIndex={-1} aria-hidden="true">
                       <Button
                         className="w-full justify-between pointer-events-none"
                         variant="outline"
+                        tabIndex={-1}
                       >
                         {dict.dashboard.useButton}
                         <ArrowUpRight data-icon="inline-end" />
@@ -206,9 +250,25 @@ export function ToolHubDashboard({
             </div>
           )}
 
+          {/* Tanıtım bölümü: sitenin ne olduğunu ve neden kullanılacağını anlatır */}
+          <div className="mt-20 grid gap-10 border-t border-border/60 pt-12 md:grid-cols-2">
+            <div className="space-y-3">
+              <h2 className="text-xl font-semibold tracking-tight">{about.title}</h2>
+              <p className="text-sm leading-7 text-muted-foreground">{about.text}</p>
+            </div>
+            <div className="space-y-3">
+              <h2 className="text-xl font-semibold tracking-tight">{about.featuresTitle}</h2>
+              <ul className="list-disc space-y-1.5 pl-5 text-sm leading-7 text-muted-foreground">
+                {about.features.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
           <footer className="mt-auto flex items-center justify-between pt-16 text-xs text-muted-foreground">
             <span>{dict.dashboard.footer}</span>
-            <span>Phase 1</span>
+            <span>© {new Date().getFullYear()} MyToolKit</span>
           </footer>
         </section>
       </div>

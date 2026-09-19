@@ -5,9 +5,9 @@
     "themeLight": "Switch to light theme",
     "themeDark": "Switch to dark theme",
     "subtitle": "Everyday tasks, made easier",
-    "title1": "The tools you need.",
-    "title2": "In one place.",
-    "description": "Accelerate your workflow with fast, reliable, and simple web tools. No installation, no waiting.",
+    "title1": "Free online tools,",
+    "title2": "in one place.",
+    "description": "Percentage and discount calculator, word counter, typing speed test, world clock and more. Fast, simple and free. No sign-up or installation required.",
     "toolsCount": "tools",
     "useButton": "Use / Open",
     "notFound": "No tools found matching your search.",
@@ -32,11 +32,11 @@
   },
   "tools": {
     "imageConverter": {
-      "title": "Image Converter & Compressor",
-      "description": "Convert and compress your WEBP, PNG, and JPG files quickly while maintaining quality."
+      "title": "Image Converter and Compressor",
+      "description": "Quickly convert and compress your WEBP, PNG, and JPG files while keeping quality."
     },
     "textAnalyzer": {
-      "title": "Smart Text & Character Analyzer",
+      "title": "Word and Character Counter",
       "description": "Calculate word, character, and sentence counts; find out your reading time instantly.",
       "subtitle": "MyToolKit Text Suite",
       "placeholder": "Type or paste your text here...",
@@ -51,24 +51,24 @@
       "copied": "Copied!"
     },
     "percentageCalculator": {
-      "title": "Percentage & Profit/Loss Calculator",
-      "description": "Manage margin, discount, and percentage difference calculations from a single simple interface."
+      "title": "Percentage, Profit/Loss and Discount Calculator",
+      "description": "Do percentage, profit/loss, and discounted price calculations from a single simple interface."
     },
     "classicCalculator": {
-      "title": "Classic Calculator",
-      "description": "Perform basic four operations, practical and fast calculations."
+      "title": "Online Calculator",
+      "description": "Perform the four basic operations quickly and practically."
     },
     "timeDifference": {
-      "title": "Date & Time Difference Calculator",
+      "title": "Date and Time Difference Calculator",
       "description": "Instantly calculate the difference between two dates or times in days, hours, and minutes."
     },
     "stopwatchTool": {
-      "title": "Stopwatch & Timer",
+      "title": "Online Stopwatch and Timer",
       "description": "Keep time, record lap times, and make practical countdowns."
     },
     "worldClock": {
-      "title": "World Clock & Time Difference",
-      "description": "Airport-style live time zone and city-to-city time difference comparator."
+      "title": "World Clock and Time Difference",
+      "description": "See the live time in different cities and compare the time difference between them."
     },
     "typingTest": {
       "title": "Typing Speed Test (WPM)",

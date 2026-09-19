@@ -1,12 +1,33 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "MyToolKit",
-  description: "Simple. Fast. Useful web tools.",
-};
+const siteUrl = "https://www.mytoolkitbase.com";
 
 export function generateStaticParams() {
-  return [{ lang: 'tr' }, { lang: 'en' }];
+  return [{ lang: "tr" }, { lang: "en" }];
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const isTr = lang === "tr";
+
+  return {
+    // canonical, hreflang ve OG adreslerini tam URL'ye çevirir
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: isTr
+        ? "MyToolKit | Ücretsiz Online Araçlar"
+        : "MyToolKit | Free Online Tools",
+      // Alt sayfalarda başlık "Sayfa Adı | MyToolKit" olur
+      template: "%s | MyToolKit",
+    },
+    description: isTr
+      ? "Basit, hızlı ve kullanışlı ücretsiz web araçları."
+      : "Simple. Fast. Useful web tools.",
+  };
 }
 
 export default async function LangLayout({
