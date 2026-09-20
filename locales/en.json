@@ -85,6 +85,18 @@
     "gpaCalculator": {
       "title": "GPA Calculator",
       "description": "Enter your course grades and credits to calculate your overall GPA."
+    },
+    "qrCodeGenerator": {
+      "title": "QR Code Generator",
+      "description": "Generate a free QR code for text or a link and download it as PNG."
+    },
+    "passwordGenerator": {
+      "title": "Password Generator",
+      "description": "Generate strong, random and secure passwords."
+    },
+    "unitConverter": {
+      "title": "Unit Converter",
+      "description": "Instantly convert length, weight and temperature units."
     }
   }
 }

@@ -85,6 +85,18 @@
     "gpaCalculator": {
       "title": "Ders Ortalaması (GPA) Hesaplama",
       "description": "Derslerinizin notlarını ve kredilerini girerek genel not ortalamanızı hesaplayın."
+    },
+    "qrCodeGenerator": {
+      "title": "QR Kod Oluşturucu",
+      "description": "Metin veya link için ücretsiz QR kod oluşturun ve PNG olarak indirin."
+    },
+    "passwordGenerator": {
+      "title": "Şifre Oluşturucu",
+      "description": "Güçlü, rastgele ve güvenli şifreler oluşturun."
+    },
+    "unitConverter": {
+      "title": "Birim Çevirici",
+      "description": "Uzunluk, ağırlık ve sıcaklık birimlerini anında çevirin."
     }
   }
 }

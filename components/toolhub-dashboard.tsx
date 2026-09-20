@@ -17,7 +17,10 @@ import {
   Keyboard, // Klavye ikonu eklendi
   Cake, // Yaş hesaplama ikonu
   Scale, // BMI hesaplama ikonu
-  GraduationCap // GPA hesaplama ikonu
+  GraduationCap, // GPA hesaplama ikonu
+  QrCode, // QR Kod ikonu
+  KeyRound, // Şifre Oluşturucu ikonu
+  Ruler // Birim Çevirici ikonu
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -50,6 +53,10 @@ const baseTools: ToolBase[] = [
   { id: 'ageCalculator', categoryKey: 'time', icon: Cake, accent: 'bg-pink-500/10 text-pink-500 ring-pink-500/20', slug: 'age-calculator' },
   { id: 'bmiCalculator', categoryKey: 'calculators', icon: Scale, accent: 'bg-teal-500/10 text-teal-500 ring-teal-500/20', slug: 'bmi-calculator' },
   { id: 'gpaCalculator', categoryKey: 'calculators', icon: GraduationCap, accent: 'bg-indigo-500/10 text-indigo-500 ring-indigo-500/20', slug: 'gpa-calculator' },
+  // EN YENİ EKLENEN 3 ARAÇ (QR Kod, Şifre Oluşturucu, Birim Çevirici):
+  { id: 'qrCodeGenerator', categoryKey: 'visual', icon: QrCode, accent: 'bg-indigo-500/10 text-indigo-400 ring-indigo-400/20', slug: 'qr-code-generator' },
+  { id: 'passwordGenerator', categoryKey: 'text', icon: KeyRound, accent: 'bg-teal-500/10 text-teal-500 ring-teal-500/20', slug: 'password-generator' },
+  { id: 'unitConverter', categoryKey: 'calculators', icon: Ruler, accent: 'bg-orange-500/10 text-orange-500 ring-orange-500/20', slug: 'unit-converter' },
 ]
 
 // Ana sayfadaki tanıtım bölümü: Google'a sitenin ne olduğunu anlatır
@@ -284,3 +291,4 @@ export function ToolHubDashboard({
 }
 
 export default ToolHubDashboard
+
