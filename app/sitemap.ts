@@ -1,9 +1,9 @@
 // app/sitemap.ts
 import type { MetadataRoute } from "next";
- 
+
 const baseUrl = "https://www.mytoolkitbase.com";
 const locales = ["tr", "en"];
- 
+
 // DİKKAT: Buradaki adlar app/[lang]/tools/ altındaki klasör adlarıyla birebir aynı olmalı.
 // Yanlış yazılan bir ad sitemap'te 404 veren bir adres olarak görünür.
 const tools = [
@@ -15,11 +15,14 @@ const tools = [
   "stopwatch",
   "percentage-calculator",
   "time-difference",
+  "age-calculator",
+  "bmi-calculator",
+  "gpa-calculator",
 ];
- 
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = ["", ...tools.map((t) => `/tools/${t}`)];
- 
+
   return pages.flatMap((page) =>
     locales.map((locale) => ({
       url: `${baseUrl}/${locale}${page}`,
@@ -34,4 +37,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 }
- 

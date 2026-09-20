@@ -73,6 +73,18 @@
     "typingTest": {
       "title": "Typing Speed Test (WPM)",
       "description": "Test how many words you can type in 60 seconds and measure your typing speed."
+    },
+    "ageCalculator": {
+      "title": "Age Calculator",
+      "description": "Instantly calculate your exact age in years, months and days from your date of birth."
+    },
+    "bmiCalculator": {
+      "title": "BMI Calculator",
+      "description": "Enter your height and weight to instantly calculate your Body Mass Index."
+    },
+    "gpaCalculator": {
+      "title": "GPA Calculator",
+      "description": "Enter your course grades and credits to calculate your overall GPA."
     }
   }
 }

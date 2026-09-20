@@ -73,6 +73,18 @@
     "typingTest": {
       "title": "Yazma Hızı Testi (WPM)",
       "description": "60 saniyede kaç kelime yazabildiğinizi test edin ve yazma hızınızı ölçün."
+    },
+    "ageCalculator": {
+      "title": "Yaş Hesaplama",
+      "description": "Doğum tarihinizden yaşınızı yıl, ay ve gün olarak anında hesaplayın."
+    },
+    "bmiCalculator": {
+      "title": "Vücut Kitle Endeksi (BMI) Hesaplama",
+      "description": "Boy ve kilonuzu girerek vücut kitle endeksinizi anında hesaplayın."
+    },
+    "gpaCalculator": {
+      "title": "Ders Ortalaması (GPA) Hesaplama",
+      "description": "Derslerinizin notlarını ve kredilerini girerek genel not ortalamanızı hesaplayın."
     }
   }
 }

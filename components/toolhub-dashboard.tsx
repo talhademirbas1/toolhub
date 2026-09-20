@@ -14,7 +14,10 @@ import {
   Clock,
   Timer,
   Globe,
-  Keyboard // Klavye ikonu eklendi
+  Keyboard, // Klavye ikonu eklendi
+  Cake, // Yaş hesaplama ikonu
+  Scale, // BMI hesaplama ikonu
+  GraduationCap // GPA hesaplama ikonu
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -43,6 +46,10 @@ const baseTools: ToolBase[] = [
   { id: 'timeDifference', categoryKey: 'time', icon: Clock, accent: 'bg-cyan-500/10 text-cyan-500 ring-cyan-500/20', slug: 'time-difference' },
   { id: 'stopwatchTool', categoryKey: 'time', icon: Timer, accent: 'bg-rose-500/10 text-rose-500 ring-rose-500/20', slug: 'stopwatch' },
   { id: 'worldClock', categoryKey: 'time', icon: Globe, accent: 'bg-blue-500/10 text-blue-500 ring-blue-500/20', slug: 'world-clock' },
+  // YENİ ARAÇLAR (yurt dışı trafiği için yüksek arama hacimli araçlar):
+  { id: 'ageCalculator', categoryKey: 'time', icon: Cake, accent: 'bg-pink-500/10 text-pink-500 ring-pink-500/20', slug: 'age-calculator' },
+  { id: 'bmiCalculator', categoryKey: 'calculators', icon: Scale, accent: 'bg-teal-500/10 text-teal-500 ring-teal-500/20', slug: 'bmi-calculator' },
+  { id: 'gpaCalculator', categoryKey: 'calculators', icon: GraduationCap, accent: 'bg-indigo-500/10 text-indigo-500 ring-indigo-500/20', slug: 'gpa-calculator' },
 ]
 
 // Ana sayfadaki tanıtım bölümü: Google'a sitenin ne olduğunu anlatır
