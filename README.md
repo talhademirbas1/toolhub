@@ -1,63 +1,50 @@
-# 🚀 MyToolKit
+# MyToolKit
 
-[🇹🇷 Türkçe](#türkçe) | [🇬🇧 English](#english)
+**Live site:** [mytoolkitbase.com](https://www.mytoolkitbase.com)
 
----
+A free, bilingual (Turkish/English) collection of everyday online tools — no sign-up, no installation, everything runs in your browser.
 
-<a name="türkçe"></a>
+![MyToolKit screenshot](./screenshot.png)
 
-## 🇹🇷 Türkçe
+## What it does
 
-> Günlük işleri hızlandırmak ve pratik çözümler sunmak için yapay zeka desteğiyle geliştirilmiş web tabanlı araçlar merkezi.
+MyToolKit brings together 11 free web tools in one place:
 
-🌐 **Canlı Site:** [[mytoolkitbase.com](http://mytoolkitbase.com)]([https://mytoolkitbase.com](https://mytoolkitbase.com))
+- **Calculators:** Percentage & Profit/Loss, Classic Calculator, BMI, GPA, Age Calculator
+- **Time:** Date & Time Difference, Stopwatch & Timer, World Clock
+- **Text:** Word & Character Counter, Typing Speed Test (WPM)
+- **Visual:** Image Converter & Compressor
 
-### 🛠️ Kullanılan Teknolojiler
+All calculations happen client-side in the browser — no data is uploaded to a server, and no account is required for any tool.
 
-* **Framework:** [Next.js]([https://nextjs.org/](https://nextjs.org/)) (App Router)
+## Features
 
-* **Stil & Tasarım:** [Tailwind CSS]([https://tailwindcss.com/](https://tailwindcss.com/))
+- 🌍 Full Turkish and English support (`/tr` and `/en` routes)
+- 🌓 Light / dark theme
+- 💾 Client-side persistence (your inputs are remembered locally, never sent to a server)
+- 📱 Responsive, works on mobile and desktop
+- ⚡ Fast, static-friendly pages with per-tool SEO metadata (Open Graph, hreflang, JSON-LD)
 
-* **Dağıtım & Analitik:** [Vercel]([https://vercel.com/](https://vercel.com/)) & Vercel Analytics
+## Tech stack
 
-### ✨ Özellikler
+- [Next.js](https://nextjs.org/) (App Router)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/) components
+- [lucide-react](https://lucide.dev/) icons
 
- *⚡* *Hızlı ve Pratik:** Kullanıcıların günlük hayatını kolaylaştıracak dijital araçlar.
+## Running locally
 
- *🌙* *Karanlık Mod Desteği:** Göz yormayan, sistem temasına uyumlu arayüz.
+```bash
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+npm install
+npm run dev
+```
 
- *📱* *Tamamen Responsive:** Mobil ve masaüstünde kusursuz görünüm.
+Then open [http://localhost:3000/tr](http://localhost:3000/tr) or [http://localhost:3000/en](http://localhost:3000/en).
 
----
+## License
 
-<a name="english"></a>
-
-## 🇬🇧 English
-
-> A collection of web-based tools developed with AI assistance to speed up daily tasks and provide practical solutions.
-
-🌐 **Live Site:** [[mytoolkitbase.com](http://mytoolkitbase.com)]([https://mytoolkitbase.com](https://mytoolkitbase.com))
-
-### 🛠️ Tech Stack
-
-* **Framework:** [Next.js]([https://nextjs.org/](https://nextjs.org/)) (App Router)
-
-* **Styling:** [Tailwind CSS]([https://tailwindcss.com/](https://tailwindcss.com/))
-
-* **Deployment & Analytics:** [Vercel]([https://vercel.com/](https://vercel.com/)) & Vercel Analytics
-
-### ✨ Features
-
- *⚡* *Fast & Practical:** Digital tools designed to simplify everyday tasks.
-
- *🌙* *Dark Mode Support:** Easy on the eyes, matching system preferences.
-
- *📱* *Fully Responsive:** Seamless experience across mobile and desktop devices.
-
----
-
-<p align="center">
-
-  Developed with ❤️ by <strong>MyToolKit</strong>
-
-</p>
+This project is open for reference and learning purposes. See [LICENSE](./LICENSE) for details.
