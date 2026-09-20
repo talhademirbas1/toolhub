@@ -18,6 +18,9 @@ const tools = [
   "age-calculator",
   "bmi-calculator",
   "gpa-calculator",
+  "unit-converter",
+  "qr-code-generator",
+  "password-generator",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
