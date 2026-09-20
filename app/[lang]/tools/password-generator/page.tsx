@@ -4,7 +4,6 @@ import { ToolPageHeader } from "@/components/tool-page-header";
 
 type Lang = "tr" | "en";
 
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/password-generator";
 
 const content = {
@@ -121,3 +120,43 @@ export default async function PasswordGeneratorPage({
 }) {
   const { lang } = await params;
   const c = content[lang];
+
+  return (
+    <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <h1 className="sr-only">{c.h1}</h1>
+
+        <ToolPageHeader lang={lang} />
+        <PasswordGeneratorTool lang={lang} />
+
+        <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
+          <div className="space-y-3">
+            <h2 className="text-xl font-semibold">{c.howToTitle}</h2>
+            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">{c.howToText}</p>
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-xl font-semibold">{c.useCasesTitle}</h2>
+            <ul className="list-disc pl-5 space-y-1.5 text-zinc-600 dark:text-zinc-400">
+              {c.useCases.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-xl font-semibold">{c.faqTitle}</h2>
+            <div className="space-y-2">
+              {c.faq.map((item) => (
+                <details key={item.q} className="group rounded-lg border border-zinc-200 dark:border-zinc-800 px-4 py-3">
+                  <summary className="cursor-pointer font-medium">{item.q}</summary>
+                  <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
