@@ -279,11 +279,6 @@ export function ToolHubDashboard({
               </ul>
             </div>
           </div>
-
-          <footer className="mt-auto flex items-center justify-between pt-16 text-xs text-muted-foreground">
-            <span>{dict.dashboard.footer}</span>
-            <span>© {new Date().getFullYear()} MyToolKit</span>
-          </footer>
         </section>
       </div>
     </main>
@@ -291,4 +286,3 @@ export function ToolHubDashboard({
 }
 
 export default ToolHubDashboard
-

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SiteFooter } from "@/components/site-footer";
 
 const siteUrl = "https://www.mytoolkitbase.com";
 
@@ -42,6 +43,7 @@ export default async function LangLayout({
   return (
     <div lang={lang} className="contents">
       {children}
+      <SiteFooter lang={lang === "en" ? "en" : "tr"} />
     </div>
   );
 }
