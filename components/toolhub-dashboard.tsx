@@ -106,6 +106,15 @@ export function ToolHubDashboard({
   const [dark, setDark] = useState(false)
   const about = aboutContent[currentLang]
 
+  // Geri dönüldüğünde eski konuma geri getirme ve kaydetme mekanizması
+  useEffect(() => {
+    const savedScroll = sessionStorage.getItem('home_scroll_pos');
+    if (savedScroll) {
+      window.scrollTo(0, parseInt(savedScroll, 10));
+      sessionStorage.removeItem('home_scroll_pos');
+    }
+  }, []);
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark' || (!savedTheme && document.documentElement.classList.contains('dark'))) {
@@ -166,7 +175,7 @@ export function ToolHubDashboard({
               />
             </div>
             
-            {/* YENİ DİNAMİK DİL SEÇİCİ */}
+            {/* DİNAMİK DİL SEÇİCİ */}
             <select
               value={currentLang}
               onChange={(e) => {
@@ -238,7 +247,11 @@ export function ToolHubDashboard({
                     <div className="space-y-2">
                       <Badge className="rounded-md font-normal" variant="secondary">{dict.categories[tool.categoryKey]}</Badge>
                       <h2 className="text-lg font-medium tracking-tight">
-                        <Link href={toolRoute} className="after:absolute after:inset-0">
+                        <Link 
+                          href={toolRoute} 
+                          onClick={() => sessionStorage.setItem('home_scroll_pos', window.scrollY.toString())}
+                          className="after:absolute after:inset-0"
+                        >
                           {dict.tools[tool.id]?.title}
                         </Link>
                       </h2>
@@ -248,7 +261,13 @@ export function ToolHubDashboard({
                     <p className="text-sm leading-6 text-muted-foreground">{dict.tools[tool.id]?.description}</p>
                   </CardContent>
                   <CardFooter>
-                    <Link href={toolRoute} className="w-full" tabIndex={-1} aria-hidden="true">
+                    <Link 
+                      href={toolRoute} 
+                      onClick={() => sessionStorage.setItem('home_scroll_pos', window.scrollY.toString())}
+                      className="w-full" 
+                      tabIndex={-1} 
+                      aria-hidden="true"
+                    >
                       <Button
                         className="w-full justify-between pointer-events-none"
                         variant="outline"

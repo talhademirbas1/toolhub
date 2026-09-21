@@ -2,11 +2,11 @@
 
 import { Button } from '@/components/ui/button'
 import { Sun, Moon } from 'lucide-react'
-import { i18n, type Locale } from '@/i18n.config'
+import { type Locale } from '@/i18n.config'
 
 interface ToolHeaderProps {
   dict: any
-  onBack: () => void
+  onBack?: () => void
   currentLang: Locale
   onLangChange: () => void
   dark: boolean
@@ -15,22 +15,26 @@ interface ToolHeaderProps {
 
 export function ToolHeader({
   dict,
-  onBack,
   currentLang,
   onLangChange,
   dark,
   onThemeToggle,
 }: ToolHeaderProps) {
-  // 3 dilli döngü için bir sonraki dili bulma (tr -> en -> es -> tr)
   const getNextLangLabel = () => {
     if (currentLang === 'tr') return 'EN';
     if (currentLang === 'en') return 'ES';
     return 'TR';
   };
 
+  const handleBack = () => {
+    // 1. Ana sayfaya dönmeden hemen önce en üstteki scroll pozisyonunu hafızaya al
+    // (Bunu ana sayfa bileşeninde okuyacağız)
+    window.history.back();
+  };
+
   return (
     <header className="mb-6 flex justify-between items-center max-w-lg mx-auto">
-      <Button onClick={onBack} variant="ghost">
+      <Button onClick={handleBack} variant="ghost">
         ← {dict?.dashboard?.backButton || "Back"}
       </Button>
       
