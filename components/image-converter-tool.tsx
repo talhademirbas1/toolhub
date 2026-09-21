@@ -18,7 +18,58 @@ const formatBytes = (bytes: number, decimals = 2) => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 };
 
+const t = {
+  tr: {
+    title: "Görsel Dönüştürücü & Sıkıştırıcı",
+    subtitle: "Limitsiz & Hızlı Format Dönüşümü",
+    uploadText: "Görsel yüklemek için tıklayın veya sürükleyin",
+    targetFormat: "Hedef Format:",
+    formatWebp: "WEBP (Önerilen)",
+    formatPng: "PNG (Şeffaf / Kayıpsız)",
+    formatJpg: "JPG (Standart Fotoğraf)",
+    formatSvg: "SVG (Vektör Çıkışı)",
+    quality: "Sıkıştırma Kalitesi:",
+    qualityHint: "Düşük kalite = Daha küçük dosya boyutu",
+    processing: "İşleniyor...",
+    convertBtn: "Dönüştür ve Sıkıştır",
+    downloadBtn: "Yeni Görseli İndir",
+  },
+  en: {
+    title: "Image Converter & Compressor",
+    subtitle: "Unlimited & Fast Format Conversion",
+    uploadText: "Click or drag to upload an image",
+    targetFormat: "Target Format:",
+    formatWebp: "WEBP (Recommended)",
+    formatPng: "PNG (Transparent / Lossless)",
+    formatJpg: "JPG (Standard Photo)",
+    formatSvg: "SVG (Vector Output)",
+    quality: "Compression Quality:",
+    qualityHint: "Lower quality = Smaller file size",
+    processing: "Processing...",
+    convertBtn: "Convert & Compress",
+    downloadBtn: "Download New Image",
+  },
+  es: {
+    title: "Convertidor y Compresor de Imágenes",
+    subtitle: "Conversión de Formatos Rápida e Ilimitada",
+    uploadText: "Haz clic o arrastra para subir una imagen",
+    targetFormat: "Formato de destino:",
+    formatWebp: "WEBP (Recomendado)",
+    formatPng: "PNG (Transparente / Sin pérdida)",
+    formatJpg: "JPG (Foto estándar)",
+    formatSvg: "SVG (Salida vectorial)",
+    quality: "Calidad de compresión:",
+    qualityHint: "Menor calidad = Menor tamaño de archivo",
+    processing: "Procesando...",
+    convertBtn: "Convertir y Comprimir",
+    downloadBtn: "Descargar Nueva Imagen",
+  }
+} as const;
+
 export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [isMounted, setIsMounted] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
@@ -151,12 +202,8 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
           <ImageIcon className="size-6" />
         </div>
         <div>
-          <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "Görsel Dönüştürücü & Sıkıştırıcı" : "Image Converter & Compressor"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "Limitsiz & Hızlı Format Dönüşümü" : "Unlimited & Fast Format Conversion"}
-          </p>
+          <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
         </div>
       </CardHeader>
 
@@ -169,9 +216,7 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
             className="absolute inset-0 opacity-0 cursor-pointer"
           />
           <Upload className="size-8 text-muted-foreground mb-2" />
-          <p className="text-sm font-medium">
-            {lang === "tr" ? "Görsel yüklemek için tıklayın veya sürükleyin" : "Click or drag to upload an image"}
-          </p>
+          <p className="text-sm font-medium">{texts.uploadText}</p>
           <p className="text-xs text-muted-foreground mt-1">PNG, JPG, WEBP, SVG</p>
         </div>
 
@@ -187,25 +232,17 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
             <div className="space-y-4 pt-2">
               <div className="flex items-center justify-between gap-4">
                 <label className="text-sm font-medium text-muted-foreground">
-                  {lang === "tr" ? "Hedef Format:" : "Target Format:"}
+                  {texts.targetFormat}
                 </label>
                 <select
                   value={format}
                   onChange={(e) => setFormat(e.target.value as any)}
                   className="h-9 rounded-md border border-input bg-background px-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 outline-none"
                 >
-                  <option value="image/webp">
-                    {lang === "tr" ? "WEBP (Önerilen)" : "WEBP (Recommended)"}
-                  </option>
-                  <option value="image/png">
-                    {lang === "tr" ? "PNG (Şeffaf / Kayıpsız)" : "PNG (Transparent / Lossless)"}
-                  </option>
-                  <option value="image/jpeg">
-                    {lang === "tr" ? "JPG (Standart Fotoğraf)" : "JPG (Standard Photo)"}
-                  </option>
-                  <option value="image/svg+xml">
-                    {lang === "tr" ? "SVG (Vektör Çıkışı)" : "SVG (Vector Output)"}
-                  </option>
+                  <option value="image/webp">{texts.formatWebp}</option>
+                  <option value="image/png">{texts.formatPng}</option>
+                  <option value="image/jpeg">{texts.formatJpg}</option>
+                  <option value="image/svg+xml">{texts.formatSvg}</option>
                 </select>
               </div>
 
@@ -214,7 +251,7 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium flex items-center gap-1.5 text-muted-foreground">
                       <Settings2 className="size-4" />
-                      {lang === "tr" ? "Sıkıştırma Kalitesi:" : "Compression Quality:"}
+                      {texts.quality}
                     </span>
                     <span className="font-bold text-sky-500">%{quality}</span>
                   </div>
@@ -228,16 +265,14 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
                     className="w-full accent-sky-500 cursor-pointer"
                   />
                   <p className="text-[10px] text-muted-foreground text-right">
-                    {lang === "tr" ? "Düşük kalite = Daha küçük dosya boyutu" : "Lower quality = Smaller file size"}
+                    {texts.qualityHint}
                   </p>
                 </div>
               )}
             </div>
 
             <Button onClick={handleConvert} disabled={isProcessing} className="w-full mt-2 font-semibold">
-              {isProcessing 
-                ? (lang === "tr" ? "İşleniyor..." : "Processing...") 
-                : (lang === "tr" ? "Dönüştür ve Sıkıştır" : "Convert & Compress")}
+              {isProcessing ? texts.processing : texts.convertBtn}
             </Button>
           </div>
         )}
@@ -265,7 +300,7 @@ export default function ImageConverterTool({ lang }: ImageConverterToolProps) {
             >
               <Button size="lg" className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-0.5">
                 <Download className="size-5" />
-                {lang === "tr" ? "Yeni Görseli İndir" : "Download New Image"}
+                {texts.downloadBtn}
               </Button>
             </a>
           </div>

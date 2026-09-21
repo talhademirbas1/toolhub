@@ -10,7 +10,37 @@ interface QrCodeToolProps {
   lang: string;
 }
 
+const t = {
+  tr: {
+    title: "QR Kod Oluşturucu",
+    subtitle: "MyToolKit Görsel Aracı",
+    label: "Metin veya URL",
+    placeholder: "https://ornek.com",
+    generateBtn: "QR Kod Oluştur",
+    downloadBtn: "İndir"
+  },
+  en: {
+    title: "QR Code Generator",
+    subtitle: "MyToolKit Visual Suite",
+    label: "Text or URL",
+    placeholder: "https://example.com",
+    generateBtn: "Generate QR Code",
+    downloadBtn: "Download"
+  },
+  es: {
+    title: "Generador de Códigos QR",
+    subtitle: "Herramienta Visual MyToolKit",
+    label: "Texto o URL",
+    placeholder: "https://ejemplo.com",
+    generateBtn: "Generar Código QR",
+    downloadBtn: "Descargar"
+  }
+} as const;
+
 export default function QrCodeTool({ lang }: QrCodeToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [text, setText] = useState("");
   const [size, setSize] = useState(300);
   const [qrUrl, setQrUrl] = useState<string | null>(null);
@@ -28,22 +58,16 @@ export default function QrCodeTool({ lang }: QrCodeToolProps) {
           <QrCode className="size-6" />
         </div>
         <div>
-          <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "QR Kod Oluşturucu" : "QR Code Generator"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Görsel Aracı" : "MyToolKit Visual Suite"}
-          </p>
+          <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-5">
         <div className="space-y-2">
-          <label className="text-xs font-medium text-muted-foreground">
-            {lang === "tr" ? "Metin veya URL" : "Text or URL"}
-          </label>
+          <label className="text-xs font-medium text-muted-foreground">{texts.label}</label>
           <Input
-            placeholder={lang === "tr" ? "https://ornek.com" : "https://example.com"}
+            placeholder={texts.placeholder}
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="w-full"
@@ -65,7 +89,7 @@ export default function QrCodeTool({ lang }: QrCodeToolProps) {
         </div>
 
         <Button onClick={handleGenerate} className="w-full font-semibold">
-          {lang === "tr" ? "QR Kod Oluştur" : "Generate QR Code"}
+          {texts.generateBtn}
         </Button>
 
         {qrUrl && (
@@ -74,7 +98,7 @@ export default function QrCodeTool({ lang }: QrCodeToolProps) {
             <a href={qrUrl} download="qr-code.png" className="w-full">
               <Button variant="outline" className="w-full gap-2">
                 <Download className="size-4" />
-                {lang === "tr" ? "İndir" : "Download"}
+                {texts.downloadBtn}
               </Button>
             </a>
           </div>

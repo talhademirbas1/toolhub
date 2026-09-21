@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import StopwatchTool from "@/components/stopwatch-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/stopwatch";
 
 const content = {
   tr: {
     metaTitle: "Online Kronometre",
-    metaDescription:
-      "Başlat, durdur ve sıfırla düğmeleriyle zamanı ölçün. Ücretsiz, kayıt gerektirmeyen ve kullanımı kolay online kronometre.",
+    metaDescription: "Başlat, durdur ve sıfırla düğmeleriyle zamanı ölçün. Ücretsiz, kayıt gerektirmeyen ve kullanımı kolay online kronometre.",
     h1: "Online Kronometre",
     howToTitle: "Online kronometre nasıl kullanılır?",
-    howToText:
-      "Başlat düğmesine basarak süreyi ölçmeye başlayın, işiniz bitince durdurun. Sıfırla düğmesiyle kronometreyi baştan başlatabilirsiniz. Kayıt olmanız veya bir uygulama indirmeniz gerekmez, araç doğrudan tarayıcıda çalışır.",
+    howToText: "Başlat düğmesine basarak süreyi ölçmeye başlayın, işiniz bitince durdurun. Sıfırla düğmesiyle kronometreyi baştan başlatabilirsiniz. Kayıt olmanız veya bir uygulama indirmeniz gerekmez, araç doğrudan tarayıcıda çalışır.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Spor ve antrenmanlarda süre tutmak",
@@ -41,12 +37,10 @@ const content = {
   },
   en: {
     metaTitle: "Online Stopwatch",
-    metaDescription:
-      "Measure time with start, stop and reset buttons. A free, easy-to-use online stopwatch that needs no sign-up.",
+    metaDescription: "Measure time with start, stop and reset buttons. A free, easy-to-use online stopwatch that needs no sign-up.",
     h1: "Online Stopwatch",
     howToTitle: "How to use the online stopwatch",
-    howToText:
-      "Press the start button to begin measuring time and stop it when you're done. Use the reset button to start over. You don't need to sign up or download an app, the tool works right in your browser.",
+    howToText: "Press the start button to begin measuring time and stop it when you're done. Use the reset button to start over. You don't need to sign up or download an app, the tool works right in your browser.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Timing sports and workouts",
@@ -70,37 +64,68 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Cronómetro Online",
+    metaDescription: "Mide el tiempo con los botones de inicio, pausa y reinicio. Un cronómetro online gratuito, fácil de usar y sin registro.",
+    h1: "Cronómetro Online",
+    howToTitle: "¿Cómo usar el cronómetro online?",
+    howToText: "Pulsa el botón de inicio para empezar a medir el tiempo y páralo cuando termines. Utiliza el botón de reinicio para empezar de nuevo. No necesitas registrarte ni descargar ninguna aplicación, la herramienta funciona directamente en tu navegador.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Cronometrar deportes y entrenamientos",
+      "Medir cuánto tiempo estudias o haces exámenes de práctica",
+      "Hacer un seguimiento del tiempo dedicado a cocinar o tareas diarias",
+      "Controlar la duración de presentaciones y ensayos de discursos",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿Cuál es la diferencia entre un cronómetro y un temporizador?",
+        a: "El cronómetro empieza desde cero y cuenta hacia adelante, midiendo el tiempo transcurrido. El temporizador cuenta hacia atrás desde un tiempo establecido.",
+      },
+      {
+        q: "¿El cronómetro es gratuito? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta.",
+      },
+      {
+        q: "¿Puedo usarlo en mi teléfono o tablet?",
+        a: "La herramienta funciona en el navegador, por lo que puedes usarla desde móviles, tablets u ordenadores.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -109,7 +134,7 @@ export async function generateMetadata({
 export default async function StopwatchPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -117,14 +142,11 @@ export default async function StopwatchPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            StopwatchTool zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <StopwatchTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import UnitConverterTool from "@/components/unit-converter-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/unit-converter";
 
 const content = {
   tr: {
     metaTitle: "Birim Çevirici",
-    metaDescription:
-      "Uzunluk, ağırlık ve sıcaklık birimlerini anında çevirin. Metre, kilogram, Celsius ve daha fazlası. Ücretsiz online birim çevirici.",
+    metaDescription: "Uzunluk, ağırlık ve sıcaklık birimlerini anında çevirin. Metre, kilogram, Celsius ve daha fazlası. Ücretsiz online birim çevirici.",
     h1: "Birim Çevirici",
     howToTitle: "Birim çevirici nasıl kullanılır?",
-    howToText:
-      "Üstteki sekmelerden dönüştürmek istediğiniz kategoriyi (uzunluk, ağırlık veya sıcaklık) seçin. Ardından dönüştürmek istediğiniz değeri girin, kaynak ve hedef birimleri seçin. Sonuç anında hesaplanır ve ekranda gösterilir; birimleri tek tıkla yer değiştirebilirsiniz.",
+    howToText: "Üstteki sekmelerden dönüştürmek istediğiniz kategoriyi (uzunluk, ağırlık veya sıcaklık) seçin. Ardından dönüştürmek istediğiniz değeri girin, kaynak ve hedef birimleri seçin. Sonuç anında hesaplanır ve ekranda gösterilir; birimleri tek tıkla yer değiştirebilirsiniz.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Yurt dışı alışverişte metre-fit veya kilogram-pound çevirisi yapmak",
@@ -45,12 +41,10 @@ const content = {
   },
   en: {
     metaTitle: "Unit Converter",
-    metaDescription:
-      "Instantly convert length, weight and temperature units. Meters, kilograms, Celsius and more. A free online unit converter.",
+    metaDescription: "Instantly convert length, weight and temperature units. Meters, kilograms, Celsius and more. A free online unit converter.",
     h1: "Unit Converter",
     howToTitle: "How to use the unit converter",
-    howToText:
-      "Choose the category you want to convert (length, weight or temperature) from the tabs above. Then enter the value you want to convert and select the source and target units. The result is calculated instantly and shown on screen; you can swap the units with one click.",
+    howToText: "Choose the category you want to convert (length, weight or temperature) from the tabs above. Then enter the value you want to convert and select the source and target units. The result is calculated instantly and shown on screen; you can swap the units with one click.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Converting meters to feet or kilograms to pounds when shopping abroad",
@@ -78,37 +72,72 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Conversor de Unidades",
+    metaDescription: "Convierte unidades de longitud, peso y temperatura al instante. Metros, kilogramos, Celsius y más. Conversor de unidades online gratuito.",
+    h1: "Conversor de Unidades",
+    howToTitle: "¿Cómo usar el conversor de unidades?",
+    howToText: "Elige la categoría que deseas convertir (longitud, peso o temperatura) en las pestañas superiores. Luego introduce el valor, selecciona las unidades de origen y destino. El resultado se calcula al instante en pantalla; puedes intercambiar las unidades con un solo clic.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Convertir metros a pies o kilogramos a libras al comprar en el extranjero",
+      "Convertir unidades de medida de recetas a tu propio sistema",
+      "Convertir temperaturas de Fahrenheit a Celsius",
+      "Realizar conversiones rápidas de unidades para proyectos escolares o de trabajo",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿Qué categorías de unidades son compatibles?",
+        a: "Actualmente puedes convertir entre unidades de longitud, peso y temperatura.",
+      },
+      {
+        q: "¿Qué tan precisas son las conversiones?",
+        a: "Las conversiones se calculan utilizando tasas estándar internacionales y son precisas hasta varios decimales.",
+      },
+      {
+        q: "¿Cómo funciona la conversión de temperatura?",
+        a: "La conversión entre Celsius, Fahrenheit y Kelvin se realiza al instante mediante fórmulas estándar.",
+      },
+      {
+        q: "¿La herramienta es gratuita?",
+        a: "Sí, la herramienta es completamente gratuita y no requiere cuenta.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -117,7 +146,7 @@ export async function generateMetadata({
 export default async function UnitConverterPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];

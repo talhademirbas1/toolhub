@@ -2,11 +2,12 @@
 
 import { Button } from '@/components/ui/button'
 import { Sun, Moon } from 'lucide-react'
+import { i18n, type Locale } from '@/i18n.config'
 
 interface ToolHeaderProps {
   dict: any
   onBack: () => void
-  currentLang: 'tr' | 'en'
+  currentLang: Locale
   onLangChange: () => void
   dark: boolean
   onThemeToggle: () => void
@@ -20,18 +21,25 @@ export function ToolHeader({
   dark,
   onThemeToggle,
 }: ToolHeaderProps) {
+  // 3 dilli döngü için bir sonraki dili bulma (tr -> en -> es -> tr)
+  const getNextLangLabel = () => {
+    if (currentLang === 'tr') return 'EN';
+    if (currentLang === 'en') return 'ES';
+    return 'TR';
+  };
+
   return (
     <header className="mb-6 flex justify-between items-center max-w-lg mx-auto">
       <Button onClick={onBack} variant="ghost">
-        ← {dict.dashboard.backButton}
+        ← {dict?.dashboard?.backButton || "Back"}
       </Button>
       
       <div className="flex items-center gap-2">
-        <Button onClick={onLangChange} size="sm" variant="outline" className="font-bold">
-          {currentLang === 'tr' ? 'EN' : 'TR'}
+        <Button onClick={onLangChange} size="sm" variant="outline" className="font-bold uppercase">
+          {getNextLangLabel()}
         </Button>
         <Button
-          aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark}
+          aria-label={dark ? dict?.dashboard?.themeLight : dict?.dashboard?.themeDark}
           onClick={onThemeToggle}
           size="icon"
           variant="outline"

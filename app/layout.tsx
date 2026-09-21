@@ -1,5 +1,6 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
+import Script from 'next/script'; // <-- YENİ EKLENDİ
 
 export const metadata = {
   title: 'MyToolKit',
@@ -11,10 +12,13 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+    // suppressHydrationWarning tema geçişlerinde uyuşmazlığı engeller
     <html lang="tr" suppressHydrationWarning>
       <head>
-        {/* Sayfa boyanmadan (paint) ÖNCE senkron çalışarak beyaz flash'ı engeller */}
-        <script
+        {/* Next.js Script componenti ile senkron tema yükleme (Beyaz parlama engellenir) */}
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {

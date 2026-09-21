@@ -14,7 +14,55 @@ const LOWER = "abcdefghijklmnopqrstuvwxyz";
 const NUMBERS = "0123456789";
 const SYMBOLS = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
+const t = {
+  tr: {
+    title: "Şifre Oluşturucu",
+    subtitle: "MyToolKit Güvenlik Aracı",
+    placeholder: "Şifre oluşturmak için butona basın",
+    weak: "Zayıf",
+    medium: "Orta",
+    strong: "Güçlü",
+    length: "Uzunluk",
+    uppercase: "Büyük Harf (A-Z)",
+    lowercase: "Küçük Harf (a-z)",
+    numbers: "Sayılar (0-9)",
+    symbols: "Semboller (!@#)",
+    generateBtn: "Şifre Oluştur"
+  },
+  en: {
+    title: "Password Generator",
+    subtitle: "MyToolKit Security Suite",
+    placeholder: "Click the button to generate a password",
+    weak: "Weak",
+    medium: "Medium",
+    strong: "Strong",
+    length: "Length",
+    uppercase: "Uppercase (A-Z)",
+    lowercase: "Lowercase (a-z)",
+    numbers: "Numbers (0-9)",
+    symbols: "Symbols (!@#)",
+    generateBtn: "Generate Password"
+  },
+  es: {
+    title: "Generador de Contraseñas",
+    subtitle: "Herramienta de Seguridad MyToolKit",
+    placeholder: "Haz clic en el botón para generar una contraseña",
+    weak: "Débil",
+    medium: "Medio",
+    strong: "Fuerte",
+    length: "Longitud",
+    uppercase: "Mayúsculas (A-Z)",
+    lowercase: "Minúsculas (a-z)",
+    numbers: "Números (0-9)",
+    symbols: "Símbolos (!@#)",
+    generateBtn: "Generar Contraseña"
+  }
+} as const;
+
 export default function PasswordGeneratorTool({ lang }: PasswordGeneratorToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [length, setLength] = useState(16);
   const [useUpper, setUseUpper] = useState(true);
   const [useLower, setUseLower] = useState(true);
@@ -64,9 +112,9 @@ export default function PasswordGeneratorTool({ lang }: PasswordGeneratorToolPro
     if (useNumbers) score++;
     if (useSymbols) score++;
 
-    if (score <= 1) return { label: lang === "tr" ? "Zayıf" : "Weak", color: "bg-rose-500", width: "25%" };
-    if (score <= 3) return { label: lang === "tr" ? "Orta" : "Medium", color: "bg-amber-500", width: "60%" };
-    return { label: lang === "tr" ? "Güçlü" : "Strong", color: "bg-emerald-500", width: "100%" };
+    if (score <= 1) return { label: texts.weak, color: "bg-rose-500", width: "25%" };
+    if (score <= 3) return { label: texts.medium, color: "bg-amber-500", width: "60%" };
+    return { label: texts.strong, color: "bg-emerald-500", width: "100%" };
   };
 
   const strength = getStrength();
@@ -78,19 +126,15 @@ export default function PasswordGeneratorTool({ lang }: PasswordGeneratorToolPro
           <KeyRound className="size-6" />
         </div>
         <div>
-          <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "Şifre Oluşturucu" : "Password Generator"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Güvenlik Aracı" : "MyToolKit Security Suite"}
-          </p>
+          <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-6">
         <div className="bg-muted p-4 rounded-lg border border-border/50 flex items-center justify-between gap-2">
           <span className="font-mono text-sm break-all">
-            {password || (lang === "tr" ? "Şifre oluşturmak için butona basın" : "Click the button to generate a password")}
+            {password || texts.placeholder}
           </span>
           {password && (
             <Button size="icon" variant="ghost" onClick={handleCopy} className="shrink-0">
@@ -110,9 +154,7 @@ export default function PasswordGeneratorTool({ lang }: PasswordGeneratorToolPro
 
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <label className="font-medium text-muted-foreground">
-              {lang === "tr" ? "Uzunluk" : "Length"}
-            </label>
+            <label className="font-medium text-muted-foreground">{texts.length}</label>
             <span className="font-bold text-teal-500">{length}</span>
           </div>
           <input
@@ -128,25 +170,25 @@ export default function PasswordGeneratorTool({ lang }: PasswordGeneratorToolPro
         <div className="grid grid-cols-2 gap-3 text-sm">
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={useUpper} onChange={(e) => setUseUpper(e.target.checked)} className="accent-teal-500" />
-            {lang === "tr" ? "Büyük Harf (A-Z)" : "Uppercase (A-Z)"}
+            {texts.uppercase}
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={useLower} onChange={(e) => setUseLower(e.target.checked)} className="accent-teal-500" />
-            {lang === "tr" ? "Küçük Harf (a-z)" : "Lowercase (a-z)"}
+            {texts.lowercase}
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={useNumbers} onChange={(e) => setUseNumbers(e.target.checked)} className="accent-teal-500" />
-            {lang === "tr" ? "Sayılar (0-9)" : "Numbers (0-9)"}
+            {texts.numbers}
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={useSymbols} onChange={(e) => setUseSymbols(e.target.checked)} className="accent-teal-500" />
-            {lang === "tr" ? "Semboller (!@#)" : "Symbols (!@#)"}
+            {texts.symbols}
           </label>
         </div>
 
         <Button onClick={generatePassword} className="w-full gap-2 font-semibold">
           <RefreshCw className="size-4" />
-          {lang === "tr" ? "Şifre Oluştur" : "Generate Password"}
+          {texts.generateBtn}
         </Button>
       </CardContent>
     </Card>

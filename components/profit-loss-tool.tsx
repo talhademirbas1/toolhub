@@ -10,7 +10,70 @@ interface ProfitLossCalculatorToolProps {
   lang: string;
 }
 
+const t = {
+  tr: {
+    title: "Yüzde & Kar/Zarar Hesaplayıcı",
+    subtitle: "MyToolKit Finansal Araç",
+    tabPercent: "Yüzde Hesapla",
+    tabProfit: "Kar / Zarar",
+    tabDiscount: "İndirim Oranı",
+    calcBtn: "Hesapla",
+    resetBtn: "Sıfırla",
+    resultLabel: "Sonuç",
+    errValid: "Lütfen geçerli sayılar girin.",
+    percentLabels: { val1: "Sayı", val2: "Yüzde (%)" },
+    profitLabels: { val1: "Maliyet Fiyatı", val2: "Satış Fiyatı" },
+    discountLabels: { val1: "Orijinal Fiyat", val2: "İndirim Yüzdesi (%)" },
+    profitText: "Kar",
+    lossText: "Zarar",
+    marginText: "oran",
+    discountAmount: "İndirim Tutarı",
+    finalPrice: "İndirimli Fiyat"
+  },
+  en: {
+    title: "Percentage & Profit/Loss Calculator",
+    subtitle: "MyToolKit Finance Suite",
+    tabPercent: "Percentage",
+    tabProfit: "Profit / Loss",
+    tabDiscount: "Discount",
+    calcBtn: "Calculate",
+    resetBtn: "Reset",
+    resultLabel: "Result",
+    errValid: "Please enter valid numbers.",
+    percentLabels: { val1: "Number", val2: "Percentage (%)" },
+    profitLabels: { val1: "Cost Price", val2: "Selling Price" },
+    discountLabels: { val1: "Original Price", val2: "Discount %" },
+    profitText: "Profit",
+    lossText: "Loss",
+    marginText: "margin",
+    discountAmount: "Discount",
+    finalPrice: "Final Price"
+  },
+  es: {
+    title: "Calculadora de Porcentajes y Ganancias",
+    subtitle: "Herramienta Financiera MyToolKit",
+    tabPercent: "Porcentaje",
+    tabProfit: "Ganancia / Pérdida",
+    tabDiscount: "Descuento",
+    calcBtn: "Calcular",
+    resetBtn: "Reiniciar",
+    resultLabel: "Resultado",
+    errValid: "Por favor introduce números válidos.",
+    percentLabels: { val1: "Número", val2: "Porcentaje (%)" },
+    profitLabels: { val1: "Precio de Coste", val2: "Precio de Venta" },
+    discountLabels: { val1: "Precio Original", val2: "% de Descuento" },
+    profitText: "Ganancia",
+    lossText: "Pérdida",
+    marginText: "margen",
+    discountAmount: "Descuento",
+    finalPrice: "Precio Final"
+  }
+} as const;
+
 export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [isMounted, setIsMounted] = useState(false);
   const [mode, setMode] = useState<"percent" | "profit" | "discount">("percent");
   
@@ -53,7 +116,7 @@ export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorT
     const num2 = parseFloat(val2);
 
     if (isNaN(num1) || isNaN(num2)) {
-      setResult(lang === "tr" ? "Lütfen geçerli sayılar girin." : "Please enter valid numbers.");
+      setResult(texts.errValid);
       return;
     }
 
@@ -63,19 +126,12 @@ export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorT
     } else if (mode === "profit") {
       const profit = num2 - num1;
       const margin = (profit / num1) * 100;
-      setResult(
-        lang === "tr" 
-          ? `Kar: ${profit} (${margin.toFixed(2)}% oran)` 
-          : `Profit: ${profit} (${margin.toFixed(2)}% margin)`
-      );
+      const prefix = profit >= 0 ? texts.profitText : texts.lossText;
+      setResult(`${prefix}: ${Math.abs(profit)} (${Math.abs(margin).toFixed(2)}% ${texts.marginText})`);
     } else if (mode === "discount") {
       const discountAmount = (num1 * num2) / 100;
       const finalPrice = num1 - discountAmount;
-      setResult(
-        lang === "tr"
-          ? `İndirim Tutarı: ${discountAmount} | İndirimli Fiyat: ${finalPrice}`
-          : `Discount: ${discountAmount} | Final Price: ${finalPrice}`
-      );
+      setResult(`${texts.discountAmount}: ${discountAmount} | ${texts.finalPrice}: ${finalPrice}`);
     }
   };
 
@@ -98,10 +154,10 @@ export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorT
         </div>
         <div>
           <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "Yüzde & Kar/Zarar Hesaplayıcı" : "Percentage & Profit/Loss Calculator"}
+            {texts.title}
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Finansal Araç" : "MyToolKit Finance Suite"}
+            {texts.subtitle}
           </p>
         </div>
 
@@ -110,19 +166,19 @@ export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorT
             onClick={() => { setMode("percent"); handleReset(); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "percent" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Yüzde Hesapla" : "Percentage"}
+            {texts.tabPercent}
           </button>
           <button
             onClick={() => { setMode("profit"); handleReset(); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "profit" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Kar / Zarar" : "Profit / Loss"}
+            {texts.tabProfit}
           </button>
           <button
             onClick={() => { setMode("discount"); handleReset(); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "discount" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "İndirim Oranı" : "Discount"}
+            {texts.tabDiscount}
           </button>
         </div>
       </CardHeader>
@@ -131,7 +187,7 @@ export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorT
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground">
-              {mode === "percent" ? (lang === "tr" ? "Sayı" : "Number") : mode === "profit" ? (lang === "tr" ? "Maliyet Fiyatı" : "Cost Price") : (lang === "tr" ? "Orijinal Fiyat" : "Original Price")}
+              {mode === "percent" ? texts.percentLabels.val1 : mode === "profit" ? texts.profitLabels.val1 : texts.discountLabels.val1}
             </label>
             <Input
               type="number"
@@ -143,7 +199,7 @@ export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorT
           </div>
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground">
-              {mode === "percent" ? (lang === "tr" ? "Yüzde (%)" : "Percentage (%)") : mode === "profit" ? (lang === "tr" ? "Satış Fiyatı" : "Selling Price") : (lang === "tr" ? "İndirim Yüzdesi (%)" : "Discount %")}
+              {mode === "percent" ? texts.percentLabels.val2 : mode === "profit" ? texts.profitLabels.val2 : texts.discountLabels.val2}
             </label>
             <Input
               type="number"
@@ -157,16 +213,16 @@ export default function ProfitLossCalculatorTool({ lang }: ProfitLossCalculatorT
 
         <div className="flex gap-2">
           <Button onClick={handleCalculate} className="flex-1 font-semibold">
-            {lang === "tr" ? "Hesapla" : "Calculate"}
+            {texts.calcBtn}
           </Button>
           <Button onClick={handleReset} variant="outline" className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10">
-            {lang === "tr" ? "Sıfırla" : "Reset"}
+            {texts.resetBtn}
           </Button>
         </div>
 
         {result !== null && (
           <div className="mt-6 p-4 bg-muted/50 rounded-xl text-center border border-border/50">
-            <span className="text-xs text-muted-foreground block mb-1">{lang === "tr" ? "Sonuç" : "Result"}</span>
+            <span className="text-xs text-muted-foreground block mb-1">{texts.resultLabel}</span>
             <span className="text-2xl font-bold font-mono text-emerald-500">{result}</span>
           </div>
         )}

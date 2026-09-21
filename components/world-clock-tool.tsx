@@ -20,7 +20,34 @@ const CITIES = [
   { name: "Sydney (AU)", zone: "Australia/Sydney" },
 ];
 
+const t = {
+  tr: {
+    title: "Dünya Saatleri & Saat Farkı",
+    subtitle: "Havalimanı Tarzı Canlı Zaman Karşılaştırıcı",
+    swapTitle: "Şehirleri Değiştir",
+    sameZone: "Aynı zaman dilimindeler",
+    aheadText: (c2: string, c1: string, sign: string, diff: number) => `${c2}, ${c1} konumundan ${sign}${diff} saat ileride`,
+  },
+  en: {
+    title: "World Clock & Time Difference",
+    subtitle: "Airport-Style Live Time Comparator",
+    swapTitle: "Swap Cities",
+    sameZone: "Same time zone",
+    aheadText: (c2: string, c1: string, sign: string, diff: number) => `${c2} is ${sign}${diff} hours ahead of ${c1}`,
+  },
+  es: {
+    title: "Reloj Mundial y Diferencia Horaria",
+    subtitle: "Comparador de Horarios en Vivo Estilo Aeropuerto",
+    swapTitle: "Intercambiar Ciudades",
+    sameZone: "Misma zona horaria",
+    aheadText: (c2: string, c1: string, sign: string, diff: number) => `${c2} está ${sign}${diff} horas por delante de ${c1}`,
+  }
+} as const;
+
 export default function WorldClockTool({ lang }: WorldClockToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [isMounted, setIsMounted] = useState(false);
 
   const [city1, setCity1] = useState("Europe/Istanbul");
@@ -62,6 +89,8 @@ export default function WorldClockTool({ lang }: WorldClockToolProps) {
       const now = new Date();
 
       try {
+        const localeTag = currentLang === "tr" ? "tr-TR" : currentLang === "es" ? "es-ES" : "en-GB";
+
         const t1 = new Intl.DateTimeFormat("en-GB", {
           timeZone: city1,
           hour: "2-digit",
@@ -70,7 +99,7 @@ export default function WorldClockTool({ lang }: WorldClockToolProps) {
           hour12: false,
         }).format(now);
 
-        const d1 = new Intl.DateTimeFormat(lang === "tr" ? "tr-TR" : "en-US", {
+        const d1 = new Intl.DateTimeFormat(localeTag, {
           timeZone: city1,
           weekday: "short",
           month: "short",
@@ -85,7 +114,7 @@ export default function WorldClockTool({ lang }: WorldClockToolProps) {
           hour12: false,
         }).format(now);
 
-        const d2 = new Intl.DateTimeFormat(lang === "tr" ? "tr-TR" : "en-US", {
+        const d2 = new Intl.DateTimeFormat(localeTag, {
           timeZone: city2,
           weekday: "short",
           month: "short",
@@ -111,14 +140,10 @@ export default function WorldClockTool({ lang }: WorldClockToolProps) {
         const cityName2 = CITIES.find((c) => c.zone === city2)?.name.split(" ")[0] || "";
 
         if (diff === 0) {
-          setDiffText(lang === "tr" ? "Aynı zaman dilimindeler" : "Same time zone");
+          setDiffText(texts.sameZone);
         } else {
           const sign = diff > 0 ? "+" : "";
-          setDiffText(
-            lang === "tr"
-              ? `${cityName2}, ${cityName1} konumundan ${sign}${diff} saat ileride`
-              : `${cityName2} is ${sign}${diff} hours ahead of ${cityName1}`
-          );
+          setDiffText(texts.aheadText(cityName2, cityName1, sign, diff));
         }
       } catch (e) {
         console.error("Zaman dilimi hesaplama hatası", e);
@@ -128,7 +153,7 @@ export default function WorldClockTool({ lang }: WorldClockToolProps) {
     updateTimes();
     const interval = setInterval(updateTimes, 1000);
     return () => clearInterval(interval);
-  }, [city1, city2, isMounted, lang]);
+  }, [city1, city2, isMounted, currentLang, texts]);
 
   const handleSwap = () => {
     const temp = city1;
@@ -146,12 +171,8 @@ export default function WorldClockTool({ lang }: WorldClockToolProps) {
             <Globe className="size-6" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">
-              {lang === "tr" ? "Dünya Saatleri & Saat Farkı" : "World Clock & Time Difference"}
-            </CardTitle>
-            <p className="text-xs text-muted-foreground mt-1">
-              {lang === "tr" ? "Havalimanı Tarzı Canlı Zaman Karşılaştırıcı" : "Airport-Style Live Time Comparator"}
-            </p>
+            <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+            <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
           </div>
         </CardHeader>
 
@@ -187,7 +208,7 @@ export default function WorldClockTool({ lang }: WorldClockToolProps) {
                 size="icon"
                 onClick={handleSwap}
                 className="rounded-full shadow-sm hover:bg-sky-500/10 hover:text-sky-500 transition-colors"
-                title={lang === "tr" ? "Şehirleri Değiştir" : "Swap Cities"}
+                title={texts.swapTitle}
               >
                 <ArrowRightLeft className="size-4" />
               </Button>

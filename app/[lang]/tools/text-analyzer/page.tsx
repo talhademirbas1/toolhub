@@ -1,24 +1,20 @@
 import type { Metadata } from "next";
 import TextAnalyzerTool from "@/components/text-analyzer-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
-
-type Lang = "tr" | "en";
+import { i18n, type Locale } from "@/i18n.config";
 
 const PATH = "/tools/text-analyzer";
 
 const content = {
   tr: {
     metaTitle: "Kelime ve Karakter Sayacı",
-    metaDescription:
-      "Metninizdeki kelime, karakter, cümle sayısını ve okuma süresini anında öğrenin. Boşluksuz karakter sayımı dahil, ücretsiz online sayaç.",
+    metaDescription: "Metninizdeki kelime, karakter, cümle sayısını ve okuma süresini anında öğrenin. Boşluksuz karakter sayımı dahil, ücretsiz online sayaç.",
     backButton: "Ana Sayfaya Dön",
     h1: "Kelime ve Karakter Sayacı",
     toolTitle: "Kelime ve Karakter Sayacı",
-    toolDescription:
-      "Metninizdeki kelime, karakter, cümle sayısını ve tahmini okuma süresini anında görün.",
+    toolDescription: "Metninizdeki kelime, karakter, cümle sayısını ve tahmini okuma süresini anında görün.",
     howToTitle: "Kelime ve karakter sayacı nasıl kullanılır?",
-    howToText:
-      "Metninizi yukarıdaki kutuya yazın veya yapıştırın. Kelime sayısı, karakter sayısı, boşluksuz karakter sayısı, cümle sayısı ve tahmini okuma süresi siz yazdıkça anında güncellenir. Kayıt olmanız veya bir şey indirmeniz gerekmez. Sonucu görmek için sayfayı açıp metni yapıştırmanız yeterlidir. İşiniz bitince Kopyala ile metni alabilir, Temizle ile kutuyu sıfırlayabilirsiniz.",
+    howToText: "Metninizi yukarıdaki kutuya yazın veya yapıştırın. Kelime sayısı, karakter sayısı, boşluksuz karakter sayısı, cümle sayısı ve tahmini okuma süresi siz yazdıkça anında güncellenir. Kayıt olmanız veya bir şey indirmeniz gerekmez. Sonucu görmek için sayfayı açıp metni yapıştırmanız yeterlidir. İşiniz bitince Kopyala ile metni alabilir, Temizle ile kutuyu sıfırlayabilirsiniz.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Ödev, makale ve tez metinlerinde kelime sınırını kontrol etmek",
@@ -48,16 +44,13 @@ const content = {
   },
   en: {
     metaTitle: "Word and Character Counter",
-    metaDescription:
-      "Count words, characters and sentences instantly and see the estimated reading time. Includes character count without spaces. Free online counter.",
+    metaDescription: "Count words, characters and sentences instantly and see the estimated reading time. Includes character count without spaces. Free online counter.",
     backButton: "Back to Home",
     h1: "Word and Character Counter",
     toolTitle: "Word and Character Counter",
-    toolDescription:
-      "Instantly see the word, character and sentence count of your text, plus the estimated reading time.",
+    toolDescription: "Instantly see the word, character and sentence count of your text, plus the estimated reading time.",
     howToTitle: "How to use the word and character counter",
-    howToText:
-      "Type or paste your text into the box above. The word count, character count, character count without spaces, sentence count and estimated reading time update as you type. You don't need to sign up or download anything. Just open the page and paste your text. When you're done, use Copy to grab the text or Clear to reset the box.",
+    howToText: "Type or paste your text into the box above. The word count, character count, character count without spaces, sentence count and estimated reading time update as you type. You don't need to sign up or download anything. Just open the page and paste your text. When you're done, use Copy to grab the text or Clear to reset the box.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Checking the word limit of essays, articles and theses",
@@ -85,37 +78,75 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Contador de Palabras y Caracteres",
+    metaDescription: "Cuenta palabras, caracteres y oraciones al instante y consulta el tiempo de lectura estimado. Incluye recuento sin espacios. Contador online gratuito.",
+    backButton: "Volver al Inicio",
+    h1: "Contador de Palabras y Caracteres",
+    toolTitle: "Contador de Palabras y Caracteres",
+    toolDescription: "Visualiza al instante el recuento de palabras, caracteres, oraciones y el tiempo estimado de lectura de tu texto.",
+    howToTitle: "¿Cómo usar el contador de palabras y caracteres?",
+    howToText: "Escribe o pega tu texto en el cuadro de arriba. El recuento de palabras, caracteres, caracteres sin espacios, oraciones y el tiempo de lectura estimado se actualizan al instante mientras escribes. No necesitas registrarte ni descargar nada. Abre la página y pega tu texto. Cuando termines, usa Copiar o Limpiar para restablecer el cuadro.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Comprobar el límite de palabras en ensayos, artículos y tesis",
+      "Mantenerse dentro de los límites de redes sociales como 280 caracteres en X (Twitter) o 150 en la biografía de Instagram",
+      "Ajustar la longitud de metadescripciones, listados y textos de productos",
+      "Estimar el tiempo de lectura de un discurso o presentación",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿Cómo se calcula el tiempo de lectura?",
+        a: "El tiempo de lectura se estima dividiendo el número de palabras por una velocidad de lectura promedio. Varía según la persona y la dificultad del texto, por lo que debe tomarse como una aproximación.",
+      },
+      {
+        q: "¿Para qué sirve el recuento de caracteres sin espacios?",
+        a: "Algunas plataformas y trabajos de traducción establecen límites o tarifas sin contar los espacios. El recuento sin espacios te da la medida correcta en esos casos.",
+      },
+      {
+        q: "¿Cómo se cuentan las oraciones?",
+        a: "El recuento de oraciones se basa en los signos de puntuación finales como puntos, signos de interrogación y exclamación. Las abreviaturas o puntos suspensivos pueden afectar ligeramente al resultado.",
+      },
+      {
+        q: "¿La herramienta es gratuita? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta.",
+      },
+    ],
+  },
 } as const;
 
-export function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+export async function generateStaticParams() {
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -124,12 +155,11 @@ export async function generateMetadata({
 export default async function TextAnalyzerPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
 
-  // Araç bileşeninin beklediği sözlük yapısı
   const dict = {
     dashboard: {
       backButton: c.backButton,
@@ -145,14 +175,11 @@ export default async function TextAnalyzerPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            TextAnalyzerTool zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <TextAnalyzerTool dict={dict} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

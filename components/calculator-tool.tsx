@@ -1,35 +1,55 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useToolNavigation } from "@/hooks/use-tool-navigation";
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calculator, Sun, Moon, ArrowLeft } from "lucide-react";
+import { i18n, type Locale } from "@/i18n.config";
 
 interface CalculatorToolProps {
   lang: string;
 }
 
-const numberToWords = (numStr: string, lang: string): string => {
-  const num = parseFloat(numStr);
-  if (isNaN(num)) return "";
-  if (num === 0) return lang === "tr" ? "sıfır" : "zero";
-
-  if (lang === "tr") {
-    if (num > 999999999999) return "Sayı çok büyük";
-    try {
-      return numberToTurkishWords(num);
-    } catch {
-      return "";
-    }
-  } else {
-    if (num > 999999999999) return "Number too large";
-    try {
-      return numberToEnglishWords(num);
-    } catch {
-      return "";
-    }
+const t = {
+  tr: {
+    backBtn: "Ana Sayfaya Dön",
+    title: "Hesap Makinesi",
+    subtitle: "MyToolKit Hesaplama Aracı",
+    errorNum: "Sayı çok büyük",
+    zero: "sıfır",
+  },
+  en: {
+    backBtn: "Back to Home",
+    title: "Calculator",
+    subtitle: "MyToolKit Math Suite",
+    errorNum: "Number too large",
+    zero: "zero",
+  },
+  es: {
+    backBtn: "Volver al Inicio",
+    title: "Calculadora",
+    subtitle: "Herramienta de Matemáticas MyToolKit",
+    errorNum: "Número demasiado grande",
+    zero: "cero",
   }
+} as const;
+
+// İspanyolca sayı çevirme (Basit form)
+const numberToSpanishWords = (n: number): string => {
+  if (n === 0) return "";
+  const unidades = ["", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve"];
+  const decenas = ["", "", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"];
+  const centenas = ["", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"];
+
+  if (n < 20) return unidades[n];
+  if (n < 30) return n === 20 ? "veinte" : "veinti" + unidades[n % 10];
+  if (n < 100) return decenas[Math.floor(n / 10)] + (n % 10 !== 0 ? " y " + unidades[n % 10] : "");
+  if (n < 1000) return n === 100 ? "cien" : centenas[Math.floor(n / 100)] + (n % 100 !== 0 ? " " + numberToSpanishWords(n % 100) : "");
+  if (n < 1000000) return (Math.floor(n / 1000) === 1 ? "mil" : numberToSpanishWords(Math.floor(n / 1000)) + " mil") + (n % 1000 !== 0 ? " " + numberToSpanishWords(n % 1000) : "");
+  if (n < 1000000000) return (Math.floor(n / 1000000) === 1 ? "un millón" : numberToSpanishWords(Math.floor(n / 1000000)) + " millones") + (n % 1000000 !== 0 ? " " + numberToSpanishWords(n % 1000000) : "");
+  return (Math.floor(n / 1000000000) === 1 ? "mil millones" : numberToSpanishWords(Math.floor(n / 1000000000)) + " mil millones") + (n % 1000000000 !== 0 ? " " + numberToSpanishWords(n % 1000000000) : "");
 };
 
 const numberToTurkishWords = (n: number): string => {
@@ -85,11 +105,31 @@ const formatNumberWithCommas = (val: string) => {
 };
 
 export default function CalculatorTool({ lang }: CalculatorToolProps) {
-  const { handleBack, toggleLanguage } = useToolNavigation(lang);
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+  
+  const router = useRouter();
+  const pathname = usePathname();
+  
   const [isMounted, setIsMounted] = useState(false);
   const [dark, setDark] = useState(false);
   const [display, setDisplay] = useState("0");
   const [equation, setEquation] = useState("");
+
+  const numberToWords = (numStr: string, lng: typeof currentLang): string => {
+    const num = parseFloat(numStr);
+    if (isNaN(num)) return "";
+    if (num === 0) return texts.zero;
+    if (num > 999999999999) return texts.errorNum;
+  
+    try {
+      if (lng === "tr") return numberToTurkishWords(num);
+      if (lng === "es") return numberToSpanishWords(num);
+      return numberToEnglishWords(num);
+    } catch {
+      return "";
+    }
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -132,6 +172,18 @@ export default function CalculatorTool({ lang }: CalculatorToolProps) {
     }
   }
 
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLang = e.target.value as Locale;
+    if (dark) localStorage.setItem('theme', 'dark');
+    else localStorage.setItem('theme', 'light');
+
+    if (!pathname) return;
+    const pathParts = pathname.split('/');
+    pathParts[1] = newLang; 
+    const newPath = pathParts.join('/');
+    router.push(newPath);
+  };
+
   const handleNumber = (num: string) => {
     if (display === "0" || display === "Error") {
       setDisplay(num);
@@ -167,22 +219,32 @@ export default function CalculatorTool({ lang }: CalculatorToolProps) {
 
   if (!isMounted) return null;
 
-  const numberInWords = numberToWords(display, lang);
+  const numberInWords = numberToWords(display, currentLang);
 
   return (
     <div className="w-full max-w-md mx-auto space-y-4">
       <div className="flex items-center justify-between px-1 border-b border-border/60 pb-4">
-        <button
-          onClick={handleBack}
+        <Link
+          href={`/${currentLang}`}
           className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
         >
           <ArrowLeft className="size-4" />
-          {lang === "tr" ? "Ana Sayfaya Dön" : "Back to Home"}
-        </button>
+          {texts.backBtn}
+        </Link>
         <div className="flex items-center gap-2">
-          <Button onClick={toggleLanguage} size="icon" variant="outline" className="font-bold text-xs h-9 w-9">
-            {lang === "tr" ? "EN" : "TR"}
-          </Button>
+          
+          <select
+            value={currentLang}
+            onChange={handleLanguageChange}
+            className="h-9 cursor-pointer rounded-md border border-input bg-transparent px-2 py-1 text-xs font-bold uppercase shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            {i18n.locales.map((l) => (
+              <option key={l} value={l} className="uppercase bg-background text-foreground">
+                {l.toUpperCase()}
+              </option>
+            ))}
+          </select>
+
           <Button onClick={toggleTheme} size="icon" variant="outline" className="h-9 w-9">
             {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </Button>
@@ -196,10 +258,10 @@ export default function CalculatorTool({ lang }: CalculatorToolProps) {
           </div>
           <div>
             <CardTitle className="text-xl font-bold">
-              {lang === "tr" ? "Hesap Makinesi" : "Calculator"}
+              {texts.title}
             </CardTitle>
             <p className="text-xs text-muted-foreground mt-1">
-              {lang === "tr" ? "MyToolKit Hesaplama Aracı" : "MyToolKit Math Suite"}
+              {texts.subtitle}
             </p>
           </div>
         </CardHeader>

@@ -1,0 +1,102 @@
+{
+    "dashboard": {
+      "backButton": "Volver",
+      "searchPlaceholder": "Buscar herramientas...",
+      "themeLight": "Cambiar a tema claro",
+      "themeDark": "Cambiar a tema oscuro",
+      "subtitle": "Tareas diarias, más fáciles",
+      "title1": "Herramientas online gratuitas,",
+      "title2": "en un solo lugar.",
+      "description": "Calculadora de porcentajes y descuentos, contador de palabras, prueba de velocidad de escritura, reloj mundial y más. Rápido, sencillo y gratuito. Sin registro ni instalación.",
+      "toolsCount": "herramientas",
+      "useButton": "Usar / Abrir",
+      "notFound": "No se encontraron herramientas que coincidan con tu búsqueda.",
+      "footer": "MyToolKit · Simple. Rápido. Útil."
+    },
+    "stopwatch": {
+      "title": "Cronómetro",
+      "start": "Iniciar",
+      "pause": "Pausar",
+      "reset": "Reiniciar",
+      "lap": "Vuelta",
+      "description": "Inicia, pausa o reinicia el tiempo.",
+      "lapsTitle": "Vueltas",
+      "lapItem": "Vuelta"
+    },
+    "categories": {
+      "all": "Todo",
+      "visual": "Herramientas Visuales",
+      "text": "Herramientas de Texto",
+      "calculators": "Calculadoras",
+      "time": "Tiempo"
+    },
+    "tools": {
+      "imageConverter": {
+        "title": "Convertidor y Compresor de Imágenes",
+        "description": "Convierte y comprime rápidamente tus archivos WEBP, PNG y JPG manteniendo la calidad."
+      },
+      "textAnalyzer": {
+        "title": "Contador de Palabras y Caracteres",
+        "subtitle": "Herramienta de Texto MyToolKit",
+        "description": "Calcula el número de palabras, caracteres y oraciones; conoce el tiempo de lectura al instante.",
+        "placeholder": "Escribe o pega tu texto aquí...",
+        "characters": "CARACTERES",
+        "charactersNoSpace": "Caracteres (sin espacios)",
+        "words": "PALABRAS",
+        "sentences": "ORACIONES",
+        "readingTime": "TIEMPO DE LECTURA",
+        "seconds": "seg",
+        "clear": "Limpiar",
+        "copy": "Copiar",
+        "copied": "¡Copiado!"
+      },
+      "percentageCalculator": {
+        "title": "Calculadora de Porcentajes, Ganancias y Descuentos",
+        "description": "Realiza cálculos de porcentajes, márgenes de beneficio y precios con descuento en una interfaz sencilla."
+      },
+      "classicCalculator": {
+        "title": "Calculadora Online",
+        "description": "Realiza las cuatro operaciones matemáticas básicas de forma práctica y rápida."
+      },
+      "timeDifference": {
+        "title": "Calculadora de Diferencia de Fecha y Hora",
+        "description": "Calcula al instante la diferencia entre dos fechas u horas en días, horas y minutos."
+      },
+      "stopwatchTool": {
+        "title": "Cronómetro y Temporizador Online",
+        "description": "Lleva el tiempo, registra tiempos de vuelta y haz cuentas regresivas prácticas."
+      },
+      "worldClock": {
+        "title": "Reloj Mundial y Diferencia Horaria",
+        "description": "Consulta la hora actual en diferentes ciudades y compara las diferencias horarias entre ellas."
+      },
+      "typingTest": {
+        "title": "Prueba de Velocidad de Escritura (WPM)",
+        "description": "Prueba cuántas palabras puedes escribir en 60 segundos y mide tu velocidad de mecanografía."
+      },
+      "ageCalculator": {
+        "title": "Calculadora de Edad",
+        "description": "Calcula al instante tu edad exacta en años, meses y días desde tu fecha de nacimiento."
+      },
+      "bmiCalculator": {
+        "title": "Calculadora de Índice de Masa Corporal (IMC)",
+        "description": "Calcula tu índice de masa corporal al instante introduciendo tu altura y peso."
+      },
+      "gpaCalculator": {
+        "title": "Calculadora de Promedio de Notas (GPA)",
+        "description": "Calcula tu promedio general introduciendo las notas y créditos de tus asignaturas."
+      },
+      "qrCodeGenerator": {
+        "title": "Generador de Códigos QR",
+        "description": "Genera códigos QR gratuitos para textos o enlaces y descárgalos como PNG."
+      },
+      "passwordGenerator": {
+        "title": "Generador de Contraseñas",
+        "description": "Genera contraseñas seguras, aleatorias y fuertes."
+      },
+      "unitConverter": {
+        "title": "Convertidor de Unidades",
+        "description": "Convierte unidades de longitud, peso y temperatura al instante."
+      }
+    }
+  }

@@ -15,7 +15,64 @@ interface Lap {
   time: string;
 }
 
+const t = {
+  tr: {
+    title: "Kronometre",
+    subtitle: "MyToolKit Zaman Aracı",
+    swTab: "Kronometre",
+    cdTab: "Zamanlayıcı",
+    start: "Başlat",
+    pause: "Durdur",
+    reset: "Sıfırla",
+    lap: "Tur",
+    timesUp: "Süre Bitti!",
+    hours: "Saat",
+    minutes: "Dakika",
+    seconds: "Saniye",
+    lapTimesHeader: "TUR ZAMANLARI",
+    timeHeader: "SÜRE",
+    lapPrefix: "Tur"
+  },
+  en: {
+    title: "Stopwatch",
+    subtitle: "MyToolKit Timer Suite",
+    swTab: "Stopwatch",
+    cdTab: "Countdown",
+    start: "Start",
+    pause: "Pause",
+    reset: "Reset",
+    lap: "Lap",
+    timesUp: "Time's Up!",
+    hours: "Hours",
+    minutes: "Minutes",
+    seconds: "Seconds",
+    lapTimesHeader: "LAP TIMES",
+    timeHeader: "TIME",
+    lapPrefix: "Lap"
+  },
+  es: {
+    title: "Cronómetro",
+    subtitle: "Herramienta de Tiempo MyToolKit",
+    swTab: "Cronómetro",
+    cdTab: "Temporizador",
+    start: "Iniciar",
+    pause: "Pausar",
+    reset: "Reiniciar",
+    lap: "Vuelta",
+    timesUp: "¡Tiempo Agotado!",
+    hours: "Horas",
+    minutes: "Minutos",
+    seconds: "Segundos",
+    lapTimesHeader: "TIEMPOS DE VUELTA",
+    timeHeader: "TIEMPO",
+    lapPrefix: "Vuelta"
+  }
+} as const;
+
 export default function StopwatchTool({ lang }: StopwatchToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [isMounted, setIsMounted] = useState(false);
   const [mode, setMode] = useState<"stopwatch" | "countdown">("stopwatch");
 
@@ -209,12 +266,8 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
           <Timer className="size-6" />
         </div>
         <div>
-          <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "Kronometre" : "Stopwatch"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Zaman Aracı" : "MyToolKit Timer Suite"}
-          </p>
+          <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
         </div>
 
         <div className="flex justify-center gap-1 bg-muted p-1 rounded-lg text-xs mt-2">
@@ -222,13 +275,13 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
             onClick={() => { setMode("stopwatch"); localStorage.setItem("sw_mode", "stopwatch"); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "stopwatch" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Kronometre" : "Stopwatch"}
+            {texts.swTab}
           </button>
           <button
             onClick={() => { setMode("countdown"); localStorage.setItem("sw_mode", "countdown"); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "countdown" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Zamanlayıcı" : "Countdown"}
+            {texts.cdTab}
           </button>
         </div>
       </CardHeader>
@@ -252,13 +305,13 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
                 }`}
               >
                 {swRunning ? <Pause className="size-4" /> : <Play className="size-4" />}
-                {swRunning ? (lang === "tr" ? "Durdur" : "Pause") : (lang === "tr" ? "Başlat" : "Start")}
+                {swRunning ? texts.pause : texts.start}
               </Button>
 
               {swRunning && (
                 <Button onClick={handleLap} variant="outline" className="gap-2">
                   <Flag className="size-4" />
-                  {lang === "tr" ? "Tur" : "Lap"}
+                  {texts.lap}
                 </Button>
               )}
 
@@ -276,21 +329,21 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
                 className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 px-4"
               >
                 <RotateCcw className="size-4 mr-1" />
-                {lang === "tr" ? "Sıfırla" : "Reset"}
+                {texts.reset}
               </Button>
             </div>
 
             {laps.length > 0 && (
               <div className="border border-border/60 rounded-xl overflow-hidden bg-muted/20 text-xs font-mono text-left">
                 <div className="bg-muted/50 px-4 py-2 font-semibold text-muted-foreground border-b border-border/40 flex justify-between">
-                  <span>{lang === "tr" ? "TUR ZAMANLARI" : "LAP TIMES"}</span>
-                  <span>{lang === "tr" ? "SÜRE" : "TIME"}</span>
+                  <span>{texts.lapTimesHeader}</span>
+                  <span>{texts.timeHeader}</span>
                 </div>
                 <div className="max-h-40 overflow-y-auto divide-y divide-border/30">
                   {laps.map((lap) => (
                     <div key={lap.id} className="flex justify-between px-4 py-2">
                       <span className="text-muted-foreground">
-                        {lang === "tr" ? `Tur ${lap.id}` : `Lap ${lap.id}`}
+                        {texts.lapPrefix} {lap.id}
                       </span>
                       <span className="font-bold">{lap.time}</span>
                     </div>
@@ -307,14 +360,14 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
               </span>
               {cdTimeLeftMs === 0 && (
                 <span className="text-sm font-semibold text-rose-500 animate-pulse block">
-                  {lang === "tr" ? "Süre Bitti!" : "Time's Up!"}
+                  {texts.timesUp}
                 </span>
               )}
             </div>
 
             <div className="flex items-center justify-center gap-2">
               <div className="flex flex-col items-center gap-1">
-                <span className="text-[10px] text-muted-foreground">{lang === "tr" ? "Saat" : "Hours"}</span>
+                <span className="text-[10px] text-muted-foreground">{texts.hours}</span>
                 <Input
                   type="number"
                   value={cdHours}
@@ -326,7 +379,7 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
               </div>
               <span className="text-xl font-bold mt-5">:</span>
               <div className="flex flex-col items-center gap-1">
-                <span className="text-[10px] text-muted-foreground">{lang === "tr" ? "Dakika" : "Minutes"}</span>
+                <span className="text-[10px] text-muted-foreground">{texts.minutes}</span>
                 <Input
                   type="number"
                   value={cdMinutes}
@@ -339,7 +392,7 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
               </div>
               <span className="text-xl font-bold mt-5">:</span>
               <div className="flex flex-col items-center gap-1">
-                <span className="text-[10px] text-muted-foreground">{lang === "tr" ? "Saniye" : "Seconds"}</span>
+                <span className="text-[10px] text-muted-foreground">{texts.seconds}</span>
                 <Input
                   type="number"
                   value={cdSeconds}
@@ -362,7 +415,7 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
                 }`}
               >
                 {cdRunning ? <Pause className="size-4" /> : <Play className="size-4" />}
-                {cdRunning ? (lang === "tr" ? "Durdur" : "Pause") : (lang === "tr" ? "Başlat" : "Start")}
+                {cdRunning ? texts.pause : texts.start}
               </Button>
               <Button
                 onClick={() => {
@@ -376,7 +429,7 @@ export default function StopwatchTool({ lang }: StopwatchToolProps) {
                 className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 px-4"
               >
                 <RotateCcw className="size-4 mr-1" />
-                {lang === "tr" ? "Sıfırla" : "Reset"}
+                {texts.reset}
               </Button>
             </div>
           </>

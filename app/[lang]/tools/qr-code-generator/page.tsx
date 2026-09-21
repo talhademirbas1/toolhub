@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import QrCodeTool from "@/components/qr-code-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/qr-code-generator";
 
 const content = {
   tr: {
     metaTitle: "QR Kod Oluşturucu",
-    metaDescription:
-      "Metin veya link için ücretsiz QR kod oluşturun ve PNG olarak indirin. Kayıt gerektirmeyen online QR kod üretici.",
+    metaDescription: "Metin veya link için ücretsiz QR kod oluşturun ve PNG olarak indirin. Kayıt gerektirmeyen online QR kod üretici.",
     h1: "QR Kod Oluşturucu",
     howToTitle: "QR kod oluşturucu nasıl kullanılır?",
-    howToText:
-      "QR koda dönüştürmek istediğiniz metni veya linki kutuya yazın, istediğiniz boyutu seçin ve 'QR Kod Oluştur' butonuna basın. Oluşan QR kodu doğrudan telefonunuzla tarayabilir veya PNG olarak bilgisayarınıza indirebilirsiniz.",
+    howToText: "QR koda dönüştürmek istediğiniz metni veya linki kutuya yazın, istediğiniz boyutu seçin ve 'QR Kod Oluştur' butonuna basın. Oluşan QR kodu doğrudan telefonunuzla tarayabilir veya PNG olarak bilgisayarınıza indirebilirsiniz.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Web sitesi veya sosyal medya linkinizi kartvizite eklemek",
@@ -45,12 +41,10 @@ const content = {
   },
   en: {
     metaTitle: "QR Code Generator",
-    metaDescription:
-      "Generate a free QR code for text or a link and download it as PNG. A free online QR code generator that needs no sign-up.",
+    metaDescription: "Generate a free QR code for text or a link and download it as PNG. A free online QR code generator that needs no sign-up.",
     h1: "QR Code Generator",
     howToTitle: "How to use the QR code generator",
-    howToText:
-      "Type the text or link you want to turn into a QR code, choose the size you want, and click 'Generate QR Code'. You can scan the resulting QR code directly with your phone or download it as a PNG to your computer.",
+    howToText: "Type the text or link you want to turn into a QR code, choose the size you want, and click 'Generate QR Code'. You can scan the resulting QR code directly with your phone or download it as a PNG to your computer.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Adding your website or social media link to a business card",
@@ -78,37 +72,72 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Generador de Códigos QR",
+    metaDescription: "Genera códigos QR gratis para textos o enlaces y descárgatelos como PNG. Generador online gratuito sin registro.",
+    h1: "Generador de Códigos QR",
+    howToTitle: "¿Cómo usar el generador de códigos QR?",
+    howToText: "Escribe el texto o enlace que quieras convertir en código QR, selecciona el tamaño deseado y haz clic en 'Generar Código QR'. Puedes escanear el código QR resultante directamente con tu teléfono o descargarlo como PNG en tu ordenador.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Añadir el enlace de tu sitio web o redes sociales a una tarjeta de visita",
+      "Compartir fácilmente una contraseña de Wi-Fi o información de contacto",
+      "Añadir un enlace digital a un menú, folleto o cartel",
+      "Colocar un código QR en entradas de eventos o embalajes de productos",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿El código QR que genero funciona para siempre?",
+        a: "Sí, el código QR generado es estático; sigue funcionando indefinidamente siempre que la información codificada en él no cambie.",
+      },
+      {
+        q: "¿Puedo usar el código QR con fines comerciales?",
+        a: "Sí, puedes utilizar libremente los códigos QR que generes en tus proyectos personales o comerciales.",
+      },
+      {
+        q: "¿Necesito registrarme para generar un código QR?",
+        a: "No, la herramienta es completamente gratuita y no requiere registro ni cuenta.",
+      },
+      {
+        q: "¿Qué tipo de información puedo convertir en un código QR?",
+        a: "Puedes convertir un enlace web, texto plano, número de teléfono, dirección de correo electrónico o cualquier texto corto similar en un código QR.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -117,7 +146,7 @@ export async function generateMetadata({
 export default async function QrCodeGeneratorPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];

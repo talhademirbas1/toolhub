@@ -2,41 +2,45 @@ import type { Metadata } from 'next'
 import { getDictionary } from './dictionaries'
 import ToolHubDashboard from '@/components/toolhub-dashboard'
 import { redirect } from 'next/navigation'
+import { i18n, type Locale } from '@/i18n.config'
 
-type Lang = 'tr' | 'en'
-
-const descriptions = {
+// Dinamik diller için Record tipi kullanıyoruz
+const descriptions: Record<Locale, string> = {
   tr: 'Yüzde ve indirim hesaplama, kelime sayacı, yazma hızı testi, dünya saati, resim dönüştürücü ve daha fazlası. Kayıt gerektirmeyen ücretsiz online araçlar.',
   en: 'Percentage and discount calculator, word counter, typing speed test, world clock, image converter and more. Free online tools with no sign-up.',
-} as const
+  es: 'Calculadora de porcentajes y descuentos, contador de palabras, prueba de velocidad de escritura, reloj mundial, convertidor de imágenes y más. Herramientas online gratuitas sin registro.'
+}
 
+// 1. Dinamik Static Params (15 dosyada manuel eklemek yerine merkezden alıyoruz)
 export function generateStaticParams() {
-  return [{ lang: 'tr' }, { lang: 'en' }]
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>
+  params: Promise<{ lang: Locale }>
 }): Promise<Metadata> {
   const { lang } = await params
 
-  // Başlık, [lang]/layout.tsx içindeki varsayılan başlıktan gelir
+  // 2. Dinamik Hreflang SEO yapısı
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}`;
+
   return {
     description: descriptions[lang],
     alternates: {
       canonical: `/${lang}`,
-      languages: {
-        tr: '/tr',
-        en: '/en',
-        'x-default': '/tr',
-      },
+      languages: languages,
     },
     openGraph: {
       description: descriptions[lang],
       url: `/${lang}`,
       siteName: 'MyToolKit',
-      locale: lang === 'tr' ? 'tr_TR' : 'en_US',
+      locale: lang === 'tr' ? 'tr_TR' : lang === 'es' ? 'es_ES' : 'en_US',
       type: 'website',
     },
   }
@@ -45,18 +49,17 @@ export async function generateMetadata({
 export default async function Page({
   params,
 }: {
-  params: Promise<{ lang: Lang }>
+  params: Promise<{ lang: Locale }>
 }) {
   const resolvedParams = await params;
   const lang = resolvedParams.lang;
   const dict = await getDictionary(lang);
 
-  async function handleLangChange(newLang: string) {
+  async function handleLangChange(newLang: Locale) {
     'use server'
     redirect(`/${newLang}`);
   }
 
-  // Google'a sitenin adını ve dilini bildiren yapılandırılmış veri
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',

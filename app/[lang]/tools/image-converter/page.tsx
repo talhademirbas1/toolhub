@@ -1,20 +1,17 @@
 import type { Metadata } from "next";
 import ImageConverterTool from "@/components/image-converter-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
-
-type Lang = "tr" | "en";
+import { i18n, type Locale } from "@/i18n.config";
 
 const PATH = "/tools/image-converter";
 
 const content = {
   tr: {
     metaTitle: "Online Resim Dönüştürücü",
-    metaDescription:
-      "Görsellerinizi farklı resim formatlarına kolayca dönüştürün. Ücretsiz, kayıt gerektirmeyen ve kullanımı basit online resim dönüştürücü.",
+    metaDescription: "Görsellerinizi farklı resim formatlarına kolayca dönüştürün. Ücretsiz, kayıt gerektirmeyen ve kullanımı basit online resim dönüştürücü.",
     h1: "Online Resim Dönüştürücü",
     howToTitle: "Resim dönüştürücü nasıl kullanılır?",
-    howToText:
-      "Dönüştürmek istediğiniz görseli araca yükleyin, istediğiniz çıktı formatını seçin ve dönüştürme işlemini başlatın. Sonuç hazır olunca yeni dosyayı bilgisayarınıza veya telefonunuza kaydedebilirsiniz. Kayıt olmanız veya bir program kurmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
+    howToText: "Dönüştürmek istediğiniz görseli araca yükleyin, istediğiniz çıktı formatını seçin ve dönüştürme işlemini başlatın. Sonuç hazır olunca yeni dosyayı bilgisayarınıza veya telefonunuza kaydedebilirsiniz. Kayıt olmanız veya bir program kurmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Bir siteye veya forma yüklerken istenen resim formatına çevirmek",
@@ -40,12 +37,10 @@ const content = {
   },
   en: {
     metaTitle: "Online Image Converter",
-    metaDescription:
-      "Convert your images to other image formats with ease. A free, simple online image converter that needs no sign-up.",
+    metaDescription: "Convert your images to other image formats with ease. A free, simple online image converter that needs no sign-up.",
     h1: "Online Image Converter",
     howToTitle: "How to use the image converter",
-    howToText:
-      "Upload the image you want to convert, choose the output format you need and start the conversion. When the result is ready, you can save the new file to your computer or phone. You don't need to sign up or install a program, the tool works right in your browser.",
+    howToText: "Upload the image you want to convert, choose the output format you need and start the conversion. When the result is ready, you can save the new file to your computer or phone. You don't need to sign up or install a program, the tool works right in your browser.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Converting an image to the format a website or form asks for",
@@ -69,37 +64,68 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Convertidor de Imágenes Online",
+    metaDescription: "Convierte tus imágenes a diferentes formatos fácilmente. Convertidor de imágenes online gratuito, sencillo y sin registro.",
+    h1: "Convertidor de Imágenes Online",
+    howToTitle: "¿Cómo usar el convertidor de imágenes?",
+    howToText: "Sube la imagen que deseas convertir, elige el formato de salida y comienza la conversión. Cuando el resultado esté listo, puedes guardar el nuevo archivo en tu ordenador o teléfono. No necesitas registrarte ni instalar programas, funciona directamente en tu navegador.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Convertir una imagen al formato requerido por un sitio web o formulario",
+      "Hacer que una imagen en formato incompatible se pueda abrir en cualquier dispositivo",
+      "Convertir imágenes de sitios web y blogs al formato adecuado",
+      "Cambiar formatos rápidamente en tu navegador sin instalar software",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿El convertidor de imágenes es gratis? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta.",
+      },
+      {
+        q: "¿A qué formatos puedo convertir?",
+        a: "Los formatos de salida que puedes elegir están listados en la pantalla de conversión.",
+      },
+      {
+        q: "¿Puedo usarlo en mi teléfono o tablet?",
+        a: "La herramienta funciona en el navegador, por lo que puedes usarla desde un móvil, tablet u ordenador.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -108,7 +134,7 @@ export async function generateMetadata({
 export default async function ImageConverterPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -116,14 +142,11 @@ export default async function ImageConverterPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            ImageConverterTool zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <ImageConverterTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

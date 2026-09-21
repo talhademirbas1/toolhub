@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import TimeDifferenceTool from "@/components/time-difference-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/time-difference";
 
 const content = {
   tr: {
     metaTitle: "Zaman Farkı Hesaplama",
-    metaDescription:
-      "İki zaman arasındaki farkı anında hesaplayın. Ücretsiz, kayıt gerektirmeyen ve kullanımı kolay online zaman farkı hesaplama aracı.",
+    metaDescription: "İki zaman arasındaki farkı anında hesaplayın. Ücretsiz, kayıt gerektirmeyen ve kullanımı kolay online zaman farkı hesaplama aracı.",
     h1: "Zaman Farkı Hesaplama",
     howToTitle: "Zaman farkı nasıl hesaplanır?",
-    howToText:
-      "Karşılaştırmak istediğiniz iki zamanı araca girin, aradaki fark anında hesaplansın. Elle çıkarma işlemi yapmanıza ve hata yapma ihtimaline gerek kalmaz. Kayıt olmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
+    howToText: "Karşılaştırmak istediğiniz iki zamanı araca girin, aradaki fark anında hesaplansın. Elle çıkarma işlemi yapmanıza ve hata yapma ihtimaline gerek kalmaz. Kayıt olmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Mesai, vardiya ve çalışma sürelerini hesaplamak",
@@ -37,12 +33,10 @@ const content = {
   },
   en: {
     metaTitle: "Time Difference Calculator",
-    metaDescription:
-      "Instantly calculate the difference between two times. A free, easy-to-use online time difference calculator that needs no sign-up.",
+    metaDescription: "Instantly calculate the difference between two times. A free, easy-to-use online time difference calculator that needs no sign-up.",
     h1: "Time Difference Calculator",
     howToTitle: "How to calculate a time difference",
-    howToText:
-      "Enter the two times you want to compare and the difference is calculated instantly. There's no need to subtract by hand and risk making a mistake. You don't need to sign up, the tool works right in your browser.",
+    howToText: "Enter the two times you want to compare and the difference is calculated instantly. There's no need to subtract by hand and risk making a mistake. You don't need to sign up, the tool works right in your browser.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Calculating work hours, shifts and durations",
@@ -62,37 +56,64 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Calculadora de Diferencia de Tiempo",
+    metaDescription: "Calcula al instante la diferencia entre dos tiempos. Calculadora online de diferencia de tiempo gratuita, fácil de usar y sin registro.",
+    h1: "Calculadora de Diferencia de Tiempo",
+    howToTitle: "¿Cómo calcular la diferencia de tiempo?",
+    howToText: "Introduce los dos tiempos que deseas comparar en la herramienta y la diferencia se calculará al instante. No necesitas hacer restas a mano ni arriesgarte a cometer errores. No requiere registro, la herramienta funciona directamente en tu navegador.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Calcular horas de trabajo, turnos y duraciones",
+      "Averiguar cuánto duró un evento o un viaje",
+      "Comprobar duraciones al planificar reuniones y horarios",
+      "Ver la diferencia de tiempo rápidamente sin restar a mano",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿La calculadora de diferencia de tiempo es gratuita? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta.",
+      },
+      {
+        q: "¿Puedo usarla en mi teléfono o tablet?",
+        a: "La herramienta funciona en el navegador, por lo que puedes usarla desde móviles, tablets u ordenadores.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -101,7 +122,7 @@ export async function generateMetadata({
 export default async function TimeDifferencePage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -109,14 +130,11 @@ export default async function TimeDifferencePage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            TimeDifferenceTool zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <TimeDifferenceTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

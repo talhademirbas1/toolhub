@@ -10,22 +10,22 @@ import {
   Moon,
   Search,
   Sun,
-  Zap,
   Clock,
   Timer,
   Globe,
-  Keyboard, // Klavye ikonu eklendi
-  Cake, // Yaş hesaplama ikonu
-  Scale, // BMI hesaplama ikonu
-  GraduationCap, // GPA hesaplama ikonu
-  QrCode, // QR Kod ikonu
-  KeyRound, // Şifre Oluşturucu ikonu
-  Ruler // Birim Çevirici ikonu
+  Keyboard,
+  Cake,
+  Scale,
+  GraduationCap,
+  QrCode,
+  KeyRound,
+  Ruler
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { i18n, type Locale } from '@/i18n.config'
 
 type CategoryKey = 'all' | 'visual' | 'text' | 'calculators' | 'time';
 
@@ -42,24 +42,20 @@ const categoryKeys: CategoryKey[] = ['all', 'visual', 'text', 'calculators', 'ti
 const baseTools: ToolBase[] = [
   { id: 'imageConverter', categoryKey: 'visual', icon: ImageIcon, accent: 'bg-sky-500/10 text-sky-400 ring-sky-400/20', slug: 'image-converter' },
   { id: 'textAnalyzer', categoryKey: 'text', icon: FileText, accent: 'bg-violet-500/10 text-violet-400 ring-violet-400/20', slug: 'text-analyzer' },
-  // YENİ KLAVYE HIZ TESTİ ARACI BURAYA EKLENDİ:
   { id: 'typingTest', categoryKey: 'text', icon: Keyboard, accent: 'bg-indigo-500/10 text-indigo-400 ring-indigo-400/20', slug: 'typing-test' },
   { id: 'percentageCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-emerald-500/10 text-emerald-400 ring-emerald-400/20', slug: 'percentage-calculator' },
   { id: 'classicCalculator', categoryKey: 'calculators', icon: Calculator, accent: 'bg-amber-500/10 text-amber-500 ring-amber-500/20', slug: 'classic-calculator' },
   { id: 'timeDifference', categoryKey: 'time', icon: Clock, accent: 'bg-cyan-500/10 text-cyan-500 ring-cyan-500/20', slug: 'time-difference' },
   { id: 'stopwatchTool', categoryKey: 'time', icon: Timer, accent: 'bg-rose-500/10 text-rose-500 ring-rose-500/20', slug: 'stopwatch' },
   { id: 'worldClock', categoryKey: 'time', icon: Globe, accent: 'bg-blue-500/10 text-blue-500 ring-blue-500/20', slug: 'world-clock' },
-  // YENİ ARAÇLAR (yurt dışı trafiği için yüksek arama hacimli araçlar):
   { id: 'ageCalculator', categoryKey: 'time', icon: Cake, accent: 'bg-pink-500/10 text-pink-500 ring-pink-500/20', slug: 'age-calculator' },
   { id: 'bmiCalculator', categoryKey: 'calculators', icon: Scale, accent: 'bg-teal-500/10 text-teal-500 ring-teal-500/20', slug: 'bmi-calculator' },
   { id: 'gpaCalculator', categoryKey: 'calculators', icon: GraduationCap, accent: 'bg-indigo-500/10 text-indigo-500 ring-indigo-500/20', slug: 'gpa-calculator' },
-  // EN YENİ EKLENEN 3 ARAÇ (QR Kod, Şifre Oluşturucu, Birim Çevirici):
   { id: 'qrCodeGenerator', categoryKey: 'visual', icon: QrCode, accent: 'bg-indigo-500/10 text-indigo-400 ring-indigo-400/20', slug: 'qr-code-generator' },
   { id: 'passwordGenerator', categoryKey: 'text', icon: KeyRound, accent: 'bg-teal-500/10 text-teal-500 ring-teal-500/20', slug: 'password-generator' },
   { id: 'unitConverter', categoryKey: 'calculators', icon: Ruler, accent: 'bg-orange-500/10 text-orange-500 ring-orange-500/20', slug: 'unit-converter' },
 ]
 
-// Ana sayfadaki tanıtım bölümü: Google'a sitenin ne olduğunu anlatır
 const aboutContent = {
   tr: {
     title: 'MyToolKit nedir?',
@@ -83,6 +79,17 @@ const aboutContent = {
       'Works on phone, tablet and computer',
     ],
   },
+  es: {
+    title: '¿Qué es MyToolKit?',
+    text: 'MyToolKit reúne herramientas online gratuitas para tus tareas diarias en un solo lugar. Puedes calcular porcentajes, ganancias y pérdidas, contar palabras y caracteres, medir tu velocidad de escritura, consultar el reloj mundial y convertir formatos de imagen. Todas las herramientas funcionan en tu navegador sin necesidad de registro ni instalación.',
+    featuresTitle: '¿Por qué MyToolKit?',
+    features: [
+      'Totalmente gratis, sin necesidad de cuenta',
+      'Funciona en el navegador, sin instalar nada',
+      'Disponible en Turco, Inglés y Español',
+      'Compatible con móviles, tablets y ordenadores',
+    ],
+  },
 } as const
 
 export function ToolHubDashboard({
@@ -91,8 +98,8 @@ export function ToolHubDashboard({
   onLangChange,
 }: {
   dict: any
-  currentLang: 'tr' | 'en'
-  onLangChange: (lang: 'tr' | 'en') => void
+  currentLang: Locale
+  onLangChange: (lang: Locale) => void
 }) {
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all')
@@ -123,21 +130,8 @@ export function ToolHubDashboard({
     }
   }
 
-  function toggleLanguage() {
-    const newLang = currentLang === 'tr' ? 'en' : 'tr'
-    if (dark) {
-      localStorage.setItem('theme', 'dark');
-    } else {
-      localStorage.setItem('theme', 'light');
-    }
-    onLangChange(newLang);
-  }
-
   const filteredTools = useMemo(() => {
-    // Arama dilini aktif arayüz diline göre ayarlıyoruz. 'tr-TR' sabit kullanılırsa
-    // İngilizce arayüzde büyük "I" harfi yanlışlıkla "ı" (noktasız i) olarak küçültülür
-    // ve İngilizce aramalar hatalı sonuç verebilir.
-    const localeCode = currentLang === 'tr' ? 'tr-TR' : 'en-US'
+    const localeCode = currentLang === 'tr' ? 'tr-TR' : currentLang === 'es' ? 'es-ES' : 'en-US'
     const normalizedQuery = query.toLocaleLowerCase(localeCode)
     return baseTools.filter((tool) => {
       const matchesCategory = activeCategory === 'all' || tool.categoryKey === activeCategory;
@@ -171,15 +165,29 @@ export function ToolHubDashboard({
                 value={query}
               />
             </div>
-            <Button
-              onClick={toggleLanguage}
-              size="icon"
-              variant="outline"
-              className="font-bold text-xs"
-              aria-label={currentLang === 'tr' ? 'Switch to English' : "Türkçe'ye geç"}
+            
+            {/* YENİ DİNAMİK DİL SEÇİCİ */}
+            <select
+              value={currentLang}
+              onChange={(e) => {
+                const newLang = e.target.value as Locale;
+                if (dark) {
+                  localStorage.setItem('theme', 'dark');
+                } else {
+                  localStorage.setItem('theme', 'light');
+                }
+                onLangChange(newLang);
+              }}
+              className="h-9 cursor-pointer rounded-md border border-input bg-transparent px-2 py-1 text-xs font-bold uppercase shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              aria-label="Dil seçin"
             >
-              {currentLang === 'tr' ? 'EN' : 'TR'}
-            </Button>
+              {i18n.locales.map((lang) => (
+                <option key={lang} value={lang} className="uppercase bg-background text-foreground">
+                  {lang.toUpperCase()}
+                </option>
+              ))}
+            </select>
+
             <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline">
               {dark ? <Sun data-icon="inline-start" /> : <Moon data-icon="inline-start" />}
             </Button>
@@ -194,7 +202,7 @@ export function ToolHubDashboard({
           </div>
 
           <div className="mt-12 flex flex-col gap-4 border-b border-border/60 pb-5 sm:flex-row sm:items-center sm:justify-between">
-            <nav aria-label={currentLang === 'tr' ? 'Araç kategorileri' : 'Tool categories'} className="flex flex-wrap gap-2">
+            <nav aria-label="Tool categories" className="flex flex-wrap gap-2">
               {categoryKeys.map((catKey) => (
                 <Button
                   className="rounded-full px-4"
@@ -229,8 +237,6 @@ export function ToolHubDashboard({
                     </div>
                     <div className="space-y-2">
                       <Badge className="rounded-md font-normal" variant="secondary">{dict.categories[tool.categoryKey]}</Badge>
-                      {/* Başlık gerçek bir link: Google araç adını bağlantı metni olarak görür.
-                          after:absolute after:inset-0 tüm kartı tıklanabilir yapar. */}
                       <h2 className="text-lg font-medium tracking-tight">
                         <Link href={toolRoute} className="after:absolute after:inset-0">
                           {dict.tools[tool.id]?.title}
@@ -264,7 +270,6 @@ export function ToolHubDashboard({
             </div>
           )}
 
-          {/* Tanıtım bölümü: sitenin ne olduğunu ve neden kullanılacağını anlatır */}
           <div className="mt-20 grid gap-10 border-t border-border/60 pt-12 md:grid-cols-2">
             <div className="space-y-3">
               <h2 className="text-xl font-semibold tracking-tight">{about.title}</h2>

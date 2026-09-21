@@ -4,23 +4,74 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { FileText, Trash2, Copy, Check } from 'lucide-react';
 
-export default function TextAnalyzerTool({ dict }: { dict?: any }) {
+interface TextAnalyzerToolProps {
+  dict?: any;
+}
+
+const labels = {
+  tr: {
+    suite: "MyToolKit Metin Aracı",
+    words: "KELİME",
+    chars: "KARAKTER",
+    sentences: "CÜMLE",
+    readingTime: "OKUMA SÜRESİ",
+    sec: "sn",
+    noSpace: "Karakter (boşluksuz)",
+    copy: "Kopyala",
+    copied: "Kopyalandı!",
+    clear: "Temizle",
+    placeholder: "Metninizi buraya yazın veya yapıştırın...",
+    defaultTitle: "Akıllı Metin & Karakter Analizcisi"
+  },
+  en: {
+    suite: "MyToolKit Text Suite",
+    words: "WORDS",
+    chars: "CHARACTERS",
+    sentences: "SENTENCES",
+    readingTime: "READING TIME",
+    sec: "sec",
+    noSpace: "Characters (no space)",
+    copy: "Copy",
+    copied: "Copied!",
+    clear: "Clear",
+    placeholder: "Type or paste your text here...",
+    defaultTitle: "Smart Text & Character Analyzer"
+  },
+  es: {
+    suite: "Herramienta de Texto MyToolKit",
+    words: "PALABRAS",
+    chars: "CARACTERES",
+    sentences: "ORACIONES",
+    readingTime: "TIEMPO DE LECTURA",
+    sec: "seg",
+    noSpace: "Caracteres (sin espacios)",
+    copy: "Copiar",
+    copied: "¡Copiado!",
+    clear: "Limpiar",
+    placeholder: "Escribe o pega tu texto aquí...",
+    defaultTitle: "Analizador Inteligente de Texto"
+  }
+} as const;
+
+export default function TextAnalyzerTool({ dict }: TextAnalyzerToolProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const [isTr, setIsTr] = useState(false);
+  const [currentLang, setCurrentLang] = useState<"tr" | "en" | "es">("tr");
   const [text, setText] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // 1. SAYFA YÜKLENDİKTEN SONRA HAFIZAYI VE DİLİ KONTROL ET
   useEffect(() => {
     setIsMounted(true);
     if (typeof window !== 'undefined') {
-      setIsTr(window.location.pathname.startsWith('/tr'));
+      const path = window.location.pathname;
+      if (path.startsWith('/es')) setCurrentLang('es');
+      else if (path.startsWith('/en')) setCurrentLang('en');
+      else setCurrentLang('tr');
+
       const savedText = localStorage.getItem('ta_text');
       if (savedText) setText(savedText);
     }
   }, []);
 
-  // 2. METİN DEĞİŞTİKÇE HAFIZAYI GÜNCELLE
   useEffect(() => {
     if (isMounted) {
       try {
@@ -31,7 +82,7 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
     }
   }, [text, isMounted]);
 
-  // dict yapısını hem dışarıdan gelen prop'a hem de güvenli yedek değerlere göre ayarlıyoruz
+  const t = labels[currentLang];
   const toolDict = dict?.tools?.textAnalyzer || dict?.textAnalyzer || {};
 
   const characters = text.length;
@@ -51,7 +102,6 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
     localStorage.removeItem('ta_text');
   };
 
-  // Hydration hatasını engellemek için yüklenene kadar boş döndür
   if (!isMounted) return null;
 
   return (
@@ -62,17 +112,17 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
         </div>
         <div>
           <h2 className="text-xl font-bold">
-            {toolDict.title || (isTr ? 'Akıllı Metin & Karakter Analizcisi' : 'Smart Text & Character Analyzer')}
+            {toolDict.title || t.defaultTitle}
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {isTr ? 'MyToolKit Metin Aracı' : 'MyToolKit Text Suite'}
+            {t.suite}
           </p>
         </div>
       </div>
 
       <textarea
         className="w-full h-40 p-4 rounded-xl bg-muted/35 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 border border-border/70 resize-y"
-        placeholder={toolDict.placeholder || (isTr ? 'Metninizi buraya yazın veya yapıştırın...' : 'Type or paste your text here...')}
+        placeholder={toolDict.placeholder || t.placeholder}
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
@@ -80,33 +130,33 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
         <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
-            {isTr ? 'KELİME' : 'WORDS'}
+            {t.words}
           </span>
           <span className="text-2xl font-black tracking-tight">{words}</span>
         </div>
         <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
-            {isTr ? 'KARAKTER' : 'CHARACTERS'}
+            {t.chars}
           </span>
           <span className="text-2xl font-black tracking-tight">{characters}</span>
         </div>
         <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
-            {isTr ? 'CÜMLE' : 'SENTENCES'}
+            {t.sentences}
           </span>
           <span className="text-2xl font-black tracking-tight">{sentences}</span>
         </div>
         <div className="p-3 bg-muted/70 rounded-xl text-center border border-border/60 shadow-sm">
           <span className="text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 block mb-1">
-            {isTr ? 'OKUMA SÜRESİ' : 'READING TIME'}
+            {t.readingTime}
           </span>
-          <span className="text-2xl font-black tracking-tight">{readingTimeSeconds} {isTr ? 'sn' : 'sec'}</span>
+          <span className="text-2xl font-black tracking-tight">{readingTimeSeconds} {t.sec}</span>
         </div>
       </div>
 
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium text-muted-foreground">
-          {isTr ? 'Karakter (boşluksuz)' : 'Characters (no space)'}: {charactersNoSpace}
+          {t.noSpace}: {charactersNoSpace}
         </span>
         <div className="flex gap-2">
           <Button
@@ -117,7 +167,7 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
             className="gap-1.5 font-medium"
           >
             {copied ? <Check className="size-4 text-emerald-500" /> : <Copy className="size-4" />}
-            {copied ? (isTr ? 'Kopyalandı!' : 'Copied!') : (isTr ? 'Kopyala' : 'Copy')}
+            {copied ? t.copied : t.copy}
           </Button>
           <Button
             variant="outline"
@@ -127,7 +177,7 @@ export default function TextAnalyzerTool({ dict }: { dict?: any }) {
             className="gap-1.5 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 font-medium"
           >
             <Trash2 className="size-4" />
-            {isTr ? 'Temizle' : 'Clear'}
+            {t.clear}
           </Button>
         </div>
       </div>

@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import ProfitLossCalculatorTool from "@/components/profit-loss-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/percentage-calculator";
 
 const content = {
   tr: {
     metaTitle: "Yüzde, Kâr Zarar ve İndirim Hesaplama",
-    metaDescription:
-      "Yüzde hesaplama, kâr zarar hesaplama ve indirim hesaplama aracı. Bir sayının yüzdesini, kâr oranını ve indirimli fiyatı anında bulun. Ücretsiz.",
+    metaDescription: "Yüzde hesaplama, kâr zarar hesaplama ve indirim hesaplama aracı. Bir sayının yüzdesini, kâr oranını ve indirimli fiyatı anında bulun. Ücretsiz.",
     h1: "Yüzde, Kâr Zarar ve İndirim Hesaplama",
     howToTitle: "Hesaplama aracı nasıl kullanılır?",
-    howToText:
-      "Üstteki sekmelerden yapmak istediğiniz hesabı seçin: Yüzde Hesapla, Kar / Zarar veya İndirim Oranı. Alanlara değerleri girip Hesapla düğmesine basın, sonuç anında görünür. Kayıt olmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
+    howToText: "Üstteki sekmelerden yapmak istediğiniz hesabı seçin: Yüzde Hesapla, Kar / Zarar veya İndirim Oranı. Alanlara değerleri girip Hesapla düğmesine basın, sonuç anında görünür. Kayıt olmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
     formulasTitle: "Yüzde, kâr zarar ve indirim formülleri",
     blocks: [
       {
@@ -30,8 +26,7 @@ const content = {
           "Kâr veya zarar oranı = (Satış fiyatı − Maliyet fiyatı) ÷ Maliyet fiyatı × 100",
           "Sonuç pozitifse kâr, negatifse zarardır.",
         ],
-        example:
-          "Örnek: 200 TL'ye aldığınız bir ürünü 250 TL'ye satarsanız kârınız 50 TL, kâr oranınız %25 olur.",
+        example: "Örnek: 200 TL'ye aldığınız bir ürünü 250 TL'ye satarsanız kârınız 50 TL, kâr oranınız %25 olur.",
       },
       {
         title: "İndirim hesaplama",
@@ -39,8 +34,7 @@ const content = {
           "İndirim tutarı = Orijinal fiyat × İndirim yüzdesi ÷ 100",
           "İndirimli fiyat = Orijinal fiyat − İndirim tutarı",
         ],
-        example:
-          "Örnek: 1.000 TL'lik bir ürüne %15 indirim uygulanırsa indirim tutarı 150 TL, indirimli fiyat 850 TL olur.",
+        example: "Örnek: 1.000 TL'lik bir ürüne %15 indirim uygulanırsa indirim tutarı 150 TL, indirimli fiyat 850 TL olur.",
       },
     ],
     useCasesTitle: "Ne işe yarar?",
@@ -72,12 +66,10 @@ const content = {
   },
   en: {
     metaTitle: "Percentage, Profit/Loss and Discount Calculator",
-    metaDescription:
-      "A percentage, profit and loss and discount calculator. Instantly find the percentage of a number, your profit margin and the discounted price. Free.",
+    metaDescription: "A percentage, profit and loss and discount calculator. Instantly find the percentage of a number, your profit margin and the discounted price. Free.",
     h1: "Percentage, Profit/Loss and Discount Calculator",
     howToTitle: "How to use the calculator",
-    howToText:
-      "Pick the calculation you need from the tabs above: Percentage, Profit / Loss or Discount. Enter the values, press Calculate and the result appears instantly. You don't need to sign up, the tool works right in your browser.",
+    howToText: "Pick the calculation you need from the tabs above: Percentage, Profit / Loss or Discount. Enter the values, press Calculate and the result appears instantly. You don't need to sign up, the tool works right in your browser.",
     formulasTitle: "Percentage, profit/loss and discount formulas",
     blocks: [
       {
@@ -92,8 +84,7 @@ const content = {
           "Profit or loss percentage = (Selling price − Cost price) ÷ Cost price × 100",
           "A positive result is a profit, a negative result is a loss.",
         ],
-        example:
-          "Example: if you buy an item for 200 and sell it for 250, your profit is 50, which is 25%.",
+        example: "Example: if you buy an item for 200 and sell it for 250, your profit is 50, which is 25%.",
       },
       {
         title: "Discount calculation",
@@ -101,8 +92,7 @@ const content = {
           "Discount amount = Original price × Discount percentage ÷ 100",
           "Final price = Original price − Discount amount",
         ],
-        example:
-          "Example: an item priced at 1,000 with a 15% discount has a discount of 150 and a final price of 850.",
+        example: "Example: an item priced at 1,000 with a 15% discount has a discount of 150 and a final price of 850.",
       },
     ],
     useCasesTitle: "What is it useful for?",
@@ -132,37 +122,97 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Calculadora de Porcentajes, Ganancias/Pérdidas y Descuentos",
+    metaDescription: "Calculadora de porcentajes, ganancias y descuentos. Encuentra al instante el porcentaje de un número, tu margen de beneficio y el precio con descuento. Gratis.",
+    h1: "Calculadora de Porcentajes, Ganancias/Pérdidas y Descuentos",
+    howToTitle: "¿Cómo usar la calculadora?",
+    howToText: "Elige el cálculo que necesitas en las pestañas superiores: Porcentaje, Ganancia/Pérdida o Descuento. Introduce los valores, pulsa Calcular y el resultado aparecerá al instante. No necesitas registrarte, la herramienta funciona en tu navegador.",
+    formulasTitle: "Fórmulas de porcentaje, ganancia/pérdida y descuento",
+    blocks: [
+      {
+        title: "Cálculo de porcentaje",
+        lines: ["Resultado = Número × Porcentaje ÷ 100"],
+        example: "Ejemplo: 20% de 250 = 250 × 20 ÷ 100 = 50.",
+      },
+      {
+        title: "Cálculo de ganancia y pérdida",
+        lines: [
+          "Ganancia o pérdida = Precio de venta − Precio de coste",
+          "Porcentaje de ganancia o pérdida = (Precio de venta − Precio de coste) ÷ Precio de coste × 100",
+          "Un resultado positivo es ganancia, uno negativo es pérdida.",
+        ],
+        example: "Ejemplo: si compras un artículo por 200 y lo vendes por 250, tu ganancia es 50, que representa el 25%.",
+      },
+      {
+        title: "Cálculo de descuento",
+        lines: [
+          "Cantidad de descuento = Precio original × Porcentaje de descuento ÷ 100",
+          "Precio final = Precio original − Cantidad de descuento",
+        ],
+        example: "Ejemplo: un artículo de 1.000 con un 15% de descuento tiene un descuento de 150 y un precio final de 850.",
+      },
+    ],
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Ver el precio con descuento y cuánto ahorras al comprar",
+      "Encontrar el porcentaje de un número (comisiones, propinas, aumentos)",
+      "Ver rápidamente la ganancia o pérdida de cada producto para tiendas y pequeños negocios",
+      "Practicar problemas de porcentajes, ganancias y descuentos para exámenes",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿Cómo calculo el porcentaje de un número?",
+        a: "Multiplica el número por el porcentaje y divide entre 100. Por ejemplo, el 20% de 250 es 250 × 20 ÷ 100 = 50.",
+      },
+      {
+        q: "¿En qué se basa el porcentaje de ganancia?",
+        a: "En esta herramienta el porcentaje se basa en el precio de coste. La ganancia se divide por el precio de coste y se multiplica por 100.",
+      },
+      {
+        q: "¿Cómo encuentro el precio con descuento?",
+        a: "Primero calcula la cantidad de descuento (porcentaje sobre el precio original) y luego réstala del precio original.",
+      },
+      {
+        q: "¿La herramienta es gratuita? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -171,7 +221,7 @@ export async function generateMetadata({
 export default async function PercentageCalculatorPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -180,14 +230,10 @@ export default async function PercentageCalculatorPage({
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
         <ToolPageHeader lang={lang} />
-
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            ToolPageHeader zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ProfitLossCalculatorTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

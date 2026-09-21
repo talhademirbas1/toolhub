@@ -1,19 +1,16 @@
 import type { Metadata } from "next";
 import CalculatorTool from "@/components/calculator-tool";
-
-type Lang = "tr" | "en";
+import { i18n, type Locale } from "@/i18n.config";
 
 const PATH = "/tools/classic-calculator";
 
 const content = {
   tr: {
     metaTitle: "Online Hesap Makinesi",
-    metaDescription:
-      "Toplama, çıkarma, çarpma ve bölme işlemlerini hızlıca yapın. Kayıt gerektirmeyen, ücretsiz ve kullanımı kolay online hesap makinesi.",
+    metaDescription: "Toplama, çıkarma, çarpma ve bölme işlemlerini hızlıca yapın. Kayıt gerektirmeyen, ücretsiz ve kullanımı kolay online hesap makinesi.",
     h1: "Online Hesap Makinesi",
     howToTitle: "Online hesap makinesi nasıl kullanılır?",
-    howToText:
-      "Sayı ve işlem tuşlarına tıklayarak hesaplamanızı yapın, sonucu anında görün. Toplama, çıkarma, çarpma ve bölme gibi temel işlemleri hızlıca yapabilirsiniz. Kayıt olmanız veya bir şey kurmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
+    howToText: "Sayı ve işlem tuşlarına tıklayarak hesaplamanızı yapın, sonucu anında görün. Toplama, çıkarma, çarpma ve bölme gibi temel işlemleri hızlıca yapabilirsiniz. Kayıt olmanız veya bir şey kurmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Günlük alışveriş ve bütçe hesaplarını hızlıca yapmak",
@@ -39,12 +36,10 @@ const content = {
   },
   en: {
     metaTitle: "Online Calculator",
-    metaDescription:
-      "Add, subtract, multiply and divide quickly. A free, easy-to-use online calculator that needs no sign-up.",
+    metaDescription: "Add, subtract, multiply and divide quickly. A free, easy-to-use online calculator that needs no sign-up.",
     h1: "Online Calculator",
     howToTitle: "How to use the online calculator",
-    howToText:
-      "Click the number and operator keys to make your calculation and see the result instantly. You can quickly do basic operations such as addition, subtraction, multiplication and division. You don't need to sign up or install anything, the tool works right in your browser.",
+    howToText: "Click the number and operator keys to make your calculation and see the result instantly. You can quickly do basic operations such as addition, subtraction, multiplication and division. You don't need to sign up or install anything, the tool works right in your browser.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Doing everyday shopping and budget calculations quickly",
@@ -68,38 +63,68 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Calculadora Online",
+    metaDescription: "Suma, resta, multiplica y divide rápidamente. Calculadora online gratis, fácil de usar y sin necesidad de registro.",
+    h1: "Calculadora Online",
+    howToTitle: "¿Cómo usar la calculadora online?",
+    howToText: "Haz clic en los números y operadores para realizar tu cálculo y ver el resultado al instante. Puedes realizar rápidamente operaciones básicas como suma, resta, multiplicación y división. No necesitas registrarte ni instalar nada, la herramienta funciona directamente en tu navegador.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Hacer compras diarias y cálculos de presupuesto rápidamente",
+      "Revisar tus cálculos mientras estudias o haces los deberes",
+      "Obtener resultados rápidos para facturas, descuentos y cálculos cortos",
+      "Calcular directamente en tu navegador cuando no tienes una calculadora a mano",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿La calculadora es gratuita? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta."
+      },
+      {
+        q: "¿Qué operaciones puedo hacer?",
+        a: "Puedes hacer operaciones básicas como suma, resta, multiplicación y división."
+      },
+      {
+        q: "¿Puedo usarla en mi teléfono o tablet?",
+        a: "La herramienta funciona en tu navegador, por lo que puedes usarla desde un móvil, tablet u ordenador."
+      },
+    ],
+  }
 } as const;
 
-// Next.js'in bu sayfayı statik olarak önceden üretmesini sağlar
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -108,7 +133,7 @@ export async function generateMetadata({
 export default async function ClassicCalculatorPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -116,14 +141,10 @@ export default async function ClassicCalculatorPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            CalculatorTool zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
-        {/* Üst barı buradan tamamen kaldırdık. Artık butonları CalculatorTool yönetecek. */}
         <CalculatorTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

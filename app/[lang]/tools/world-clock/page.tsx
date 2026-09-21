@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import WorldClockTool from "@/components/world-clock-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/world-clock";
 
 const content = {
   tr: {
     metaTitle: "Dünya Saati",
-    metaDescription:
-      "Dünyanın farklı şehirlerindeki güncel saati aynı ekranda görün. Ücretsiz, kayıt gerektirmeyen online dünya saati.",
+    metaDescription: "Dünyanın farklı şehirlerindeki güncel saati aynı ekranda görün. Ücretsiz, kayıt gerektirmeyen online dünya saati.",
     h1: "Dünya Saati",
     howToTitle: "Dünya saati nasıl kullanılır?",
-    howToText:
-      "Sayfayı açtığınızda farklı şehirlerin ve saat dilimlerinin güncel saatini aynı ekranda görürsünüz. Yurt dışındaki biriyle görüşmeden önce veya uluslararası bir toplantı planlarken saat farkına bakmak için kullanabilirsiniz. Kayıt olmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
+    howToText: "Sayfayı açtığınızda farklı şehirlerin ve saat dilimlerinin güncel saatini aynı ekranda görürsünüz. Yurt dışındaki biriyle görüşmeden önce veya uluslararası bir toplantı planlarken saat farkına bakmak için kullanabilirsiniz. Kayıt olmanız gerekmez, araç doğrudan tarayıcıda çalışır.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Yurt dışındaki aile ve arkadaşları ararken saati kontrol etmek",
@@ -45,12 +41,10 @@ const content = {
   },
   en: {
     metaTitle: "World Clock",
-    metaDescription:
-      "See the current time in cities around the world on one screen. A free online world clock that needs no sign-up.",
+    metaDescription: "See the current time in cities around the world on one screen. A free online world clock that needs no sign-up.",
     h1: "World Clock",
     howToTitle: "How to use the world clock",
-    howToText:
-      "When you open the page you see the current time in different cities and time zones on one screen. Use it to check the time difference before calling someone abroad or when planning an international meeting. You don't need to sign up, the tool works right in your browser.",
+    howToText: "When you open the page you see the current time in different cities and time zones on one screen. Use it to check the time difference before calling someone abroad or when planning an international meeting. You don't need to sign up, the tool works right in your browser.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Checking the time before calling family and friends abroad",
@@ -78,37 +72,72 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Reloj Mundial",
+    metaDescription: "Consulta la hora actual en ciudades de todo el mundo en una sola pantalla. Reloj mundial online gratuito y sin registro.",
+    h1: "Reloj Mundial",
+    howToTitle: "¿Cómo usar el reloj mundial?",
+    howToText: "Al abrir la página verás la hora actual en diferentes ciudades y zonas horarias en una sola pantalla. Úsalo para comprobar la diferencia horaria antes de llamar al extranjero o al planificar una reunión internacional. No requiere registro, funciona directamente en tu navegador.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Comprobar la hora antes de llamar a familiares y amigos en el extranjero",
+      "Planificar horarios de reuniones con equipos en diferentes países",
+      "Averiguar la hora local de una ciudad antes de viajar",
+      "Convertir horarios de eventos internacionales y transmisiones en vivo a tu hora local",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿En qué zona horaria está Turquía?",
+        a: "Turquía utiliza la zona horaria UTC+3 durante todo el año y no aplica el horario de verano.",
+      },
+      {
+        q: "¿El horario de verano afecta a la diferencia horaria?",
+        a: "Sí. En los países que adoptan el horario de verano, los relojes se adelantan una hora durante parte del año, por lo que la diferencia entre dos ciudades puede variar.",
+      },
+      {
+        q: "¿Qué es UTC?",
+        a: "UTC es el Tiempo Universal Coordinado, la referencia en la que se basan las zonas horarias del mundo. Las demás horas se expresan como más o menos horas respecto a UTC.",
+      },
+      {
+        q: "¿El reloj mundial es gratuito? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -117,7 +146,7 @@ export async function generateMetadata({
 export default async function WorldClockPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -125,14 +154,11 @@ export default async function WorldClockPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            WorldClockTool zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <WorldClockTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

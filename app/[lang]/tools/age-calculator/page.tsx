@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import AgeCalculatorTool from "@/components/age-calculator-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/age-calculator";
 
 const content = {
@@ -70,37 +68,68 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Calculadora de Edad",
+    metaDescription: "Calcula tu edad exacta en años, meses y días al instante desde tu fecha de nacimiento. Calculadora de edad online gratis sin registro.",
+    h1: "Calculadora de Edad",
+    howToTitle: "¿Cómo calcular tu edad?",
+    howToText: "Elige tu fecha de nacimiento y la herramienta calculará al instante tu edad en años, meses y días según la fecha de hoy. También puedes ver los días totales vividos y los días que faltan para tu próximo cumpleaños. Sin cálculos manuales ni registros.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Saber tu edad exacta en años, meses y días",
+      "Ver cuántos días faltan para tu próximo cumpleaños",
+      "Verificar información de edad en formularios oficiales",
+      "Saber cuánto tiempo ha pasado desde un nacimiento o evento"
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿La calculadora de edad es gratis? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta."
+      },
+      {
+        q: "¿Cómo se calcula, se guarda mi fecha de nacimiento?",
+        a: "El cálculo se realiza completamente en tu navegador; la fecha que introduces nunca se envía a un servidor."
+      },
+      {
+        q: "¿Puedo usarlo en mi móvil o tablet?",
+        a: "La herramienta funciona en el navegador, por lo que puedes usarla desde móviles, tablets u ordenadores."
+      }
+    ]
+  }
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -109,7 +138,7 @@ export async function generateMetadata({
 export default async function AgeCalculatorPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -117,13 +146,11 @@ export default async function AgeCalculatorPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <AgeCalculatorTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

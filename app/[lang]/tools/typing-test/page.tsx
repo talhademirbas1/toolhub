@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import TypingTestTool from "@/components/typing-test-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/typing-test";
 
 const content = {
   tr: {
     metaTitle: "Yazma Hızı Testi",
-    metaDescription:
-      "Klavyede yazma hızınızı ölçün. Ücretsiz, kayıt gerektirmeyen online yazma hızı testi ile dakikada kaç kelime yazdığınızı öğrenin.",
+    metaDescription: "Klavyede yazma hızınızı ölçün. Ücretsiz, kayıt gerektirmeyen online yazma hızı testi ile dakikada kaç kelime yazdığınızı öğrenin.",
     h1: "Yazma Hızı Testi",
     howToTitle: "Yazma hızı testi nasıl yapılır?",
-    howToText:
-      "Testi başlatın ve ekrandaki metni olabildiğince hızlı ve hatasız yazın. Test bitince yazma hızınızı görürsünüz. Yazma hızı genellikle dakikadaki kelime sayısı (WPM) ile ölçülür. Kayıt olmanız gerekmez, test doğrudan tarayıcıda çalışır.",
+    howToText: "Testi başlatın ve ekrandaki metni olabildiğince hızlı ve hatasız yazın. Test bitince yazma hızınızı görürsünüz. Yazma hızı genellikle dakikadaki kelime sayısı (WPM) ile ölçülür. Kayıt olmanız gerekmez, test doğrudan tarayıcıda çalışır.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Klavyede ne kadar hızlı yazdığınızı öğrenmek",
@@ -45,12 +41,10 @@ const content = {
   },
   en: {
     metaTitle: "Typing Speed Test",
-    metaDescription:
-      "Measure your typing speed on the keyboard. Find out how many words per minute you type with this free online typing test that needs no sign-up.",
+    metaDescription: "Measure your typing speed on the keyboard. Find out how many words per minute you type with this free online typing test that needs no sign-up.",
     h1: "Typing Speed Test",
     howToTitle: "How to take a typing speed test",
-    howToText:
-      "Start the test and type the text on the screen as fast and as accurately as you can. When the test ends you can see your typing speed. Typing speed is usually measured in words per minute (WPM). You don't need to sign up, the test works right in your browser.",
+    howToText: "Start the test and type the text on the screen as fast and as accurately as you can. When the test ends you can see your typing speed. Typing speed is usually measured in words per minute (WPM). You don't need to sign up, the test works right in your browser.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Finding out how fast you type on the keyboard",
@@ -78,37 +72,73 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Test de Velocidad de Escritura",
+    metaDescription: "Mide tu velocidad de escritura en el teclado. Descubre cuántas palabras por minuto escribes con este test online gratuito sin registro.",
+    h1: "Test de Velocidad de Escritura",
+    howToTitle: "¿Cómo hacer el test de velocidad de escritura?",
+    howToText: "Inicia la prueba y escribe el texto en pantalla tan rápido y con tanta precisión como puedas. Al terminar, verás tu velocidad de escritura, medida habitualmente en palabras por minuto (WPM). No necesitas registrarte, la prueba funciona directamente en tu navegador.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Averiguar qué tan rápido escribes en el teclado",
+      "Hacer un seguimiento de cómo mejora tu velocidad de escritura con el tiempo",
+      "Probar tus habilidades con el teclado antes de una entrevista de trabajo o examen",
+      "Desarrollar tus hábitos de escritura con práctica regular",
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿Qué es WPM?",
+        q_es: "¿Qué es WPM?",
+        a: "WPM significa palabras por minuto (Words Per Minute), el número de palabras que escribes en un minuto. Es la unidad más común en las pruebas de mecanografía.",
+      },
+      {
+        q: "¿Cuál es una velocidad de escritura promedio?",
+        a: "Un usuario promedio suele escribir alrededor de 40 palabras por minuto. Quienes practican regularmente pueden alcanzar de 60 a 80 palabras por minuto o más.",
+      },
+      {
+        q: "¿Cómo puedo escribir más rápido?",
+        a: "Puedes mejorar mirando a la pantalla en lugar del teclado, colocando los dedos en las teclas correctas y practicando con regularidad. Céntrate primero en la precisión y la velocidad llegará sola.",
+      },
+      {
+        q: "¿El test de velocidad es gratuito? ¿Necesito una cuenta?",
+        a: "La prueba es completamente gratuita y no requiere cuenta.",
+      },
+    ],
+  },
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -117,7 +147,7 @@ export async function generateMetadata({
 export default async function TypingTestPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -125,14 +155,11 @@ export default async function TypingTestPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli.
-            TypingTestTool zaten bir h1 basıyorsa bu satırı sil. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <TypingTestTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

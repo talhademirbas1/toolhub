@@ -1,32 +1,37 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/site-footer";
+import { i18n, type Locale } from "@/i18n.config";
 
 const siteUrl = "https://www.mytoolkitbase.com";
 
+// Dinamik diller
 export function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const isTr = lang === "tr";
+  const isEs = lang === "es";
 
   return {
-    // canonical, hreflang ve OG adreslerini tam URL'ye çevirir
     metadataBase: new URL(siteUrl),
     title: {
       default: isTr
         ? "MyToolKit | Ücretsiz Online Araçlar"
+        : isEs
+        ? "MyToolKit | Herramientas Online Gratuitas"
         : "MyToolKit | Free Online Tools",
-      // Alt sayfalarda başlık "Sayfa Adı | MyToolKit" olur
       template: "%s | MyToolKit",
     },
     description: isTr
       ? "Basit, hızlı ve kullanışlı ücretsiz web araçları."
+      : isEs
+      ? "Herramientas web simples, rápidas y útiles."
       : "Simple. Fast. Useful web tools.",
   };
 }
@@ -36,14 +41,15 @@ export default async function LangLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
 
   return (
     <div lang={lang} className="contents">
       {children}
-      <SiteFooter lang={lang === "en" ? "en" : "tr"} />
+      {/* ARTIL ZORUNLU TR/EN DEĞİL, GEÇERLİ DİLİ GÖNDERİYORUZ */}
+      <SiteFooter lang={lang} />
     </div>
   );
 }

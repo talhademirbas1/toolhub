@@ -16,10 +16,10 @@ interface BmiResult {
 }
 
 const CATEGORY_LABELS = {
-  under: { tr: "Zayıf", en: "Underweight", color: "text-sky-500" },
-  normal: { tr: "Normal", en: "Normal", color: "text-emerald-500" },
-  over: { tr: "Fazla Kilolu", en: "Overweight", color: "text-amber-500" },
-  obese: { tr: "Obez", en: "Obese", color: "text-rose-500" },
+  under: { tr: "Zayıf", en: "Underweight", es: "Bajo peso", color: "text-sky-500" },
+  normal: { tr: "Normal", en: "Normal", es: "Normal", color: "text-emerald-500" },
+  over: { tr: "Fazla Kilolu", en: "Overweight", es: "Sobrepeso", color: "text-amber-500" },
+  obese: { tr: "Obez", en: "Obese", es: "Obesidad", color: "text-rose-500" },
 };
 
 const getCategory = (bmi: number): BmiResult["categoryKey"] => {
@@ -29,7 +29,59 @@ const getCategory = (bmi: number): BmiResult["categoryKey"] => {
   return "obese";
 };
 
+// Çeviri nesnesi
+const t = {
+  tr: {
+    title: "Vücut Kitle Endeksi Hesaplama",
+    subtitle: "MyToolKit Sağlık Aracı",
+    metric: "Metrik (cm/kg)",
+    imperial: "İngiliz (ft/lb)",
+    heightCm: "Boy (cm)",
+    weightKg: "Kilo (kg)",
+    heightFt: "Boy (fit)",
+    heightIn: "Boy (inç)",
+    weightLb: "Kilo (lb)",
+    calcBtn: "Hesapla",
+    resetBtn: "Sıfırla",
+    errorValid: "Lütfen geçerli boy ve kilo girin.",
+    resultLabel: "Vücut Kitle Endeksiniz"
+  },
+  en: {
+    title: "BMI Calculator",
+    subtitle: "MyToolKit Health Suite",
+    metric: "Metric (cm/kg)",
+    imperial: "Imperial (ft/lb)",
+    heightCm: "Height (cm)",
+    weightKg: "Weight (kg)",
+    heightFt: "Height (ft)",
+    heightIn: "Height (in)",
+    weightLb: "Weight (lb)",
+    calcBtn: "Calculate",
+    resetBtn: "Reset",
+    errorValid: "Please enter a valid height and weight.",
+    resultLabel: "Your BMI"
+  },
+  es: {
+    title: "Calculadora de IMC",
+    subtitle: "Herramienta de Salud MyToolKit",
+    metric: "Métrico (cm/kg)",
+    imperial: "Imperial (ft/lb)",
+    heightCm: "Altura (cm)",
+    weightKg: "Peso (kg)",
+    heightFt: "Altura (pies)",
+    heightIn: "Altura (pulgadas)",
+    weightLb: "Peso (lb)",
+    calcBtn: "Calcular",
+    resetBtn: "Reiniciar",
+    errorValid: "Por favor introduce una altura y peso válidos.",
+    resultLabel: "Tu IMC"
+  }
+} as const;
+
 export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [isMounted, setIsMounted] = useState(false);
   const [unit, setUnit] = useState<"metric" | "imperial">("metric");
 
@@ -95,7 +147,7 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
       const h = parseFloat(heightCm);
       const w = parseFloat(weightKg);
       if (isNaN(h) || isNaN(w) || h <= 0 || w <= 0) {
-        setError(lang === "tr" ? "Lütfen geçerli boy ve kilo girin." : "Please enter a valid height and weight.");
+        setError(texts.errorValid);
         setResult(null);
         return;
       }
@@ -108,7 +160,7 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
       const w = parseFloat(weightLb);
       const totalInches = ft * 12 + inch;
       if (isNaN(totalInches) || totalInches <= 0 || isNaN(w) || w <= 0) {
-        setError(lang === "tr" ? "Lütfen geçerli boy ve kilo girin." : "Please enter a valid height and weight.");
+        setError(texts.errorValid);
         setResult(null);
         return;
       }
@@ -142,12 +194,8 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
           <Scale className="size-6" />
         </div>
         <div>
-          <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "Vücut Kitle Endeksi Hesaplama" : "BMI Calculator"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Sağlık Aracı" : "MyToolKit Health Suite"}
-          </p>
+          <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
         </div>
 
         <div className="flex justify-center gap-1 bg-muted p-1 rounded-lg text-xs mt-2">
@@ -155,13 +203,13 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
             onClick={() => { setUnit("metric"); setResult(null); setError(""); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${unit === "metric" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Metrik (cm/kg)" : "Metric (cm/kg)"}
+            {texts.metric}
           </button>
           <button
             onClick={() => { setUnit("imperial"); setResult(null); setError(""); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${unit === "imperial" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "İngiliz (ft/lb)" : "Imperial (ft/lb)"}
+            {texts.imperial}
           </button>
         </div>
       </CardHeader>
@@ -170,9 +218,7 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
         {unit === "metric" ? (
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                {lang === "tr" ? "Boy (cm)" : "Height (cm)"}
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">{texts.heightCm}</label>
               <Input
                 type="number"
                 placeholder="170"
@@ -182,9 +228,7 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                {lang === "tr" ? "Kilo (kg)" : "Weight (kg)"}
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">{texts.weightKg}</label>
               <Input
                 type="number"
                 placeholder="65"
@@ -197,9 +241,7 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
         ) : (
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                {lang === "tr" ? "Boy (fit)" : "Height (ft)"}
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">{texts.heightFt}</label>
               <Input
                 type="number"
                 placeholder="5"
@@ -209,9 +251,7 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                {lang === "tr" ? "Boy (inç)" : "Height (in)"}
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">{texts.heightIn}</label>
               <Input
                 type="number"
                 placeholder="7"
@@ -221,9 +261,7 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                {lang === "tr" ? "Kilo (lb)" : "Weight (lb)"}
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">{texts.weightLb}</label>
               <Input
                 type="number"
                 placeholder="145"
@@ -242,22 +280,18 @@ export default function BmiCalculatorTool({ lang }: BmiCalculatorToolProps) {
         )}
 
         <div className="flex gap-2">
-          <Button onClick={handleCalculate} className="flex-1 font-semibold">
-            {lang === "tr" ? "Hesapla" : "Calculate"}
-          </Button>
+          <Button onClick={handleCalculate} className="flex-1 font-semibold">{texts.calcBtn}</Button>
           <Button onClick={handleReset} variant="outline" className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10">
-            {lang === "tr" ? "Sıfırla" : "Reset"}
+            {texts.resetBtn}
           </Button>
         </div>
 
         {result && (
           <div className="p-4 bg-muted/50 rounded-xl text-center border border-border/50 space-y-2">
-            <span className="text-xs text-muted-foreground block">
-              {lang === "tr" ? "Vücut Kitle Endeksiniz" : "Your BMI"}
-            </span>
+            <span className="text-xs text-muted-foreground block">{texts.resultLabel}</span>
             <span className="text-4xl font-bold font-mono text-teal-500 block">{result.bmi}</span>
             <span className={`text-sm font-semibold ${CATEGORY_LABELS[result.categoryKey].color}`}>
-              {lang === "tr" ? CATEGORY_LABELS[result.categoryKey].tr : CATEGORY_LABELS[result.categoryKey].en}
+              {CATEGORY_LABELS[result.categoryKey][currentLang as keyof typeof CATEGORY_LABELS[typeof result.categoryKey]]}
             </span>
           </div>
         )}

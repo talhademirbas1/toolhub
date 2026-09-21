@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import GpaCalculatorTool from "@/components/gpa-calculator-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/gpa-calculator";
 
 const content = {
   tr: {
     metaTitle: "Ders Ortalaması (GPA) Hesaplama",
-    metaDescription:
-      "Derslerinizin notlarını ve kredilerini girerek genel not ortalamanızı (GPA) 4.0 üzerinden anında hesaplayın. Ücretsiz, kayıt gerektirmeyen online GPA hesaplama aracı.",
+    metaDescription: "Derslerinizin notlarını ve kredilerini girerek genel not ortalamanızı (GPA) 4.0 üzerinden anında hesaplayın. Ücretsiz, kayıt gerektirmeyen online GPA hesaplama aracı.",
     h1: "Ders Ortalaması (GPA) Hesaplama",
     howToTitle: "GPA nasıl hesaplanır?",
-    howToText:
-      "Aldığınız her ders için harf notunu (A, B+, C- gibi) ve kredi sayısını girin. Araç, her dersin not katsayısını kredisiyle çarpıp toplayarak kredi ağırlıklı genel not ortalamanızı (GPA) 4.0 üzerinden hesaplar. İstediğiniz kadar ders ekleyip çıkarabilirsiniz.",
+    howToText: "Aldığınız her ders için harf notunu (A, B+, C- gibi) ve kredi sayısını girin. Araç, her dersin not katsayısını kredisiyle çarpıp toplayarak kredi ağırlıklı genel not ortalamanızı (GPA) 4.0 üzerinden hesaplar. İstediğiniz kadar ders ekleyip çıkarabilirsiniz.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Dönem sonu veya kümülatif GPA'nızı hızlıca hesaplamak",
@@ -41,12 +37,10 @@ const content = {
   },
   en: {
     metaTitle: "GPA Calculator",
-    metaDescription:
-      "Enter your course grades and credits to instantly calculate your GPA on a 4.0 scale. A free online GPA calculator that needs no sign-up.",
+    metaDescription: "Enter your course grades and credits to instantly calculate your GPA on a 4.0 scale. A free online GPA calculator that needs no sign-up.",
     h1: "GPA Calculator",
     howToTitle: "How to calculate your GPA",
-    howToText:
-      "For each course you've taken, enter the letter grade (A, B+, C- and so on) and the number of credits. The tool multiplies each grade's point value by its credits and adds them up to give you your credit-weighted GPA on a 4.0 scale. You can add or remove as many courses as you need.",
+    howToText: "For each course you've taken, enter the letter grade (A, B+, C- and so on) and the number of credits. The tool multiplies each grade's point value by its credits and adds them up to give you your credit-weighted GPA on a 4.0 scale. You can add or remove as many courses as you need.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Quickly calculating your semester or cumulative GPA",
@@ -70,37 +64,68 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Calculadora de GPA",
+    metaDescription: "Introduce las notas y créditos de tus asignaturas para calcular al instante tu GPA en una escala de 4.0. Calculadora de GPA online gratis sin registro.",
+    h1: "Calculadora de GPA",
+    howToTitle: "¿Cómo calcular tu GPA?",
+    howToText: "Para cada asignatura que hayas cursado, introduce la calificación con letras (A, B+, C-, etc.) y el número de créditos. La herramienta multiplica el valor de cada nota por sus créditos y los suma para obtener tu GPA ponderado en una escala de 4.0. Puedes añadir o eliminar tantas asignaturas como necesites.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Calcular rápidamente tu GPA semestral o acumulativo",
+      "Ver cómo cambiaría tu GPA bajo diferentes escenarios de notas",
+      "Verificar tu GPA para solicitudes de universidades en el extranjero",
+      "Hacer un seguimiento de los requisitos de becas o rendimiento académico"
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿La calculadora de GPA es gratuita? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta."
+      },
+      {
+        q: "¿Qué sistema de calificación utiliza?",
+        a: "La herramienta utiliza la escala estándar estadounidense de 4.0 letras, de A+ a F. Si tu escuela usa una escala diferente, elige la calificación equivalente más cercana."
+      },
+      {
+        q: "¿Se guardan los datos de las asignaturas que introduzco?",
+        a: "El cálculo se realiza completamente en tu navegador; los datos que introduces nunca se envían a un servidor."
+      }
+    ]
+  }
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -109,7 +134,7 @@ export async function generateMetadata({
 export default async function GpaCalculatorPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -117,13 +142,11 @@ export default async function GpaCalculatorPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <GpaCalculatorTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

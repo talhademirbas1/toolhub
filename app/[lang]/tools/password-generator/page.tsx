@@ -1,20 +1,17 @@
 import type { Metadata } from "next";
 import PasswordGeneratorTool from "@/components/password-generator-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
-
-type Lang = "tr" | "en";
+import { i18n, type Locale } from "@/i18n.config";
 
 const PATH = "/tools/password-generator";
 
 const content = {
   tr: {
     metaTitle: "Şifre Oluşturucu",
-    metaDescription:
-      "Güçlü, rastgele ve güvenli şifreler oluşturun. Uzunluk ve karakter türlerini özelleştirin. Ücretsiz, kayıt gerektirmeyen online şifre üretici.",
+    metaDescription: "Güçlü, rastgele ve güvenli şifreler oluşturun. Uzunluk ve karakter türlerini özelleştirin. Ücretsiz, kayıt gerektirmeyen online şifre üretici.",
     h1: "Şifre Oluşturucu",
     howToTitle: "Şifre oluşturucu nasıl kullanılır?",
-    howToText:
-      "Şifrenizin uzunluğunu kaydırıcıdan seçin, hangi karakter türlerinin (büyük harf, küçük harf, sayı, sembol) kullanılacağını işaretleyin ve 'Şifre Oluştur' butonuna basın. Oluşan şifreyi tek tıkla panoya kopyalayabilirsiniz. Şifre, tarayıcınızda üretilir ve hiçbir sunucuya gönderilmez.",
+    howToText: "Şifrenizin uzunluğunu kaydırıcıdan seçin, hangi karakter türlerinin (büyük harf, küçük harf, sayı, sembol) kullanılacağını işaretleyin ve 'Şifre Oluştur' butonuna basın. Oluşan şifreyi tek tıkla panoya kopyalayabilirsiniz. Şifre, tarayıcınızda üretilir ve hiçbir sunucuya gönderilmez.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Yeni bir hesap veya uygulama için güçlü bir şifre oluşturmak",
@@ -44,12 +41,10 @@ const content = {
   },
   en: {
     metaTitle: "Password Generator",
-    metaDescription:
-      "Generate strong, random and secure passwords. Customize length and character types. A free online password generator that needs no sign-up.",
+    metaDescription: "Generate strong, random and secure passwords. Customize length and character types. A free online password generator that needs no sign-up.",
     h1: "Password Generator",
     howToTitle: "How to use the password generator",
-    howToText:
-      "Choose your password length with the slider, select which character types (uppercase, lowercase, numbers, symbols) to include, and click 'Generate Password'. You can copy the resulting password to your clipboard with one click. The password is generated in your browser and is never sent to any server.",
+    howToText: "Choose your password length with the slider, select which character types (uppercase, lowercase, numbers, symbols) to include, and click 'Generate Password'. You can copy the resulting password to your clipboard with one click. The password is generated in your browser and is never sent to any server.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Creating a strong password for a new account or app",
@@ -77,37 +72,72 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Generador de Contraseñas",
+    metaDescription: "Genera contraseñas fuertes, aleatorias y seguras. Personaliza la longitud y los tipos de caracteres. Generador online gratuito sin registro.",
+    h1: "Generador de Contraseñas",
+    howToTitle: "¿Cómo usar el generador de contraseñas?",
+    howToText: "Elige la longitud de tu contraseña con el control deslizante, selecciona qué tipos de caracteres incluir y haz clic en 'Generar Contraseña'. Puedes copiar la contraseña resultante al portapapeles con un solo clic. La contraseña se genera en tu navegador y nunca se envía a ningún servidor.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Crear una contraseña fuerte para una nueva cuenta o aplicación",
+      "Reemplazar contraseñas débiles o predecibles",
+      "Generar contraseñas aleatorias para añadir a tu gestor de contraseñas",
+      "Crear una contraseña con una longitud o restricciones específicas"
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿Se guardan las contraseñas generadas en algún lugar?",
+        a: "No, la contraseña se genera completamente en tu navegador y nunca se envía ni se almacena en ningún servidor."
+      },
+      {
+        q: "¿Qué longitud debe tener una contraseña?",
+        a: "Se recomienda al menos 12 caracteres por seguridad, y 16 caracteres o más se consideran más fuertes."
+      },
+      {
+        q: "¿Las contraseñas con símbolos son aceptadas en todos los sitios?",
+        a: "La mayoría de los sitios aceptan contraseñas con símbolos, pero algunos sistemas más antiguos pueden tener restricciones; en ese caso, puedes desactivar la opción de símbolos."
+      },
+      {
+        q: "¿La herramienta es gratuita?",
+        a: "Sí, la herramienta es completamente gratuita y no requiere cuenta."
+      }
+    ]
+  }
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -116,7 +146,7 @@ export async function generateMetadata({
 export default async function PasswordGeneratorPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];

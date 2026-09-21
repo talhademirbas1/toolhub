@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
 import BmiCalculatorTool from "@/components/bmi-calculator-tool";
 import { ToolPageHeader } from "@/components/tool-page-header";
+import { i18n, type Locale } from "@/i18n.config";
 
-type Lang = "tr" | "en";
-
-// DİKKAT: Bu, sayfanın klasör adıyla birebir aynı olmalı (app/[lang]/tools/<klasör>/page.tsx)
 const PATH = "/tools/bmi-calculator";
 
 const content = {
   tr: {
     metaTitle: "Vücut Kitle Endeksi (BMI) Hesaplama",
-    metaDescription:
-      "Boy ve kilonuzu girerek vücut kitle endeksinizi (BMI) anında hesaplayın. Ücretsiz, kayıt gerektirmeyen online BMI hesaplama aracı.",
+    metaDescription: "Boy ve kilonuzu girerek vücut kitle endeksinizi (BMI) anında hesaplayın. Ücretsiz, kayıt gerektirmeyen online BMI hesaplama aracı.",
     h1: "Vücut Kitle Endeksi (BMI) Hesaplama",
     howToTitle: "BMI nasıl hesaplanır?",
-    howToText:
-      "Boyunuzu ve kilonuzu metrik (cm/kg) veya İngiliz (ft/lb) birim sisteminde girin, vücut kitle endeksiniz (BMI) ve hangi kategoriye (zayıf, normal, fazla kilolu, obez) girdiğiniz anında hesaplansın. Sonuç Dünya Sağlık Örgütü'nün (WHO) standart BMI aralıklarına göre belirlenir.",
+    howToText: "Boyunuzu ve kilonuzu metrik (cm/kg) veya İngiliz (ft/lb) birim sisteminde girin, vücut kitle endeksiniz (BMI) ve hangi kategoriye (zayıf, normal, fazla kilolu, obez) girdiğiniz anında hesaplansın. Sonuç Dünya Sağlık Örgütü'nün (WHO) standart BMI aralıklarına göre belirlenir.",
     useCasesTitle: "Ne işe yarar?",
     useCases: [
       "Vücut ağırlığınızın boyunuza göre sağlıklı aralıkta olup olmadığını kontrol etmek",
@@ -41,12 +37,10 @@ const content = {
   },
   en: {
     metaTitle: "BMI Calculator",
-    metaDescription:
-      "Enter your height and weight to instantly calculate your Body Mass Index (BMI). A free online BMI calculator that needs no sign-up.",
+    metaDescription: "Enter your height and weight to instantly calculate your Body Mass Index (BMI). A free online BMI calculator that needs no sign-up.",
     h1: "BMI Calculator",
     howToTitle: "How to calculate your BMI",
-    howToText:
-      "Enter your height and weight in metric (cm/kg) or imperial (ft/lb) units, and your Body Mass Index (BMI) plus its category (underweight, normal, overweight, obese) is calculated instantly. The result follows the World Health Organization's (WHO) standard BMI ranges.",
+    howToText: "Enter your height and weight in metric (cm/kg) or imperial (ft/lb) units, and your Body Mass Index (BMI) plus its category (underweight, normal, overweight, obese) is calculated instantly. The result follows the World Health Organization's (WHO) standard BMI ranges.",
     useCasesTitle: "What is it useful for?",
     useCases: [
       "Checking whether your body weight is in a healthy range for your height",
@@ -70,37 +64,68 @@ const content = {
       },
     ],
   },
+  es: {
+    metaTitle: "Calculadora de IMC",
+    metaDescription: "Introduce tu altura y peso para calcular al instante tu Índice de Masa Corporal (IMC). Calculadora de IMC online gratis sin registro.",
+    h1: "Calculadora de IMC",
+    howToTitle: "¿Cómo calcular tu IMC?",
+    howToText: "Introduce tu altura y peso en sistema métrico (cm/kg) o imperial (ft/lb) y tu Índice de Masa Corporal (IMC) junto con su categoría (bajo peso, normal, sobrepeso, obesidad) se calculará al instante. El resultado sigue los rangos estándar de la OMS.",
+    useCasesTitle: "¿Para qué sirve?",
+    useCases: [
+      "Comprobar si tu peso corporal está en un rango saludable para tu altura",
+      "Hacer un seguimiento de tus objetivos de pérdida o ganancia de peso",
+      "Obtener una referencia rápida antes de hablar con un médico o dietista",
+      "Comparar cómo cambia tu IMC con el tiempo"
+    ],
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        q: "¿La calculadora de IMC es gratuita? ¿Necesito una cuenta?",
+        a: "La herramienta es completamente gratuita y no requiere cuenta."
+      },
+      {
+        q: "¿El IMC por sí solo me informa sobre mi salud?",
+        a: "El IMC proporciona un indicador general pero no tiene en cuenta factores como la masa muscular, la edad o el sexo. Para una evaluación completa, consulta a un profesional."
+      },
+      {
+        q: "¿Se guardan los datos de altura y peso que introduzco?",
+        a: "El cálculo se realiza completamente en tu navegador; tus datos nunca se envían a un servidor."
+      }
+    ]
+  }
 } as const;
 
 export async function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
     openGraph: {
       title: c.metaTitle,
       description: c.metaDescription,
       url: `/${lang}${PATH}`,
       siteName: "MyToolKit",
-      locale: lang === "tr" ? "tr_TR" : "en_US",
+      locale: lang === "tr" ? "tr_TR" : lang === "es" ? "es_ES" : "en_US",
       type: "website",
     },
   };
@@ -109,7 +134,7 @@ export async function generateMetadata({
 export default async function BmiCalculatorPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
@@ -117,13 +142,11 @@ export default async function BmiCalculatorPage({
   return (
     <div className="min-h-screen p-6 sm:p-10 bg-zinc-100 dark:bg-background text-foreground transition-colors">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Ekranda görünmez ama Google'ın sayfa başlığını anlaması için gerekli. */}
         <h1 className="sr-only">{c.h1}</h1>
 
         <ToolPageHeader lang={lang} />
         <BmiCalculatorTool lang={lang} />
 
-        {/* SEO içeriği: Google'a sayfanın ne hakkında olduğunu anlatır */}
         <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 p-6 sm:p-8 space-y-8">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold">{c.howToTitle}</h2>

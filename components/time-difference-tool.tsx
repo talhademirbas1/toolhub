@@ -10,9 +10,71 @@ interface TimeDifferenceToolProps {
   lang: string;
 }
 
+const t = {
+  tr: {
+    title: "Tarih ve Saat Farkı",
+    subtitle: "MyToolKit Zaman Aracı",
+    tabDatetime: "Tam Tarih & Saat",
+    tabDate: "Sadece Tarih",
+    tabTime: "Sadece Saat",
+    start: "Başlangıç",
+    end: "Bitiş",
+    calcBtn: "Hesapla",
+    resetBtn: "Sıfırla",
+    errFill: "Lütfen tüm alanları doldurun.",
+    errFormat: "Geçersiz tarih formatı.",
+    errPast: "Bitiş zamanı başlangıçtan önce olamaz.",
+    days: "Gün",
+    hours: "Saat",
+    minutes: "Dakika",
+    totalDays: "Toplam Gün Farkı",
+    mins: "Dakika"
+  },
+  en: {
+    title: "Time Difference",
+    subtitle: "MyToolKit Time Suite",
+    tabDatetime: "Date & Time",
+    tabDate: "Only Date",
+    tabTime: "Only Time",
+    start: "Start",
+    end: "End",
+    calcBtn: "Calculate",
+    resetBtn: "Reset",
+    errFill: "Please fill in all fields.",
+    errFormat: "Invalid date format.",
+    errPast: "End time cannot be earlier than start.",
+    days: "Days",
+    hours: "Hours",
+    minutes: "Minutes",
+    totalDays: "Total Days Difference",
+    mins: "Mins"
+  },
+  es: {
+    title: "Diferencia de Tiempo",
+    subtitle: "Herramienta de Tiempo MyToolKit",
+    tabDatetime: "Fecha y Hora",
+    tabDate: "Solo Fecha",
+    tabTime: "Solo Hora",
+    start: "Inicio",
+    end: "Fin",
+    calcBtn: "Calcular",
+    resetBtn: "Reiniciar",
+    errFill: "Por favor completa todos los campos.",
+    errFormat: "Formato de fecha inválido.",
+    errPast: "La hora de fin no puede ser anterior al inicio.",
+    days: "Días",
+    hours: "Horas",
+    minutes: "Minutos",
+    totalDays: "Diferencia Total en Días",
+    mins: "Min"
+  }
+} as const;
+
 export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [isMounted, setIsMounted] = useState(false);
-  
   const [mode, setMode] = useState<"datetime" | "date" | "time">("datetime");
   const [startValue, setStartValue] = useState("");
   const [endValue, setEndValue] = useState("");
@@ -25,7 +87,6 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
 
   const [error, setError] = useState("");
 
-  // 1. SAYFA YÜKLENDİKTEN SONRA HAFIZAYI KONTROL ET (Hydration Koruması)
   useEffect(() => {
     setIsMounted(true);
     try {
@@ -45,7 +106,6 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
     }
   }, []);
 
-  // 2. DEĞİŞİKLİK YAPILDIKÇA HAFIZAYI GÜNCELLE
   useEffect(() => {
     if (isMounted) {
       try {
@@ -66,7 +126,7 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
   const handleCalculate = () => {
     setError("");
     if (!startValue || !endValue) {
-      setError(lang === "tr" ? "Lütfen tüm alanları doldurun." : "Please fill in all fields.");
+      setError(texts.errFill);
       setResult(null);
       return;
     }
@@ -76,14 +136,14 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
       const end = new Date(endValue).getTime();
 
       if (isNaN(start) || isNaN(end)) {
-        setError(lang === "tr" ? "Geçersiz tarih formatı." : "Invalid date format.");
+        setError(texts.errFormat);
         setResult(null);
         return;
       }
 
       const diffMs = end - start;
       if (diffMs < 0) {
-        setError(lang === "tr" ? "Bitiş zamanı başlangıçtan önce olamaz." : "End time cannot be earlier than start.");
+        setError(texts.errPast);
         setResult(null);
         return;
       }
@@ -98,14 +158,14 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
       const end = new Date(endValue).getTime();
 
       if (isNaN(start) || isNaN(end)) {
-        setError(lang === "tr" ? "Geçersiz tarih formatı." : "Invalid date format.");
+        setError(texts.errFormat);
         setResult(null);
         return;
       }
 
       const diffMs = end - start;
       if (diffMs < 0) {
-        setError(lang === "tr" ? "Bitiş tarihi başlangıçtan önce olamaz." : "End date cannot be earlier than start.");
+        setError(texts.errPast);
         setResult(null);
         return;
       }
@@ -141,7 +201,6 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
     localStorage.removeItem("td_result");
   };
 
-  // Hydration hatasını önlemek için bileşen yüklenene kadar boş döndür
   if (!isMounted) return null;
 
   return (
@@ -151,33 +210,28 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
           <Clock className="size-6" />
         </div>
         <div>
-          <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "Tarih ve Saat Farkı" : "Time Difference"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Zaman Aracı" : "MyToolKit Time Suite"}
-          </p>
+          <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
         </div>
         
-        {/* Mod Seçim Sekmeleri */}
         <div className="flex justify-center gap-1 bg-muted p-1 rounded-lg text-xs mt-2">
           <button
             onClick={() => { setMode("datetime"); handleReset(); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "datetime" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Tam Tarih & Saat" : "Date & Time"}
+            {texts.tabDatetime}
           </button>
           <button
             onClick={() => { setMode("date"); handleReset(); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "date" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Sadece Tarih" : "Only Date"}
+            {texts.tabDate}
           </button>
           <button
             onClick={() => { setMode("time"); handleReset(); }}
             className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${mode === "time" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {lang === "tr" ? "Sadece Saat" : "Only Time"}
+            {texts.tabTime}
           </button>
         </div>
       </CardHeader>
@@ -185,9 +239,7 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
       <CardContent className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground">
-              {lang === "tr" ? "Başlangıç" : "Start"}
-            </label>
+            <label className="text-xs font-medium text-muted-foreground">{texts.start}</label>
             <Input
               type={mode === "date" ? "date" : mode === "time" ? "time" : "datetime-local"}
               value={startValue}
@@ -198,9 +250,7 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground">
-              {lang === "tr" ? "Bitiş" : "End"}
-            </label>
+            <label className="text-xs font-medium text-muted-foreground">{texts.end}</label>
             <Input
               type={mode === "date" ? "date" : mode === "time" ? "time" : "datetime-local"}
               value={endValue}
@@ -219,11 +269,9 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
         )}
 
         <div className="flex gap-2">
-          <Button onClick={handleCalculate} className="flex-1 font-semibold">
-            {lang === "tr" ? "Hesapla" : "Calculate"}
-          </Button>
+          <Button onClick={handleCalculate} className="flex-1 font-semibold">{texts.calcBtn}</Button>
           <Button onClick={handleReset} variant="outline" className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10">
-            {lang === "tr" ? "Sıfırla" : "Reset"}
+            {texts.resetBtn}
           </Button>
         </div>
 
@@ -231,21 +279,21 @@ export default function TimeDifferenceTool({ lang }: TimeDifferenceToolProps) {
           <div className="mt-6 p-4 bg-muted/50 rounded-xl text-center border border-border/50">
             {mode === "datetime" && result.days !== undefined && (
               <div className="grid grid-cols-3 gap-2">
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.days}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Gün" : "Days"}</span></div>
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.hours}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Saat" : "Hours"}</span></div>
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.minutes}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Dakika" : "Mins"}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.days}</span><span className="text-xs text-muted-foreground">{texts.days}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.hours}</span><span className="text-xs text-muted-foreground">{texts.hours}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.minutes}</span><span className="text-xs text-muted-foreground">{texts.mins}</span></div>
               </div>
             )}
             {mode === "date" && result.totalDays !== undefined && (
               <div className="flex flex-col items-center py-2">
                 <span className="text-3xl font-bold font-mono text-cyan-500">{result.totalDays}</span>
-                <span className="text-xs text-muted-foreground mt-1">{lang === "tr" ? "Toplam Gün Farkı" : "Total Days Difference"}</span>
+                <span className="text-xs text-muted-foreground mt-1">{texts.totalDays}</span>
               </div>
             )}
             {mode === "time" && result.hours !== undefined && (
               <div className="grid grid-cols-2 gap-4 py-1">
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.hours}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Saat" : "Hours"}</span></div>
-                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.minutes}</span><span className="text-xs text-muted-foreground">{lang === "tr" ? "Dakika" : "Minutes"}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.hours}</span><span className="text-xs text-muted-foreground">{texts.hours}</span></div>
+                <div className="flex flex-col"><span className="text-3xl font-bold font-mono text-cyan-500">{result.minutes}</span><span className="text-xs text-muted-foreground">{texts.minutes}</span></div>
               </div>
             )}
           </div>

@@ -18,18 +18,10 @@ interface Course {
 }
 
 const GRADE_POINTS: Record<string, number> = {
-  "A+": 4.0,
-  A: 4.0,
-  "A-": 3.7,
-  "B+": 3.3,
-  B: 3.0,
-  "B-": 2.7,
-  "C+": 2.3,
-  C: 2.0,
-  "C-": 1.7,
-  "D+": 1.3,
-  D: 1.0,
-  "D-": 0.7,
+  "A+": 4.0, A: 4.0, "A-": 3.7,
+  "B+": 3.3, B: 3.0, "B-": 2.7,
+  "C+": 2.3, C: 2.0, "C-": 1.7,
+  "D+": 1.3, D: 1.0, "D-": 0.7,
   F: 0.0,
 };
 
@@ -42,7 +34,49 @@ const createCourse = (): Course => ({
   credits: "3",
 });
 
+const t = {
+  tr: {
+    title: "Ders Ortalaması (GPA) Hesaplama",
+    subtitle: "MyToolKit Eğitim Aracı",
+    courseName: "Ders Adı (opsiyonel)",
+    grade: "Not",
+    credits: "Kredi",
+    coursePrefix: "Ders",
+    addCourse: "Ders Ekle",
+    calcBtn: "Ortalamayı Hesapla",
+    resetBtn: "Sıfırla",
+    resultLabel: "Genel Not Ortalamanız (4.0 üzerinden)"
+  },
+  en: {
+    title: "GPA Calculator",
+    subtitle: "MyToolKit Education Suite",
+    courseName: "Course Name (optional)",
+    grade: "Grade",
+    credits: "Credits",
+    coursePrefix: "Course",
+    addCourse: "Add Course",
+    calcBtn: "Calculate GPA",
+    resetBtn: "Reset",
+    resultLabel: "Your GPA (out of 4.0)"
+  },
+  es: {
+    title: "Calculadora de GPA",
+    subtitle: "Herramienta de Educación MyToolKit",
+    courseName: "Asignatura (opcional)",
+    grade: "Nota",
+    credits: "Créditos",
+    coursePrefix: "Asignatura",
+    addCourse: "Añadir Asignatura",
+    calcBtn: "Calcular GPA",
+    resetBtn: "Reiniciar",
+    resultLabel: "Tu GPA (sobre 4.0)"
+  }
+} as const;
+
 export default function GpaCalculatorTool({ lang }: GpaCalculatorToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
   const [isMounted, setIsMounted] = useState(false);
   const [courses, setCourses] = useState<Course[]>([createCourse(), createCourse()]);
   const [gpa, setGpa] = useState<number | null>(null);
@@ -120,20 +154,16 @@ export default function GpaCalculatorTool({ lang }: GpaCalculatorToolProps) {
           <GraduationCap className="size-6" />
         </div>
         <div>
-          <CardTitle className="text-xl font-bold">
-            {lang === "tr" ? "Ders Ortalaması (GPA) Hesaplama" : "GPA Calculator"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            {lang === "tr" ? "MyToolKit Eğitim Aracı" : "MyToolKit Education Suite"}
-          </p>
+          <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-6">
         <div className="hidden sm:grid grid-cols-[1fr,110px,90px,36px] gap-2 px-1 text-xs font-medium text-muted-foreground">
-          <span>{lang === "tr" ? "Ders Adı (opsiyonel)" : "Course Name (optional)"}</span>
-          <span>{lang === "tr" ? "Not" : "Grade"}</span>
-          <span>{lang === "tr" ? "Kredi" : "Credits"}</span>
+          <span>{texts.courseName}</span>
+          <span>{texts.grade}</span>
+          <span>{texts.credits}</span>
           <span />
         </div>
 
@@ -142,7 +172,7 @@ export default function GpaCalculatorTool({ lang }: GpaCalculatorToolProps) {
             <div key={course.id} className="grid grid-cols-2 sm:grid-cols-[1fr,110px,90px,36px] gap-2 items-center">
               <Input
                 type="text"
-                placeholder={lang === "tr" ? `Ders ${idx + 1}` : `Course ${idx + 1}`}
+                placeholder={`${texts.coursePrefix} ${idx + 1}`}
                 value={course.name}
                 onChange={(e) => updateCourse(course.id, "name", e.target.value)}
                 className="col-span-2 sm:col-span-1 text-sm"
@@ -181,23 +211,19 @@ export default function GpaCalculatorTool({ lang }: GpaCalculatorToolProps) {
 
         <Button onClick={addCourse} variant="outline" className="w-full gap-2">
           <Plus className="size-4" />
-          {lang === "tr" ? "Ders Ekle" : "Add Course"}
+          {texts.addCourse}
         </Button>
 
         <div className="flex gap-2">
-          <Button onClick={handleCalculate} className="flex-1 font-semibold">
-            {lang === "tr" ? "Ortalamayı Hesapla" : "Calculate GPA"}
-          </Button>
+          <Button onClick={handleCalculate} className="flex-1 font-semibold">{texts.calcBtn}</Button>
           <Button onClick={handleReset} variant="outline" className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10">
-            {lang === "tr" ? "Sıfırla" : "Reset"}
+            {texts.resetBtn}
           </Button>
         </div>
 
         {gpa !== null && (
           <div className="p-4 bg-muted/50 rounded-xl text-center border border-border/50">
-            <span className="text-xs text-muted-foreground block mb-1">
-              {lang === "tr" ? "Genel Not Ortalamanız (4.0 üzerinden)" : "Your GPA (out of 4.0)"}
-            </span>
+            <span className="text-xs text-muted-foreground block mb-1">{texts.resultLabel}</span>
             <span className="text-4xl font-bold font-mono text-indigo-500">{gpa.toFixed(2)}</span>
           </div>
         )}

@@ -11,12 +11,14 @@ interface TypingTestToolProps {
 }
 
 const WORD_LISTS = {
-  tr: ["bilgisayar", "yazılım", "kodlama", "program", "donanım", "internet", "klavye", "ekran", "veri", "sunucu", "sistem", "güvenlik", "tasarım", "proje", "geliştirici", "teknoloji", "bellek", "işlemci", "ağ", "ağaç", "kalem", "defter", "masa", "kitap", "kahve", "müzik", "güneş", "yıldız", "telefon", "kulaklık", "pencere", "kapı", "çiçek", "bulut", "yağmur", "rüzgar", "şehir", "sokak", "araba", "tren", "uçak", "liman", "orman", "deniz", "nehir", "dağ", "tepe", "köprü", "yol", "saat", "yaz", "kış", "hava", "toprak", "yıldız", "gezegen", "bilgi", "okul", "öğrenci", "kitaplık", "yaprak", "kalp", "sevgi", "dostluk", "başarı", "hedef", "çalışma", "emek", "kazanç", "zaman", "saniye", "dakika", "hafta", "ay", "yıl", "asır", "tarih", "mühendis", "mimar", "doktor", "hastane", "sağlık", "spor", "futbol", "basketbol", "tenis", "koşu", "yüzme", "şarkı", "film", "tiyatro", "sanat", "resim", "müze", "saray", "kale", "bahçe", "meyve", "elma", "armut", "karpuz", "limon", "çilek"],
-  en: ["computer", "software", "coding", "program", "hardware", "internet", "keyboard", "screen", "data", "server", "system", "security", "design", "project", "developer", "technology", "memory", "processor", "network", "pencil", "notebook", "desk", "book", "coffee", "music", "sun", "star", "phone", "headphone", "window", "door", "flower", "cloud", "rain", "wind", "city", "street", "car", "train", "plane", "port", "forest", "sea", "river", "mountain", "hill", "bridge", "road", "clock", "summer", "winter", "weather", "earth", "planet", "knowledge", "school", "student", "library", "leaf", "heart", "love", "friendship", "success", "goal", "work", "effort", "profit", "time", "second", "minute", "week", "month", "year", "century", "history", "engineer", "architect", "doctor", "hospital", "health", "sports", "football", "tennis", "running", "swimming", "song", "movie", "theater", "art", "painting", "museum", "palace", "castle", "garden", "fruit", "apple", "pear", "watermelon", "lemon", "strawberry"]
+  tr: ["bilgisayar", "yazılım", "kodlama", "program", "donanım", "internet", "klavye", "ekran", "veri", "sunucu", "sistem", "güvenlik", "tasarım", "proje", "geliştirici", "teknoloji", "bellek", "işlemci", "ağ", "kalem", "defter", "masa", "kitap", "kahve", "müzik", "güneş", "yıldız", "telefon", "kulaklık", "pencere", "kapı", "çiçek", "bulut", "yağmur", "rüzgar", "şehir", "sokak", "araba", "tren", "uçak", "liman", "orman", "deniz", "nehir", "dağ", "tepe", "köprü", "yol", "saat", "yaz", "kış", "hava", "toprak", "gezegen", "bilgi", "okul", "öğrenci", "kitaplık", "yaprak", "kalp", "sevgi", "dostluk", "başarı", "hedef", "çalışma", "emek", "kazanç", "zaman", "saniye", "dakika", "hafta", "ay", "yıl", "asır", "tarih", "mühendis", "mimar", "doktor", "hastane", "sağlık", "spor", "futbol", "basketbol", "tenis", "koşu", "yüzme", "şarkı", "film", "tiyatro", "sanat", "resim", "müze", "saray", "kale", "bahçe", "meyve", "elma", "armut", "karpuz", "limon", "çilek"],
+  en: ["computer", "software", "coding", "program", "hardware", "internet", "keyboard", "screen", "data", "server", "system", "security", "design", "project", "developer", "technology", "memory", "processor", "network", "pencil", "notebook", "desk", "book", "coffee", "music", "sun", "star", "phone", "headphone", "window", "door", "flower", "cloud", "rain", "wind", "city", "street", "car", "train", "plane", "port", "forest", "sea", "river", "mountain", "hill", "bridge", "road", "clock", "summer", "winter", "weather", "earth", "planet", "knowledge", "school", "student", "library", "leaf", "heart", "love", "friendship", "success", "goal", "work", "effort", "profit", "time", "second", "minute", "week", "month", "year", "century", "history", "engineer", "architect", "doctor", "hospital", "health", "sports", "football", "tennis", "running", "swimming", "song", "movie", "theater", "art", "painting", "museum", "palace", "castle", "garden", "fruit", "apple", "pear", "watermelon", "lemon", "strawberry"],
+  es: ["computadora", "software", "codigo", "programa", "hardware", "internet", "teclado", "pantalla", "datos", "servidor", "sistema", "seguridad", "diseno", "proyecto", "desarrollador", "tecnologia", "memoria", "procesador", "red", "lapiz", "cuaderno", "escritorio", "libro", "cafe", "musica", "sol", "estrella", "telefono", "auriculares", "ventana", "puerta", "flor", "nube", "lluvia", "viento", "ciudad", "calle", "auto", "tren", "avion", "puerto", "bosque", "mar", "rio", "montana", "colina", "puente", "camino", "reloj", "verano", "invierno", "clima", "tierra", "planeta", "conocimiento", "escuela", "estudiante", "biblioteca", "hoja", "corazon", "amor", "amistad", "exito", "meta", "trabajo", "esfuerzo", "ganancia", "tiempo", "segundo", "minuto", "semana", "mes", "ano", "siglo", "historia", "ingeniero", "arquitecto", "doctor", "hospital", "salud", "deporte", "futbol", "tenis", "correr", "natacion", "cancion", "pelicula", "teatro", "arte", "pintura", "museo", "palacio", "castillo", "jardin", "fruta", "manzana", "pera", "sandia", "limon", "fresa"]
 };
 
 const generateRandomWords = (lang: string, count: number) => {
-  const list = lang === "tr" ? WORD_LISTS.tr : WORD_LISTS.en;
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const list = WORD_LISTS[currentLang];
   let result = [];
   for (let i = 0; i < count; i++) {
     const randomIndex = Math.floor(Math.random() * list.length);
@@ -25,9 +27,62 @@ const generateRandomWords = (lang: string, count: number) => {
   return result.join(" ");
 };
 
-export default function TypingTestTool({ lang }: TypingTestToolProps) {
-  const [isMounted, setIsMounted] = useState(false);
+const t = {
+  tr: {
+    title: "Klavye Hız Testi",
+    subtitle: "Rekor seviyesinde zengin kelime havuzu ile hızını test et",
+    tabTime: "Süreye Göre Kelime (WPM)",
+    tabWords: "Kelimeye Göre Süre (Sn)",
+    timeLabel: "Süre (sn):",
+    wordCountLabel: "Kelime Sayısı:",
+    custom: "Özel:",
+    timeLeft: "Kalan Süre",
+    elapsedTime: "Geçen Süre",
+    placeholder: "Kelimeleri buraya yazmaya başla (boşluk tuşunu kullan)...",
+    successTitle: "🎉 Test Tamamlandı!",
+    tryAgain: "Tekrar Dene",
+    reset: "Sıfırla",
+    accuracy: "Doğruluk"
+  },
+  en: {
+    title: "Typing Speed Test",
+    subtitle: "Test your speed with a record-level rich word pool",
+    tabTime: "Time to Words",
+    tabWords: "Words to Time",
+    timeLabel: "Time (sec):",
+    wordCountLabel: "Word Count:",
+    custom: "Custom:",
+    timeLeft: "Time Left",
+    elapsedTime: "Elapsed Time",
+    placeholder: "Start typing words here (use space)...",
+    successTitle: "🎉 Test Completed!",
+    tryAgain: "Try Again",
+    reset: "Reset",
+    accuracy: "Accuracy"
+  },
+  es: {
+    title: "Test de Velocidad de Escritura",
+    subtitle: "Prueba tu velocidad con un rico repertorio de palabras",
+    tabTime: "Tiempo a Palabras (WPM)",
+    tabWords: "Palabras a Tiempo (Seg)",
+    timeLabel: "Tiempo (seg):",
+    wordCountLabel: "Nº de Palabras:",
+    custom: "Personalizado:",
+    timeLeft: "Tiempo Restante",
+    elapsedTime: "Tiempo Transcurrido",
+    placeholder: "Empieza a escribir aquí (usa la barra espaciadora)...",
+    successTitle: "🎉 ¡Prueba Completada!",
+    tryAgain: "Intentar de nuevo",
+    reset: "Reiniciar",
+    accuracy: "Precisión"
+  }
+} as const;
 
+export default function TypingTestTool({ lang }: TypingTestToolProps) {
+  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
+  const texts = t[currentLang];
+
+  const [isMounted, setIsMounted] = useState(false);
   const [testMode, setTestMode] = useState<"time-to-words" | "words-to-time">("time-to-words");
   const [selectedTime, setSelectedTime] = useState<number>(30); 
   const [customTimeInput, setCustomTimeInput] = useState<string>("30");
@@ -74,11 +129,11 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
 
     if (testMode === "time-to-words") {
       const calculatedWordCount = Math.min(750, Math.max(30, Math.floor(selectedTime * 2.5)));
-      setTargetWords(generateRandomWords(lang, calculatedWordCount).split(" "));
+      setTargetWords(generateRandomWords(currentLang, calculatedWordCount).split(" "));
       setTimeLeft(selectedTime);
     } else {
       const safeWordCount = Math.min(300, Math.max(5, selectedWordCount));
-      setTargetWords(generateRandomWords(lang, safeWordCount).split(" "));
+      setTargetWords(generateRandomWords(currentLang, safeWordCount).split(" "));
     }
 
     try {
@@ -88,7 +143,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
     } catch (e) {
       console.warn("Hafızaya yazılamadı.");
     }
-  }, [lang, testMode, selectedTime, selectedWordCount, isMounted]);
+  }, [currentLang, testMode, selectedTime, selectedWordCount, isMounted]);
 
   const handleModeSwitch = (mode: "time-to-words" | "words-to-time") => {
     setTestMode(mode);
@@ -108,7 +163,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
     setResultMetric(null);
 
     const calculatedWordCount = Math.min(750, Math.max(30, Math.floor(time * 2.5)));
-    setTargetWords(generateRandomWords(lang, calculatedWordCount).split(" "));
+    setTargetWords(generateRandomWords(currentLang, calculatedWordCount).split(" "));
 
     if (timerRef.current) clearInterval(timerRef.current);
   };
@@ -121,7 +176,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
     setIsFinished(false);
     setResultMetric(null);
     const safeWordCount = Math.min(300, Math.max(5, wordCount));
-    setTargetWords(generateRandomWords(lang, safeWordCount).split(" "));
+    setTargetWords(generateRandomWords(currentLang, safeWordCount).split(" "));
     if (timerRef.current) clearInterval(timerRef.current);
   };
 
@@ -184,7 +239,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
         return;
       }
       if (testMode === "time-to-words" && typedWords.length >= targetWords.length - 10) {
-        setTargetWords((prev) => [...prev, ...generateRandomWords(lang, 50).split(" ")]);
+        setTargetWords((prev) => [...prev, ...generateRandomWords(currentLang, 50).split(" ")]);
       }
     }
 
@@ -211,13 +266,13 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
     if (testMode === "time-to-words") {
       const timeSpentMinutes = (selectedTime - timeLeft > 0 ? selectedTime - timeLeft : 1) / 60;
       const wpm = Math.round(wordsTyped / timeSpentMinutes);
-      primaryResult = lang === "tr" ? `${wpm} WPM (Dakikada Kelime)` : `${wpm} WPM (Words Per Minute)`;
-      secondaryResult = lang === "tr" ? `Toplam ${wordsTyped} kelime yazdınız.` : `You typed a total of ${wordsTyped} words.`;
+      primaryResult = currentLang === "tr" ? `${wpm} WPM (Dakikada Kelime)` : currentLang === "es" ? `${wpm} WPM (Palabras por minuto)` : `${wpm} WPM (Words Per Minute)`;
+      secondaryResult = currentLang === "tr" ? `Toplam ${wordsTyped} kelime yazdınız.` : currentLang === "es`" ? `Escribiste un total de ${wordsTyped} palabras.` : `You typed a total of ${wordsTyped} words.`;
     } else {
       const secondsSpent = elapsedTime > 0 ? elapsedTime : 1;
-      primaryResult = lang === "tr" ? `${selectedWordCount} kelimeyi ${secondsSpent} saniyede yazdınız!` : `Typed ${selectedWordCount} words in ${secondsSpent} seconds!`;
+      primaryResult = currentLang === "tr" ? `${selectedWordCount} kelimeyi ${secondsSpent} saniyede yazdınız!` : currentLang === "es" ? `¡Escribiste ${selectedWordCount} palabras en ${secondsSpent} segundos!` : `Typed ${selectedWordCount} words in ${secondsSpent} seconds!`;
       const calculatedWpm = Math.round((wordsTyped / secondsSpent) * 60);
-      secondaryResult = lang === "tr" ? `Yaklaşık Hız: ${calculatedWpm} WPM` : `Approximate Speed: ${calculatedWpm} WPM`;
+      secondaryResult = currentLang === "tr" ? `Yaklaşık Hız: ${calculatedWpm} WPM` : currentLang === "es" ? `Velocidad aproximada: ${calculatedWpm} WPM` : `Approximate Speed: ${calculatedWpm} WPM`;
     }
 
     let correctChars = 0;
@@ -231,7 +286,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
 
     setResultMetric({
       primary: primaryResult,
-      secondary: `${secondaryResult} — ${lang === "tr" ? "Doğruluk" : "Accuracy"}: %${accuracy}`
+      secondary: `${secondaryResult} — ${texts.accuracy}: %${accuracy}`
     });
   };
 
@@ -248,12 +303,8 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
             <Keyboard className="size-6" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">
-              {lang === "tr" ? "Klavye Hız Testi" : "Typing Speed Test"}
-            </CardTitle>
-            <p className="text-xs text-muted-foreground mt-1">
-              {lang === "tr" ? "Rekor seviyesinde zengin kelime havuzu ile hızını test et" : "Test your speed with a record-level rich word pool"}
-            </p>
+            <CardTitle className="text-xl font-bold">{texts.title}</CardTitle>
+            <p className="text-xs text-muted-foreground mt-1">{texts.subtitle}</p>
           </div>
 
           <div className="flex justify-center gap-1 bg-muted p-1 rounded-lg text-xs mt-2">
@@ -261,20 +312,20 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
               onClick={() => handleModeSwitch("time-to-words")}
               className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${testMode === "time-to-words" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
             >
-              {lang === "tr" ? "Süreye Göre Kelime (WPM)" : "Time to Words"}
+              {texts.tabTime}
             </button>
             <button
               onClick={() => handleModeSwitch("words-to-time")}
               className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-all ${testMode === "words-to-time" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
             >
-              {lang === "tr" ? "Kelimeye Göre Süre (Sn)" : "Words to Time"}
+              {texts.tabWords}
             </button>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs text-muted-foreground">
             {testMode === "time-to-words" ? (
               <div className="flex flex-wrap gap-1.5 items-center justify-center">
-                <span>{lang === "tr" ? "Süre (sn):" : "Time (sec):"}</span>
+                <span>{texts.timeLabel}</span>
                 {[15, 30, 60, 120].map((t) => (
                   <button
                     key={t}
@@ -289,7 +340,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
                   </button>
                 ))}
                 <div className="flex items-center gap-1 ml-2">
-                  <span className="text-[11px]">{lang === "tr" ? "Özel:" : "Custom:"}</span>
+                  <span className="text-[11px]">{texts.custom}</span>
                   <Input
                     type="number"
                     min="1"
@@ -302,7 +353,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
               </div>
             ) : (
               <div className="flex flex-wrap gap-1.5 items-center justify-center">
-                <span>{lang === "tr" ? "Kelime Sayısı:" : "Word Count:"}</span>
+                <span>{texts.wordCountLabel}</span>
                 {[10, 25, 50, 100].map((w) => (
                   <button
                     key={w}
@@ -317,7 +368,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
                   </button>
                 ))}
                 <div className="flex items-center gap-1 ml-2">
-                  <span className="text-[11px]">{lang === "tr" ? "Özel:" : "Custom:"}</span>
+                  <span className="text-[11px]">{texts.custom}</span>
                   <Input
                     type="number"
                     min="1"
@@ -335,7 +386,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
         <CardContent className="space-y-6">
           <div className="text-center bg-muted/40 p-3 rounded-xl border border-border/50">
             <div className="text-xs text-muted-foreground">
-              {testMode === "time-to-words" ? (lang === "tr" ? "Kalan Süre" : "Time Left") : (lang === "tr" ? "Geçen Süre" : "Elapsed Time")}
+              {testMode === "time-to-words" ? texts.timeLeft : texts.elapsedTime}
             </div>
             <div className="text-2xl font-bold font-mono text-violet-500">
               {testMode === "time-to-words" ? `${timeLeft}s` : `${elapsedTime}s`}
@@ -382,14 +433,14 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
             value={inputVal}
             onChange={handleInputChange}
             disabled={isFinished}
-            placeholder={lang === "tr" ? "Kelimeleri buraya yazmaya başla (boşluk tuşunu kullan)..." : "Start typing words here (use space)..."}
+            placeholder={texts.placeholder}
             className="w-full h-12 p-3 rounded-xl border border-input bg-background text-sm font-mono focus:ring-2 focus:ring-violet-500 outline-none"
           />
 
           {isFinished && resultMetric ? (
             <div className="p-4 bg-violet-500/10 rounded-xl border border-violet-500/20 text-center space-y-2">
               <div className="font-bold text-violet-600 dark:text-violet-400">
-                {lang === "tr" ? "🎉 Test Tamamlandı!" : "🎉 Test Completed!"}
+                {texts.successTitle}
               </div>
               <div className="text-base font-semibold text-foreground">
                 {resultMetric.primary}
@@ -399,13 +450,13 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
               </div>
               <Button onClick={() => testMode === "time-to-words" ? handleResetTime() : handleResetWords()} className="w-full mt-2 gap-2">
                 <RotateCcw className="size-4" />
-                {lang === "tr" ? "Tekrar Dene" : "Try Again"}
+                {texts.tryAgain}
               </Button>
             </div>
           ) : (
             <Button onClick={() => testMode === "time-to-words" ? handleResetTime() : handleResetWords()} variant="outline" className="w-full gap-2">
               <RotateCcw className="size-4" />
-              {lang === "tr" ? "Sıfırla" : "Reset"}
+              {texts.reset}
             </Button>
           )}
         </CardContent>

@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ToolPageHeader } from "@/components/tool-page-header";
-
-type Lang = "tr" | "en";
+import { i18n, type Locale } from "@/i18n.config";
 
 const PATH = "/about";
 
 const content = {
   tr: {
     metaTitle: "Hakkımızda",
-    metaDescription:
-      "MyToolKit, günlük işlerde işe yarayan ücretsiz online araçları tek bir yerde toplayan bağımsız bir projedir.",
+    metaDescription: "MyToolKit, günlük işlerde işe yarayan ücretsiz online araçları tek bir yerde toplayan bağımsız bir projedir.",
     title: "Hakkımızda",
     sections: [
       {
@@ -23,7 +21,7 @@ const content = {
       },
       {
         title: "Nasıl çalışır?",
-        text: "Araçlar Türkçe ve İngilizce sunulur, telefon, tablet ve bilgisayarda kullanılabilir. Yeni araçlar düzenli olarak eklenir.",
+        text: "Araçlar Türkçe, İngilizce ve İspanyolca sunulur, telefon, tablet ve bilgisayarda kullanılabilir. Yeni araçlar düzenli olarak eklenir.",
       },
       {
         title: "Geri bildirim",
@@ -34,8 +32,7 @@ const content = {
   },
   en: {
     metaTitle: "About",
-    metaDescription:
-      "MyToolKit is an independent project that brings together free online tools for everyday tasks in one place.",
+    metaDescription: "MyToolKit is an independent project that brings together free online tools for everyday tasks in one place.",
     title: "About",
     sections: [
       {
@@ -48,7 +45,7 @@ const content = {
       },
       {
         title: "How it works",
-        text: "The tools are available in Turkish and English and work on phone, tablet and computer. New tools are added regularly.",
+        text: "The tools are available in Turkish, English and Spanish and work on phone, tablet and computer. New tools are added regularly.",
       },
       {
         title: "Feedback",
@@ -57,30 +54,56 @@ const content = {
     ],
     contactLink: "Go to the contact page",
   },
+  es: {
+    metaTitle: "Acerca de",
+    metaDescription: "MyToolKit es un proyecto independiente que reúne herramientas online gratuitas para las tareas diarias en un solo lugar.",
+    title: "Acerca de",
+    sections: [
+      {
+        title: "¿Qué es MyToolKit?",
+        text: "MyToolKit es un proyecto independiente que reúne herramientas online gratuitas para las tareas diarias en un solo lugar. Puedes usar herramientas como calculadora de porcentajes y descuentos, contador de palabras, prueba de velocidad de escritura, reloj mundial y convertidor de imágenes directamente en tu navegador, sin registrarte.",
+      },
+      {
+        title: "Nuestro objetivo",
+        text: "Ayudarte a resolver la pequeña tarea que tienes delante en el menor número de pasos posible. Las herramientas están diseñadas para ser simples, rápidas y claras, y cada una viene con una explicación de cómo usarla y en qué fórmula se basa.",
+      },
+      {
+        title: "Cómo funciona",
+        text: "Las herramientas están disponibles en Turco, Inglés y Español, y funcionan en teléfonos, tablets y ordenadores. Se añaden nuevas herramientas regularmente.",
+      },
+      {
+        title: "Comentarios",
+        text: "Si encuentras un error o hay una herramienta que te gustaría que añadiéramos, escríbenos.",
+      },
+    ],
+    contactLink: "Ir a la página de contacto",
+  }
 } as const;
 
 export function generateStaticParams() {
-  return [{ lang: "tr" }, { lang: "en" }];
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
   const c = content[lang];
+
+  const languages = i18n.locales.reduce((acc, locale) => {
+    acc[locale] = `/${locale}${PATH}`;
+    return acc;
+  }, {} as Record<string, string>);
+  languages["x-default"] = `/${i18n.defaultLocale}${PATH}`;
 
   return {
     title: c.metaTitle,
     description: c.metaDescription,
     alternates: {
       canonical: `/${lang}${PATH}`,
-      languages: {
-        tr: `/tr${PATH}`,
-        en: `/en${PATH}`,
-        "x-default": `/tr${PATH}`,
-      },
+      languages: languages,
     },
   };
 }
@@ -88,7 +111,7 @@ export async function generateMetadata({
 export default async function AboutPage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
   const c = content[lang];
