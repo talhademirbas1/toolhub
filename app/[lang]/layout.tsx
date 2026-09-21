@@ -4,7 +4,7 @@ import { i18n, type Locale } from "@/i18n.config";
 
 const siteUrl = "https://www.mytoolkitbase.com";
 
-// Dinamik diller
+// Dinamik diller (tr, en, es)
 export function generateStaticParams() {
   return i18n.locales.map((lang) => ({ lang }));
 }
@@ -44,12 +44,12 @@ export default async function LangLayout({
   params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
+  const currentLang = i18n.locales.includes(lang) ? lang : i18n.defaultLocale;
 
   return (
-    <div lang={lang} className="contents">
+    <div lang={currentLang} className="contents">
       {children}
-      {/* ARTIL ZORUNLU TR/EN DEĞİL, GEÇERLİ DİLİ GÖNDERİYORUZ */}
-      <SiteFooter lang={lang} />
+      <SiteFooter lang={currentLang} />
     </div>
   );
 }
