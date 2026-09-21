@@ -4,7 +4,6 @@ import { i18n, type Locale } from "@/i18n.config";
 
 const siteUrl = "https://www.mytoolkitbase.com";
 
-// Dinamik diller (tr, en, es)
 export function generateStaticParams() {
   return i18n.locales.map((lang) => ({ lang }));
 }
@@ -12,9 +11,10 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Locale }>;
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
-  const { lang } = await params;
+  const resolvedParams = await params;
+  const lang = resolvedParams.lang;
   const isTr = lang === "tr";
   const isEs = lang === "es";
 
@@ -41,10 +41,11 @@ export default async function LangLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ lang: Locale }>;
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  const currentLang = i18n.locales.includes(lang) ? lang : i18n.defaultLocale;
+  const resolvedParams = await params;
+  const rawLang = resolvedParams.lang;
+  const currentLang = i18n.locales.includes(rawLang as Locale) ? (rawLang as Locale) : i18n.defaultLocale;
 
   return (
     <div lang={currentLang} className="contents">
