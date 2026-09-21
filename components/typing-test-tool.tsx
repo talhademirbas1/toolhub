@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Keyboard, RotateCcw } from "lucide-react";
+import { type Locale } from "@/i18n.config";
 
 interface TypingTestToolProps {
-  lang: string;
+  lang: Locale | string;
 }
 
 const WORD_LISTS = {
@@ -17,8 +18,8 @@ const WORD_LISTS = {
 };
 
 const generateRandomWords = (lang: string, count: number) => {
-  const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
-  const list = WORD_LISTS[currentLang];
+  const currentLang = lang === "es" || lang === "en" || lang === "tr" ? (lang as keyof typeof WORD_LISTS) : "tr";
+  const list = WORD_LISTS[currentLang] || WORD_LISTS.tr;
   let result = [];
   for (let i = 0; i < count; i++) {
     const randomIndex = Math.floor(Math.random() * list.length);
@@ -80,7 +81,7 @@ const t = {
 
 export default function TypingTestTool({ lang }: TypingTestToolProps) {
   const currentLang = (lang === "es" || lang === "en" || lang === "tr") ? lang : "tr";
-  const texts = t[currentLang];
+  const texts = t[currentLang as keyof typeof t];
 
   const [isMounted, setIsMounted] = useState(false);
   const [testMode, setTestMode] = useState<"time-to-words" | "words-to-time">("time-to-words");
@@ -267,7 +268,7 @@ export default function TypingTestTool({ lang }: TypingTestToolProps) {
       const timeSpentMinutes = (selectedTime - timeLeft > 0 ? selectedTime - timeLeft : 1) / 60;
       const wpm = Math.round(wordsTyped / timeSpentMinutes);
       primaryResult = currentLang === "tr" ? `${wpm} WPM (Dakikada Kelime)` : currentLang === "es" ? `${wpm} WPM (Palabras por minuto)` : `${wpm} WPM (Words Per Minute)`;
-      secondaryResult = currentLang === "tr" ? `Toplam ${wordsTyped} kelime yazdınız.` : currentLang === "es`" ? `Escribiste un total de ${wordsTyped} palabras.` : `You typed a total of ${wordsTyped} words.`;
+      secondaryResult = currentLang === "tr" ? `Toplam ${wordsTyped} kelime yazdınız.` : currentLang === "es" ? `Escribiste un total de ${wordsTyped} palabras.` : `You typed a total of ${wordsTyped} words.`;
     } else {
       const secondsSpent = elapsedTime > 0 ? elapsedTime : 1;
       primaryResult = currentLang === "tr" ? `${selectedWordCount} kelimeyi ${secondsSpent} saniyede yazdınız!` : currentLang === "es" ? `¡Escribiste ${selectedWordCount} palabras en ${secondsSpent} segundos!` : `Typed ${selectedWordCount} words in ${secondsSpent} seconds!`;
