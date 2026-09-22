@@ -19,7 +19,13 @@ import {
   GraduationCap,
   QrCode,
   KeyRound,
-  Ruler
+  Ruler,
+  Eraser,
+  Scissors,
+  Type,
+  Palette,
+  AlignLeft,
+  GitCompare,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -54,6 +60,13 @@ const baseTools: ToolBase[] = [
   { id: 'qrCodeGenerator', categoryKey: 'visual', icon: QrCode, accent: 'bg-indigo-500/10 text-indigo-400 ring-indigo-400/20', slug: 'qr-code-generator' },
   { id: 'passwordGenerator', categoryKey: 'text', icon: KeyRound, accent: 'bg-teal-500/10 text-teal-500 ring-teal-500/20', slug: 'password-generator' },
   { id: 'unitConverter', categoryKey: 'calculators', icon: Ruler, accent: 'bg-orange-500/10 text-orange-500 ring-orange-500/20', slug: 'unit-converter' },
+  { id: 'backgroundRemover', categoryKey: 'visual', icon: Eraser, accent: 'bg-purple-500/10 text-purple-400 ring-purple-400/20', slug: 'background-remover' },
+  { id: 'imageCropper', categoryKey: 'visual', icon: Scissors, accent: 'bg-rose-500/10 text-rose-400 ring-rose-400/20', slug: 'image-cropper' },
+  { id: 'caseConverter', categoryKey: 'text', icon: Type, accent: 'bg-yellow-500/10 text-yellow-500 ring-yellow-500/20', slug: 'case-converter' },
+  { id: 'pomodoroTimer', categoryKey: 'time', icon: Timer, accent: 'bg-red-500/10 text-red-500 ring-red-500/20', slug: 'pomodoro-timer' },
+  { id: 'colorPicker', categoryKey: 'visual', icon: Palette, accent: 'bg-pink-500/10 text-pink-400 ring-pink-400/20', slug: 'color-picker' },
+  { id: 'loremIpsum', categoryKey: 'text', icon: AlignLeft, accent: 'bg-slate-500/10 text-slate-400 ring-slate-400/20', slug: 'lorem-ipsum' },
+  { id: 'textDiff', categoryKey: 'text', icon: GitCompare, accent: 'bg-lime-500/10 text-lime-500 ring-lime-500/20', slug: 'text-diff' },
 ]
 
 const aboutContent = {
@@ -64,7 +77,7 @@ const aboutContent = {
     features: [
       'Tamamen ücretsiz, üyelik gerektirmez',
       'Tarayıcıda çalışır, program kurmanız gerekmez',
-      'Türkçe ve İngilizce dil desteği',
+      'Türkçe, İngilizce ve İspanyolca dil desteği',
       'Telefon, tablet ve bilgisayarda kullanılabilir',
     ],
   },
@@ -75,7 +88,7 @@ const aboutContent = {
     features: [
       'Completely free, no account required',
       'Runs in your browser, nothing to install',
-      'Available in Turkish and English',
+      'Available in Turkish, English and Spanish',
       'Works on phone, tablet and computer',
     ],
   },
@@ -106,7 +119,6 @@ export function ToolHubDashboard({
   const [dark, setDark] = useState(false)
   const about = aboutContent[currentLang]
 
-  // Geri dönüldüğünde eski konuma geri getirme ve kaydetme mekanizması
   useEffect(() => {
     const savedScroll = sessionStorage.getItem('home_scroll_pos');
     if (savedScroll) {
@@ -129,7 +141,6 @@ export function ToolHubDashboard({
   function toggleTheme() {
     const yeniDurum = !dark;
     setDark(yeniDurum);
-    
     if (yeniDurum) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -147,7 +158,6 @@ export function ToolHubDashboard({
       const translatedTitle = dict.tools[tool.id]?.title || '';
       const translatedDesc = dict.tools[tool.id]?.description || '';
       const translatedCategory = dict.categories[tool.categoryKey] || '';
-      
       const matchesQuery = `${translatedTitle} ${translatedDesc} ${translatedCategory}`.toLocaleLowerCase(localeCode).includes(normalizedQuery)
       return matchesCategory && matchesQuery
     })
@@ -174,8 +184,6 @@ export function ToolHubDashboard({
                 value={query}
               />
             </div>
-            
-            {/* DİNAMİK DİL SEÇİCİ */}
             <select
               value={currentLang}
               onChange={(e) => {
@@ -196,7 +204,6 @@ export function ToolHubDashboard({
                 </option>
               ))}
             </select>
-
             <Button aria-label={dark ? dict.dashboard.themeLight : dict.dashboard.themeDark} onClick={toggleTheme} size="icon" variant="outline">
               {dark ? <Sun data-icon="inline-start" /> : <Moon data-icon="inline-start" />}
             </Button>
@@ -206,7 +213,10 @@ export function ToolHubDashboard({
         <section className="flex flex-1 flex-col py-14 sm:py-20">
           <div className="max-w-2xl">
             <p className="mb-4 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">{dict.dashboard.subtitle}</p>
-            <h1 className="text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">{dict.dashboard.title1}<br /><span className="text-muted-foreground">{dict.dashboard.title2}</span></h1>
+            <h1 className="text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
+              {dict.dashboard.title1}<br />
+              <span className="text-muted-foreground">{dict.dashboard.title2}</span>
+            </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">{dict.dashboard.description}</p>
           </div>
 
@@ -247,8 +257,8 @@ export function ToolHubDashboard({
                     <div className="space-y-2">
                       <Badge className="rounded-md font-normal" variant="secondary">{dict.categories[tool.categoryKey]}</Badge>
                       <h2 className="text-lg font-medium tracking-tight">
-                        <Link 
-                          href={toolRoute} 
+                        <Link
+                          href={toolRoute}
                           onClick={() => sessionStorage.setItem('home_scroll_pos', window.scrollY.toString())}
                           className="after:absolute after:inset-0"
                         >
@@ -261,18 +271,14 @@ export function ToolHubDashboard({
                     <p className="text-sm leading-6 text-muted-foreground">{dict.tools[tool.id]?.description}</p>
                   </CardContent>
                   <CardFooter>
-                    <Link 
-                      href={toolRoute} 
+                    <Link
+                      href={toolRoute}
                       onClick={() => sessionStorage.setItem('home_scroll_pos', window.scrollY.toString())}
-                      className="w-full" 
-                      tabIndex={-1} 
+                      className="w-full"
+                      tabIndex={-1}
                       aria-hidden="true"
                     >
-                      <Button
-                        className="w-full justify-between pointer-events-none"
-                        variant="outline"
-                        tabIndex={-1}
-                      >
+                      <Button className="w-full justify-between pointer-events-none" variant="outline" tabIndex={-1}>
                         {dict.dashboard.useButton}
                         <ArrowUpRight data-icon="inline-end" />
                       </Button>

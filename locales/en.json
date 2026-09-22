@@ -97,6 +97,34 @@
     "unitConverter": {
       "title": "Unit Converter",
       "description": "Instantly convert length, weight and temperature units."
+    },
+    "backgroundRemover": {
+      "title": "Background Remover",
+      "description": "Remove the background from your image automatically and for free with one click."
+    },
+    "imageCropper": {
+      "title": "Image Cropper",
+      "description": "Easily crop your image to any size. Runs in the browser, no installation needed."
+    },
+    "caseConverter": {
+      "title": "Case Converter",
+      "description": "Instantly convert your text to uppercase, lowercase, title case and more."
+    },
+    "pomodoroTimer": {
+      "title": "Pomodoro Timer",
+      "description": "Work 25 minutes, break 5 minutes. The classic Pomodoro technique to stay focused."
+    },
+    "colorPicker": {
+      "title": "Color Picker and Converter",
+      "description": "Instantly convert HEX, RGB and HSL color codes and build your color palette."
+    },
+    "loremIpsum": {
+      "title": "Lorem Ipsum Generator",
+      "description": "Generate any number of Lorem Ipsum paragraphs, sentences or words instantly."
+    },
+    "textDiff": {
+      "title": "Text Comparator",
+      "description": "Compare two texts and see added and removed parts highlighted in color."
     }
   }
 }

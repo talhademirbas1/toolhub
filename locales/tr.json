@@ -97,6 +97,34 @@
     "unitConverter": {
       "title": "Birim Çevirici",
       "description": "Uzunluk, ağırlık ve sıcaklık birimlerini anında çevirin."
+    },
+    "backgroundRemover": {
+      "title": "Arka Plan Silici",
+      "description": "Resminizin arka planını tek tıkla ücretsiz ve otomatik olarak kaldırın."
+    },
+    "imageCropper": {
+      "title": "Resim Kırpıcı",
+      "description": "Resminizi istediğiniz boyuta kolayca kırpın, tarayıcıda çalışır kurulum gerekmez."
+    },
+    "caseConverter": {
+      "title": "Büyük / Küçük Harf Dönüştürücü",
+      "description": "Metninizi büyük harf, küçük harf, başlık formatı ve daha fazlasına anında dönüştürün."
+    },
+    "pomodoroTimer": {
+      "title": "Pomodoro Zamanlayıcı",
+      "description": "25 dakika çalış, 5 dakika mola ver. Odaklanmak için klasik Pomodoro tekniği."
+    },
+    "colorPicker": {
+      "title": "Renk Seçici ve Dönüştürücü",
+      "description": "HEX, RGB ve HSL renk kodlarını anında dönüştürün ve renk paletinizi oluşturun."
+    },
+    "loremIpsum": {
+      "title": "Lorem Ipsum Üretici",
+      "description": "İstediğiniz sayıda Lorem Ipsum paragrafı, cümle veya kelime üretin."
+    },
+    "textDiff": {
+      "title": "Metin Karşılaştırıcı",
+      "description": "İki metni karşılaştırın, eklenen ve silinen kısımları renkli olarak görün."
     }
   }
 }
