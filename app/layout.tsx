@@ -1,6 +1,6 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
-import Script from 'next/script'; // <-- YENİ EKLENDİ
+import Script from 'next/script';
 
 export const metadata = {
   title: 'MyToolKit',
@@ -12,10 +12,8 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // suppressHydrationWarning tema geçişlerinde uyuşmazlığı engeller
     <html lang="tr" suppressHydrationWarning>
       <head>
-        {/* Next.js Script componenti ile senkron tema yükleme (Beyaz parlama engellenir) */}
         <Script
           id="theme-script"
           strategy="beforeInteractive"
@@ -32,6 +30,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               })();
             `,
           }}
+        />
+        {/* AdSense doğrulama scripti */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7088352321084753"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
         />
       </head>
       <body className="bg-background text-foreground antialiased transition-colors">
