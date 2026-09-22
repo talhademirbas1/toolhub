@@ -8,6 +8,9 @@ export const metadata = {
   verification: {
     google: 'WroaGcnuy3Wy4pTACYI-40MIBEmFZHMeSosCK25r38U',
   },
+  other: {
+    'google-adsense-account': 'ca-pub-7088352321084753',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -31,7 +34,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
-        {/* AdSense doğrulama scripti */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7088352321084753"
