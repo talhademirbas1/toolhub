@@ -125,6 +125,18 @@
     "textDiff": {
       "title": "Metin Karşılaştırıcı",
       "description": "İki metni karşılaştırın, eklenen ve silinen kısımları renkli olarak görün."
+    },
+    "countdownTimer": {
+      "title": "Geri Sayım Sayacı",
+      "description": "Yılbaşı, doğum günü veya özel bir etkinlik için canlı geri sayım oluşturun."
+    },
+    "businessDaysCalculator": {
+      "title": "İş Günü Hesaplayıcı",
+      "description": "İki tarih arasındaki iş günü sayısını hesaplayın veya bir tarihe iş günü ekleyin."
+    },
+    "faviconGenerator": {
+      "title": "Favicon Oluşturucu",
+      "description": "Görselinizi tüm cihazlar için gerekli favicon boyutlarına dönüştürün."
     }
   }
 }

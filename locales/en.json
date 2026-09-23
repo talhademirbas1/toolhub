@@ -125,6 +125,18 @@
     "textDiff": {
       "title": "Text Comparator",
       "description": "Compare two texts and see added and removed parts highlighted in color."
+    },
+    "countdownTimer": {
+      "title": "Countdown Timer",
+      "description": "Create a live countdown for New Year, a birthday or any special event."
+    },
+    "businessDaysCalculator": {
+      "title": "Business Days Calculator",
+      "description": "Calculate business days between two dates, or add business days to a date."
+    },
+    "faviconGenerator": {
+      "title": "Favicon Generator",
+      "description": "Convert your image into all the favicon sizes your site needs."
     }
   }
 }

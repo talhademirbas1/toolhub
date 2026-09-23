@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 import { i18n } from "@/i18n.config";
-
+ 
 const baseUrl = "https://www.mytoolkitbase.com";
 const locales = i18n.locales;
-
+ 
 const tools = [
   "classic-calculator",
   "image-converter",
@@ -26,8 +26,11 @@ const tools = [
   "color-picker",
   "lorem-ipsum",
   "text-diff",
+  "countdown-timer",
+  "business-days-calculator",
+  "favicon-generator",
 ];
-
+ 
 const staticRoutes = [
   "",
   "/about",
@@ -35,7 +38,7 @@ const staticRoutes = [
   "/privacy",
   ...tools.map((t) => `/tools/${t}`),
 ];
-
+ 
 export default function sitemap(): MetadataRoute.Sitemap {
   return staticRoutes.flatMap((route) =>
     locales.map((locale) => {

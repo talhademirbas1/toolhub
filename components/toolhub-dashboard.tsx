@@ -26,6 +26,9 @@ import {
   Palette,
   AlignLeft,
   GitCompare,
+  Hourglass,
+  CalendarCheck,
+  Layers,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -67,6 +70,9 @@ const baseTools: ToolBase[] = [
   { id: 'colorPicker', categoryKey: 'visual', icon: Palette, accent: 'bg-pink-500/10 text-pink-400 ring-pink-400/20', slug: 'color-picker' },
   { id: 'loremIpsum', categoryKey: 'text', icon: AlignLeft, accent: 'bg-slate-500/10 text-slate-400 ring-slate-400/20', slug: 'lorem-ipsum' },
   { id: 'textDiff', categoryKey: 'text', icon: GitCompare, accent: 'bg-lime-500/10 text-lime-500 ring-lime-500/20', slug: 'text-diff' },
+  { id: 'countdownTimer', categoryKey: 'time', icon: Hourglass, accent: 'bg-fuchsia-500/10 text-fuchsia-400 ring-fuchsia-400/20', slug: 'countdown-timer' },
+  { id: 'businessDaysCalculator', categoryKey: 'calculators', icon: CalendarCheck, accent: 'bg-lime-500/10 text-lime-500 ring-lime-500/20', slug: 'business-days-calculator' },
+  { id: 'faviconGenerator', categoryKey: 'visual', icon: Layers, accent: 'bg-cyan-500/10 text-cyan-400 ring-cyan-400/20', slug: 'favicon-generator' },
 ]
 
 const aboutContent = {

@@ -125,6 +125,18 @@
     "textDiff": {
       "title": "Comparador de Textos",
       "description": "Compara dos textos y visualiza las partes añadidas y eliminadas resaltadas en color."
+    },
+    "countdownTimer": {
+      "title": "Cuenta Atrás",
+      "description": "Crea una cuenta atrás en directo para Año Nuevo, un cumpleaños o cualquier evento."
+    },
+    "businessDaysCalculator": {
+      "title": "Calculadora de Días Hábiles",
+      "description": "Calcula días hábiles entre dos fechas, o añade días hábiles a una fecha."
+    },
+    "faviconGenerator": {
+      "title": "Generador de Favicon",
+      "description": "Convierte tu imagen en todos los tamaños de favicon que necesita tu sitio."
     }
   }
 }
