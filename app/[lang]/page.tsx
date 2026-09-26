@@ -6,9 +6,9 @@ import { i18n, type Locale } from '@/i18n.config'
 
 // Dinamik diller için Record tipi kullanıyoruz
 const descriptions: Record<Locale, string> = {
-  tr: 'Yüzde ve indirim hesaplama, kelime sayacı, yazma hızı testi, dünya saati, resim dönüştürücü ve daha fazlası. Kayıt gerektirmeyen ücretsiz online araçlar.',
-  en: 'Percentage and discount calculator, word counter, typing speed test, world clock, image converter and more. Free online tools with no sign-up.',
-  es: 'Calculadora de porcentajes y descuentos, contador de palabras, prueba de velocidad de escritura, reloj mundial, convertidor de imágenes y más. Herramientas online gratuitas sin registro.'
+  tr: 'Yüzde ve indirim hesaplama, kelime sayacı, yazma hızı testi, dünya saati, resim dönüştürücü, bilimsel hesap makinesi ve daha fazlası. Kayıt gerektirmeyen ücretsiz online araçlar.',
+  en: 'Percentage and discount calculator, word counter, typing speed test, world clock, image converter, scientific calculator and more. Free online tools with no sign-up.',
+  es: 'Calculadora de porcentajes y descuentos, contador de palabras, prueba de velocidad de escritura, reloj mundial, convertidor de imágenes, calculadora científica y más. Herramientas online gratuitas sin registro.'
 }
 
 // 1. Dinamik Static Params (15 dosyada manuel eklemek yerine merkezden alıyoruz)

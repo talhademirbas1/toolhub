@@ -29,6 +29,11 @@ import {
   Hourglass,
   CalendarCheck,
   Layers,
+  Sigma,
+  Divide,
+  ArrowRightLeft,
+  Shapes,
+  Superscript,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -36,7 +41,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { i18n, type Locale } from '@/i18n.config'
 
-type CategoryKey = 'all' | 'visual' | 'text' | 'calculators' | 'time';
+type CategoryKey = 'all' | 'visual' | 'text' | 'calculators' | 'math' | 'time';
 
 type ToolBase = {
   id: string;
@@ -46,7 +51,7 @@ type ToolBase = {
   slug: string;
 }
 
-const categoryKeys: CategoryKey[] = ['all', 'visual', 'text', 'calculators', 'time'];
+const categoryKeys: CategoryKey[] = ['all', 'visual', 'text', 'calculators', 'math', 'time'];
 
 const baseTools: ToolBase[] = [
   { id: 'imageConverter', categoryKey: 'visual', icon: ImageIcon, accent: 'bg-sky-500/10 text-sky-400 ring-sky-400/20', slug: 'image-converter' },
@@ -73,6 +78,11 @@ const baseTools: ToolBase[] = [
   { id: 'countdownTimer', categoryKey: 'time', icon: Hourglass, accent: 'bg-fuchsia-500/10 text-fuchsia-400 ring-fuchsia-400/20', slug: 'countdown-timer' },
   { id: 'businessDaysCalculator', categoryKey: 'calculators', icon: CalendarCheck, accent: 'bg-lime-500/10 text-lime-500 ring-lime-500/20', slug: 'business-days-calculator' },
   { id: 'faviconGenerator', categoryKey: 'visual', icon: Layers, accent: 'bg-cyan-500/10 text-cyan-400 ring-cyan-400/20', slug: 'favicon-generator' },
+  { id: 'scientificCalculator', categoryKey: 'math', icon: Sigma, accent: 'bg-violet-500/10 text-violet-500 ring-violet-500/20', slug: 'scientific-calculator' },
+  { id: 'fractionCalculator', categoryKey: 'math', icon: Divide, accent: 'bg-sky-500/10 text-sky-500 ring-sky-500/20', slug: 'fraction-calculator' },
+  { id: 'ratioProportionCalculator', categoryKey: 'math', icon: ArrowRightLeft, accent: 'bg-amber-500/10 text-amber-500 ring-amber-500/20', slug: 'ratio-proportion-calculator' },
+  { id: 'areaVolumeCalculator', categoryKey: 'math', icon: Shapes, accent: 'bg-emerald-500/10 text-emerald-500 ring-emerald-500/20', slug: 'area-volume-calculator' },
+  { id: 'exponentRootCalculator', categoryKey: 'math', icon: Superscript, accent: 'bg-rose-500/10 text-rose-500 ring-rose-500/20', slug: 'exponent-root-calculator' },
 ]
 
 const aboutContent = {

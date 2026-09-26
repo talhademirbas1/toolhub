@@ -28,6 +28,7 @@
     "visual": "Herramientas Visuales",
     "text": "Herramientas de Texto",
     "calculators": "Calculadoras",
+    "math": "Matemáticas",
     "time": "Tiempo"
   },
   "tools": {
@@ -137,6 +138,26 @@
     "faviconGenerator": {
       "title": "Generador de Favicon",
       "description": "Convierte tu imagen en todos los tamaños de favicon que necesita tu sitio."
+    },
+    "scientificCalculator": {
+      "title": "Calculadora Científica",
+      "description": "Realiza cálculos trigonométricos, logarítmicos y exponenciales con una calculadora científica."
+    },
+    "fractionCalculator": {
+      "title": "Calculadora de Fracciones",
+      "description": "Suma, resta, multiplica y divide dos fracciones y obtén el resultado simplificado al instante."
+    },
+    "ratioProportionCalculator": {
+      "title": "Calculadora de Razón y Proporción",
+      "description": "Encuentra al instante el valor desconocido en una proporción de cuatro términos."
+    },
+    "areaVolumeCalculator": {
+      "title": "Calculadora de Área y Volumen",
+      "description": "Calcula el área o el volumen de cuadrados, rectángulos, triángulos, círculos, cubos, esferas, cilindros y conos."
+    },
+    "exponentRootCalculator": {
+      "title": "Calculadora de Potencias y Raíces",
+      "description": "Calcula al instante la potencia o la raíz enésima de un número."
     }
   }
 }

@@ -28,6 +28,7 @@
     "visual": "Görsel Araçlar",
     "text": "Metin Araçları",
     "calculators": "Hesaplayıcılar",
+    "math": "Matematik",
     "time": "Zaman"
   },
   "tools": {
@@ -137,6 +138,26 @@
     "faviconGenerator": {
       "title": "Favicon Oluşturucu",
       "description": "Görselinizi tüm cihazlar için gerekli favicon boyutlarına dönüştürün."
+    },
+    "scientificCalculator": {
+      "title": "Bilimsel Hesap Makinesi",
+      "description": "Trigonometrik, logaritmik ve üslü işlemleri tek bir bilimsel hesap makinesiyle yapın."
+    },
+    "fractionCalculator": {
+      "title": "Kesir Hesaplama",
+      "description": "İki kesirle toplama, çıkarma, çarpma ve bölme işlemlerini sadeleştirilmiş sonuçla yapın."
+    },
+    "ratioProportionCalculator": {
+      "title": "Oran-Orantı Hesaplama",
+      "description": "Dört terimli orantıda bilinmeyen değeri anında bulun."
+    },
+    "areaVolumeCalculator": {
+      "title": "Alan-Hacim Hesaplama",
+      "description": "Kare, dikdörtgen, üçgen, daire, küp, küre, silindir ve koni için alan veya hacim hesaplayın."
+    },
+    "exponentRootCalculator": {
+      "title": "Üslü-Köklü Sayı Hesaplama",
+      "description": "Bir sayının üssünü veya n. dereceden kökünü anında hesaplayın."
     }
   }
 }

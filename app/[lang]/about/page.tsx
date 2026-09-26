@@ -13,7 +13,7 @@ const content = {
     sections: [
       {
         title: "MyToolKit nedir?",
-        text: "MyToolKit, günlük işlerde işe yarayan ücretsiz online araçları tek bir yerde toplayan bağımsız bir projedir. Yüzde ve indirim hesaplama, kelime sayacı, yazma hızı testi, dünya saati, resim dönüştürücü gibi araçları kayıt olmadan, doğrudan tarayıcıdan kullanabilirsiniz.",
+        text: "MyToolKit, günlük işlerde işe yarayan ücretsiz online araçları tek bir yerde toplayan bağımsız bir projedir. Yüzde ve indirim hesaplama, kelime sayacı, yazma hızı testi, dünya saati, resim dönüştürücü, bilimsel hesap makinesi gibi araçları kayıt olmadan, doğrudan tarayıcıdan kullanabilirsiniz.",
       },
       {
         title: "Amacımız",
@@ -37,7 +37,7 @@ const content = {
     sections: [
       {
         title: "What is MyToolKit?",
-        text: "MyToolKit is an independent project that brings together free online tools for everyday tasks in one place. You can use tools such as a percentage and discount calculator, word counter, typing speed test, world clock and image converter right in your browser, without signing up.",
+        text: "MyToolKit is an independent project that brings together free online tools for everyday tasks in one place. You can use tools such as a percentage and discount calculator, word counter, typing speed test, world clock, image converter and scientific calculator right in your browser, without signing up.",
       },
       {
         title: "Our goal",
@@ -61,7 +61,7 @@ const content = {
     sections: [
       {
         title: "¿Qué es MyToolKit?",
-        text: "MyToolKit es un proyecto independiente que reúne herramientas online gratuitas para las tareas diarias en un solo lugar. Puedes usar herramientas como calculadora de porcentajes y descuentos, contador de palabras, prueba de velocidad de escritura, reloj mundial y convertidor de imágenes directamente en tu navegador, sin registrarte.",
+        text: "MyToolKit es un proyecto independiente que reúne herramientas online gratuitas para las tareas diarias en un solo lugar. Puedes usar herramientas como calculadora de porcentajes y descuentos, contador de palabras, prueba de velocidad de escritura, reloj mundial, convertidor de imágenes y calculadora científica directamente en tu navegador, sin registrarte.",
       },
       {
         title: "Nuestro objetivo",

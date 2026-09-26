@@ -29,6 +29,11 @@ const tools = [
   "countdown-timer",
   "business-days-calculator",
   "favicon-generator",
+  "scientific-calculator",
+  "fraction-calculator",
+  "ratio-proportion-calculator",
+  "area-volume-calculator",
+  "exponent-root-calculator",
 ];
  
 const staticRoutes = [
@@ -56,3 +61,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 }
+ 

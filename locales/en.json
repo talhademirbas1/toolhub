@@ -28,6 +28,7 @@
     "visual": "Visual Tools",
     "text": "Text Tools",
     "calculators": "Calculators",
+    "math": "Math",
     "time": "Time"
   },
   "tools": {
@@ -137,6 +138,26 @@
     "faviconGenerator": {
       "title": "Favicon Generator",
       "description": "Convert your image into all the favicon sizes your site needs."
+    },
+    "scientificCalculator": {
+      "title": "Scientific Calculator",
+      "description": "Perform trigonometric, logarithmic and exponential calculations with one scientific calculator."
+    },
+    "fractionCalculator": {
+      "title": "Fraction Calculator",
+      "description": "Add, subtract, multiply and divide two fractions and get the simplified result instantly."
+    },
+    "ratioProportionCalculator": {
+      "title": "Ratio-Proportion Calculator",
+      "description": "Instantly find the missing value in a four-term proportion."
+    },
+    "areaVolumeCalculator": {
+      "title": "Area-Volume Calculator",
+      "description": "Calculate the area or volume of squares, rectangles, triangles, circles, cubes, spheres, cylinders and cones."
+    },
+    "exponentRootCalculator": {
+      "title": "Exponent-Root Calculator",
+      "description": "Instantly calculate the power or the nth root of a number."
     }
   }
 }
